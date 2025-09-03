@@ -149,7 +149,6 @@ export const StackSimulation = () => {
                 })
                 .catch(() => setHasPermission(false));
         } else {
-            // For browsers that don't require permission but have the event
              if ('ondeviceorientation' in window) {
                 setHasPermission(true);
             } else {

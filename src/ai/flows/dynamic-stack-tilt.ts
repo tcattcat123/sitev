@@ -1,13 +1,5 @@
 'use server';
 
-/**
- * @fileOverview Handles the dynamic simulation of the technology stack based on device tilt.
- *
- * - getTiltControlledGravity - A function that adjusts gravity based on device orientation or triggers automatic re-simulation.
- * - TiltControlledGravityInput - The input type for the getTiltControlledGravity function.
- * - TiltControlledGravityOutput - The return type for the getTiltControlledGravity function.
- */
-
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 

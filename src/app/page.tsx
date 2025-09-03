@@ -23,7 +23,10 @@ export default function Home() {
   }
 
   const handleServiceClick = (serviceName: string, description: string) => {
-    alert(`C:\\> ${serviceName.toUpperCase()}.EXE\n\n${description}`);
+    toast({
+      title: `C:\\> ${serviceName.toUpperCase()}.EXE`,
+      description: description,
+    })
   };
   
   useEffect(() => {
@@ -163,7 +166,7 @@ export default function Home() {
         onClick={() => {
           if (label === '..') handleNavClick('main')
           else if (content === 'projects' || content === 'cv') handleNavClick(content)
-          else alert('C:\\> ' + label + '\n\nРаздел в разработке.')
+          else toast({ title: 'C:\\> ' + label, description: 'Раздел в разработке.'})
         }}
       >
         <span>{command}</span>
