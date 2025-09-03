@@ -174,11 +174,10 @@ export default function Home() {
                  />
               ) : showCvAvatar ? (
                 <Image 
-                    src="https://i.pinimg.com/originals/5a/d1/12/5ad1129aac65a79357551cd652a484e3.gif" 
-                    alt="matrix gif"
+                    src="https://i.pinimg.com/736x/21/f4/12/21f412812347a9c8134a464786ae287d.jpg"
+                    alt="pixelated person"
                     layout="fill"
                     objectFit="cover"
-                    unoptimized
                     className="grayscale"
                  />
               ) : (
