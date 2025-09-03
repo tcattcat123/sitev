@@ -102,8 +102,8 @@ export default function Home() {
             </div>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="md:col-span-2">
+        <div className="grid grid-cols-3 gap-4 md:gap-8">
+            <div className="col-span-2">
                 <section className="mb-6">
                     <h2 className="text-lg sm:text-xl font-bold text-primary mb-2">Objective</h2>
                     <p className="text-foreground text-xs sm:text-sm"><Typewriter text={cvData.objective} /></p>
@@ -120,7 +120,7 @@ export default function Home() {
                 </section>
             </div>
 
-            <div className="md:col-span-1">
+            <div className="col-span-1">
                 <h2 className="text-lg sm:text-xl font-bold text-primary mb-2">Skills</h2>
                 <ul className="list-none space-y-1 text-foreground text-xs sm:text-sm">
                     {cvData.skills.map((skill, index) => (
@@ -137,7 +137,7 @@ export default function Home() {
       {projectsData.map((project, i) => (
         <div 
           key={i}
-          className="aspect-square bg-card border border-primary flex items-center justify-center text-foreground font-mono text-sm transition-all duration-300 ease-in-out hover:rounded-full hover:bg-primary/20 cursor-pointer relative group overflow-hidden"
+          className="aspect-square bg-card border border-primary flex items-center justify-center text-foreground font-mono transition-all duration-300 ease-in-out hover:rounded-full hover:bg-primary/20 cursor-pointer relative group overflow-hidden"
         >
           {project.image ? (
             <>
@@ -152,7 +152,7 @@ export default function Home() {
               <div className="glitch-overlay absolute inset-0 opacity-20 group-hover:opacity-10" />
             </>
           ) : null}
-          <span className="relative z-10 whitespace-nowrap">{project.name}</span>
+          <span className="relative z-10 whitespace-nowrap text-sm">{project.name}</span>
         </div>
       ))}
     </div>
