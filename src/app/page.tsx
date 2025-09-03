@@ -176,7 +176,7 @@ export default function Home() {
 
 
   return (
-    <main className="flex flex-col h-screen p-2 sm:p-4">
+    <main className="flex flex-col h-screen p-2 sm:p-4 overflow-hidden">
       <div className="w-full max-w-xl mx-auto flex flex-col flex-1 min-h-0">
         
         <header className="flex gap-2 mb-2">
@@ -274,7 +274,7 @@ export default function Home() {
               </Card>
             </section>
 
-            <section className="flex-1 min-h-0">
+            <section className="flex-1 min-h-0 mb-4">
                 <Card className="w-full h-full p-1 border-primary">
                   <CardHeader className="absolute p-2 z-10">
                     <CardTitle className="text-xs text-muted-foreground">C:\&gt; LOAD STACK</CardTitle>
