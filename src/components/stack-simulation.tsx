@@ -18,20 +18,20 @@ declare global {
 type StackCategory = 'frontend' | 'backend' | 'tool';
 
 const stackItems: { name: string; category: StackCategory; width: number, height: number }[] = [
-    { name: 'React', category: 'frontend', width: 50, height: 20 },
-    { name: 'Next.js', category: 'frontend', width: 57, height: 20 },
-    { name: 'Tailwind', category: 'frontend', width: 67, height: 20 },
-    { name: 'Go', category: 'backend', width: 33, height: 20 },
-    { name: 'Node.js', category: 'backend', width: 57, height: 20 },
-    { name: 'Python', category: 'backend', width: 57, height: 20 },
-    { name: 'PHP', category: 'backend', width: 40, height: 20 },
-    { name: 'PostgreSQL', category: 'backend', width: 83, height: 20 },
-    { name: 'MySQL', category: 'backend', width: 50, height: 20 },
-    { name: 'MongoDB', category: 'backend', width: 73, height: 20 },
-    { name: 'Supabase', category: 'tool', width: 67, height: 20 },
-    { name: 'OpenAI', category: 'tool', width: 50, height: 20 },
-    { name: 'Telegram', category: 'tool', width: 67, height: 20 },
-    { name: 'Parsers', category: 'tool', width: 57, height: 20 },
+    { name: 'React', category: 'frontend', width: 33, height: 13 },
+    { name: 'Next.js', category: 'frontend', width: 38, height: 13 },
+    { name: 'Tailwind', category: 'frontend', width: 45, height: 13 },
+    { name: 'Go', category: 'backend', width: 22, height: 13 },
+    { name: 'Node.js', category: 'backend', width: 38, height: 13 },
+    { name: 'Python', category: 'backend', width: 38, height: 13 },
+    { name: 'PHP', category: 'backend', width: 27, height: 13 },
+    { name: 'PostgreSQL', category: 'backend', width: 55, height: 13 },
+    { name: 'MySQL', category: 'backend', width: 33, height: 13 },
+    { name: 'MongoDB', category: 'backend', width: 49, height: 13 },
+    { name: 'Supabase', category: 'tool', width: 45, height: 13 },
+    { name: 'OpenAI', category: 'tool', width: 33, height: 13 },
+    { name: 'Telegram', category: 'tool', width: 45, height: 13 },
+    { name: 'Parsers', category: 'tool', width: 38, height: 13 },
 ];
 
 const categoryColors: Record<StackCategory, string> = {
@@ -107,9 +107,10 @@ export const StackSimulation = () => {
             )
         );
 
-        const ground = Bodies.rectangle(container.clientWidth / 2, 184, container.clientWidth + 20, 10, { isStatic: true, render: { visible: false } });
-        const wallLeft = Bodies.rectangle(-5, 96, 10, 192, { isStatic: true, render: { visible: false } });
-        const wallRight = Bodies.rectangle(container.clientWidth + 5, 96, 10, 192, { isStatic: true, render: { visible: false } });
+        const ground = Bodies.rectangle(container.clientWidth / 2, container.clientHeight - 5, container.clientWidth + 20, 10, { isStatic: true, render: { visible: false } });
+        const wallLeft = Bodies.rectangle(-5, container.clientHeight / 2, 10, container.clientHeight, { isStatic: true, render: { visible: false } });
+        const wallRight = Bodies.rectangle(container.clientWidth + 5, container.clientHeight / 2, 10, container.clientHeight, { isStatic: true, render: { visible: false } });
+
 
         Composite.add(engine.world, [...matterBodies, ground, wallLeft, wallRight]);
         
@@ -146,14 +147,27 @@ export const StackSimulation = () => {
         const handleResize = () => {
              if (!container || !engineRef.current) return;
              
-             Bodies.setPosition(ground, { x: container.clientWidth / 2, y: 184 });
+             Bodies.setPosition(ground, { x: container.clientWidth / 2, y: container.clientHeight - 5 });
              Bodies.setVertices(ground, [
-                { x: 0, y: 184 },
-                { x: container.clientWidth, y: 184 },
-                { x: container.clientWidth, y: 194 },
-                { x: 0, y: 194 }
+                { x: 0, y: container.clientHeight - 5 },
+                { x: container.clientWidth, y: container.clientHeight - 5 },
+                { x: container.clientWidth, y: container.clientHeight + 5 },
+                { x: 0, y: container.clientHeight + 5 }
              ]);
-             Bodies.setPosition(wallRight, { x: container.clientWidth + 5, y: 96 });
+             Bodies.setPosition(wallRight, { x: container.clientWidth + 5, y: container.clientHeight / 2 });
+             Bodies.setPosition(wallLeft, { x: -5, y: container.clientHeight / 2 });
+             Matter.Body.setVertices(wallLeft, [
+                { x: -10, y: 0 },
+                { x: 0, y: 0 },
+                { x: 0, y: container.clientHeight },
+                { x: -10, y: container.clientHeight }
+            ]);
+            Matter.Body.setVertices(wallRight, [
+                { x: container.clientWidth, y: 0 },
+                { x: container.clientWidth + 10, y: 0 },
+                { x: container.clientWidth + 10, y: container.clientHeight },
+                { x: container.clientWidth, y: container.clientHeight }
+            ]);
         };
         window.addEventListener('resize', handleResize);
 
