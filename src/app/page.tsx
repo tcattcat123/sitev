@@ -123,7 +123,11 @@ export default function Home() {
       <Button 
         variant="outline" 
         className="justify-start h-full text-base border-primary hover:bg-accent" 
-        onClick={() => label === 'CV' ? handleNavClick(content) : label === '..' ? handleNavClick('main') : toast({ title: 'C:\\> ' + label, description: 'Раздел в разработке.'})}
+        onClick={() => {
+          if (label === 'CV') handleNavClick(content)
+          else if (label === '..') handleNavClick('main')
+          else toast({ title: 'C:\\> ' + label, description: 'Раздел в разработке.'})
+        }}
       >
         <span>{command}</span>
       </Button>
@@ -254,7 +258,3 @@ export default function Home() {
     </main>
   );
 }
-
-    
-
-    
