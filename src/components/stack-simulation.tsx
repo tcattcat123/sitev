@@ -2,11 +2,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { getTiltControlledGravity, type TiltControlledGravityInput } from '@/ai/flows/dynamic-stack-tilt';
-import { Button } from './ui/button';
 import Matter from 'matter-js';
-import { motion } from 'framer-motion';
-import { Badge } from './ui/badge';
 
 const stackItems = [
     { name: 'React' }, { name: 'Next.js' }, { name: 'Tailwind' },
@@ -16,56 +12,61 @@ const stackItems = [
     { name: 'Telegram' }, { name: 'Parsers' },
 ];
 
+const colors = [
+    'hsl(var(--chart-1))',
+    'hsl(var(--chart-2))',
+    'hsl(var(--chart-3))',
+    'hsl(var(--chart-4))',
+    'hsl(var(--chart-5))',
+    'hsl(var(--primary))',
+];
+
 export const StackSimulation = () => {
     const sceneRef = useRef<HTMLDivElement>(null);
     const engineRef = useRef<Matter.Engine | null>(null);
     const runnerRef = useRef<Matter.Runner | null>(null);
     const renderRef = useRef<Matter.Render | null>(null);
-    const [hasPermission, setHasPermission] = useState<boolean | null>(null);
-    const isSetup = useRef(false);
     const [isClient, setIsClient] = useState(false);
-    const [isTouchDevice, setIsTouchDevice] = useState(false);
+    const isSetup = useRef(false);
 
     useEffect(() => {
         setIsClient(true);
-        setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
     }, []);
 
     const cleanupMatter = useCallback(() => {
         if (!isSetup.current) return;
+        
         if (renderRef.current) {
             Matter.Render.stop(renderRef.current);
             if (renderRef.current.canvas) {
                 renderRef.current.canvas.remove();
             }
+            renderRef.current = null;
         }
         if (runnerRef.current) {
             Matter.Runner.stop(runnerRef.current);
+            runnerRef.current = null;
         }
         if (engineRef.current) {
-            if (engineRef.current.world) {
-                Matter.World.clear(engineRef.current.world, false);
-            }
             Matter.Engine.clear(engineRef.current);
+            engineRef.current = null;
         }
-        renderRef.current = null;
-        runnerRef.current = null;
-        engineRef.current = null;
         isSetup.current = false;
     }, []);
 
     const setupMatter = useCallback(() => {
-        if (!sceneRef.current || isSetup.current) return;
+        if (!sceneRef.current || isSetup.current || !isClient) return;
         
         isSetup.current = true;
 
-        const { Engine, Render, Runner, Bodies, Composite, Events } = Matter;
+        const { Engine, Render, Runner, Bodies, Composite, Events, Mouse, MouseConstraint } = Matter;
         const container = sceneRef.current;
         if (!container) return;
         
-        const engine = Engine.create();
+        const engine = Engine.create({
+            gravity: { x: 0, y: 1, scale: 0.001 }
+        });
         engineRef.current = engine;
-        engine.world.gravity.y = 1;
         
         const render = Render.create({
             element: container,
@@ -79,31 +80,45 @@ export const StackSimulation = () => {
         });
         renderRef.current = render;
         
-        const stackBodies = stackItems.map(item => {
+        const stackBodies = stackItems.map((item, index) => {
             const textWidth = item.name.length * 8 + 16;
             return Bodies.rectangle(
                 Math.random() * container.clientWidth * 0.8 + container.clientWidth * 0.1,
-                Math.random() * -container.clientHeight - 50,
+                Math.random() * -container.clientHeight,
                 textWidth,
                 28,
                 {
-                    restitution: 0.4,
-                    friction: 0.8,
+                    restitution: 0.5,
+                    friction: 0.6,
                     label: item.name,
-                    chamfer: { radius: 4 },
+                    chamfer: { radius: 14 },
                     render: {
-                        fillStyle: 'hsl(var(--primary))',
+                        fillStyle: colors[index % colors.length],
                     }
                 }
             );
         });
 
         Composite.add(engine.world, [
-            Bodies.rectangle(container.clientWidth / 2, container.clientHeight + 10, container.clientWidth, 20, { isStatic: true, render: { visible: false } }),
-            Bodies.rectangle(-10, container.clientHeight / 2, 20, container.clientHeight, { isStatic: true, render: { visible: false } }),
-            Bodies.rectangle(container.clientWidth + 10, container.clientHeight / 2, 20, container.clientHeight, { isStatic: true, render: { visible: false } }),
+            Bodies.rectangle(container.clientWidth / 2, container.clientHeight + 20, container.clientWidth, 40, { isStatic: true, render: { visible: false } }),
+            Bodies.rectangle(-20, container.clientHeight / 2, 40, container.clientHeight, { isStatic: true, render: { visible: false } }),
+            Bodies.rectangle(container.clientWidth + 20, container.clientHeight / 2, 40, container.clientHeight, { isStatic: true, render: { visible: false } }),
             ...stackBodies
         ]);
+        
+        const mouse = Mouse.create(render.canvas);
+        const mouseConstraint = MouseConstraint.create(engine, {
+            mouse: mouse,
+            constraint: {
+                stiffness: 0.2,
+                render: {
+                    visible: false
+                }
+            }
+        });
+        Composite.add(engine.world, mouseConstraint);
+        render.mouse = mouse;
+
 
         Events.on(render, 'afterRender', () => {
             if (!render.context) return;
@@ -126,141 +141,32 @@ export const StackSimulation = () => {
         runnerRef.current = runner;
         Render.run(render);
         Runner.run(runner, engine);
-    }, []);
-
-    const handleOrientation = useCallback(async (event: DeviceOrientationEvent) => {
-        if (!engineRef.current || !event.gamma || !event.beta) return;
-
-        const input: TiltControlledGravityInput = {
-            tiltLR: event.gamma,
-            tiltFB: event.beta,
-            hasDeviceOrientation: true,
-        };
-
-        try {
-            const { gravityX, gravityY } = await getTiltControlledGravity(input);
-            if(engineRef.current) {
-                engineRef.current.world.gravity.x = gravityX;
-                engineRef.current.world.gravity.y = gravityY;
-            }
-        } catch(e) {
-        }
-
-    }, []);
-    
-    const resimulate = useCallback(async () => {
-        try {
-            const { shouldResimulate } = await getTiltControlledGravity({ hasDeviceOrientation: false });
-            if (shouldResimulate) {
-                cleanupMatter();
-                setTimeout(setupMatter, 100);
-            }
-        } catch(e) {
-
-        }
-    }, [cleanupMatter, setupMatter]);
-    
-    const requestPermission = useCallback(() => {
-        if (typeof (DeviceOrientationEvent as any).requestPermission === 'function') {
-            (DeviceOrientationEvent as any).requestPermission()
-                .then((permissionState: 'granted' | 'denied' | 'prompt') => {
-                    setHasPermission(permissionState === 'granted');
-                })
-                .catch(() => setHasPermission(false));
-        } else {
-             if ('ondeviceorientation' in window) {
-                setHasPermission(true);
-            } else {
-                setHasPermission(false);
-            }
-        }
-    }, []);
+    }, [isClient]);
     
     useEffect(() => {
-        if (!isClient || isTouchDevice) return;
-        
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-        if(isIOS) {
-            setHasPermission(null);
-        } else {
-            setHasPermission(false);
+        if (isClient) {
+            cleanupMatter();
+            setupMatter();
         }
 
-        setupMatter();
+        const handleResize = () => {
+            cleanupMatter();
+            setupMatter();
+        };
+
+        window.addEventListener('resize', handleResize);
 
         return () => {
+            window.removeEventListener('resize', handleResize);
             cleanupMatter();
         };
-    }, [isClient, isTouchDevice, setupMatter, cleanupMatter]);
-
-    useEffect(() => {
-        if(!isClient || isTouchDevice) return;
-
-        if (hasPermission) {
-            window.addEventListener('deviceorientation', handleOrientation);
-        } else {
-            window.removeEventListener('deviceorientation', handleOrientation);
-        }
-        return () => window.removeEventListener('deviceorientation', handleOrientation);
-    }, [hasPermission, handleOrientation, isClient, isTouchDevice]);
-
-    useEffect(() => {
-        if(!isClient || isTouchDevice) return;
-        let resimulateInterval: NodeJS.Timeout | undefined;
-        if (hasPermission === false) {
-             resimulateInterval = setInterval(resimulate, 8000);
-        }
-        return () => {
-            if (resimulateInterval) {
-                clearInterval(resimulateInterval);
-            }
-        };
-    }, [hasPermission, resimulate, isClient, isTouchDevice]);
-
+    }, [isClient, setupMatter, cleanupMatter]);
 
     if (!isClient) {
         return null; 
     }
 
-    if (isTouchDevice) {
-        return (
-            <div className="relative h-full w-full flex flex-wrap items-center justify-center gap-2 p-4 overflow-hidden">
-                {stackItems.map((item, index) => (
-                    <motion.div
-                        key={index}
-                        drag
-                        dragConstraints={{
-                            top: -50,
-                            left: -50,
-                            right: 50,
-                            bottom: 50,
-                        }}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                    >
-                        <Badge variant="secondary" className="text-sm font-mono cursor-pointer bg-primary text-primary-foreground">
-                            {item.name}
-                        </Badge>
-                    </motion.div>
-                ))}
-            </div>
-        )
-    }
-
     return (
-        <div ref={sceneRef} className="h-full w-full relative">
-             {hasPermission === null && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 z-20 p-4">
-                    <Button variant="outline" className="w-full" onClick={requestPermission}>
-                        ENABLE TILT CONTROLS
-                    </Button>
-                </div>
-            )}
-            {hasPermission === false && (
-                <div className="absolute bottom-2 left-2 text-xs text-muted-foreground z-10">
-                    Tilt controls disabled. Auto-simulating...
-                </div>
-            )}
-        </div>
+        <div ref={sceneRef} className="h-full w-full relative" />
     );
 };
