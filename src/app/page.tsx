@@ -176,8 +176,8 @@ export default function Home() {
 
 
   return (
-    <main className="p-2 sm:p-4">
-      <div className="w-full max-w-xl mx-auto">
+    <main className="p-2 sm:p-4 min-h-screen flex flex-col">
+      <div className="w-full max-w-xl mx-auto flex flex-col flex-grow">
         
         <header className="flex gap-2 mb-2">
           <Card 
@@ -230,7 +230,7 @@ export default function Home() {
         )}
 
         {activeContent === 'main' && (
-          <div className="space-y-2">
+          <div className="space-y-2 flex flex-col flex-grow">
             <section>
                 <Card className="w-full p-1 border-primary">
                     <CardHeader className="p-2">
@@ -274,8 +274,8 @@ export default function Home() {
               </Card>
             </section>
 
-            <section className="h-48">
-                <Card className="w-full h-full p-1 border-primary">
+            <section className="flex-grow flex flex-col">
+                <Card className="w-full flex-grow p-1 border-primary">
                   <CardHeader className="absolute p-2 z-10">
                     <CardTitle className="text-xs text-muted-foreground">C:\&gt; LOAD STACK</CardTitle>
                   </CardHeader>
