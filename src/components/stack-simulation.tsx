@@ -13,6 +13,7 @@ export const StackSimulation = () => {
     const runnerRef = useRef<any>(null);
     const renderRef = useRef<any>(null);
     const [hasPermission, setHasPermission] = useState<boolean | null>(null);
+    const isSetup = useRef(false);
 
     const stackItems = [
         { name: 'React' }, { name: 'Next.js' }, { name: 'Tailwind' },
@@ -23,32 +24,36 @@ export const StackSimulation = () => {
     ];
 
     const cleanupMatter = useCallback(() => {
-        if (typeof Matter === 'undefined') return;
+        if (typeof Matter === 'undefined' || !isSetup.current) return;
         if (renderRef.current) {
             Matter.Render.stop(renderRef.current);
-            if (engineRef.current?.world) {
-                Matter.World.clear(engineRef.current.world, false);
+            if (renderRef.current.canvas) {
+                renderRef.current.canvas.remove();
             }
-            if (engineRef.current) {
-                Matter.Engine.clear(engineRef.current);
-            }
-            renderRef.current.canvas?.remove();
-            renderRef.current.canvas = null;
-            renderRef.current.context = null;
-            renderRef.current.textures = {};
-            renderRef.current = null;
         }
         if (runnerRef.current) {
             Matter.Runner.stop(runnerRef.current);
-            runnerRef.current = null;
         }
+        if (engineRef.current) {
+            if (engineRef.current.world) {
+                Matter.World.clear(engineRef.current.world, false);
+            }
+            Matter.Engine.clear(engineRef.current);
+        }
+        renderRef.current = null;
+        runnerRef.current = null;
+        engineRef.current = null;
+        isSetup.current = false;
     }, []);
 
     const setupMatter = useCallback(() => {
-        if (!sceneRef.current || typeof Matter === 'undefined' || renderRef.current) return;
+        if (!sceneRef.current || typeof Matter === 'undefined' || isSetup.current) return;
+        
+        isSetup.current = true;
 
         const { Engine, Render, Runner, Bodies, Composite, Events } = Matter;
         const container = sceneRef.current;
+        if (!container) return;
         
         const engine = Engine.create();
         engineRef.current = engine;
@@ -107,7 +112,7 @@ export const StackSimulation = () => {
                 context.restore();
             });
         });
-
+        
         const runner = Runner.create();
         runnerRef.current = runner;
         Render.run(render);
@@ -129,26 +134,25 @@ export const StackSimulation = () => {
     }, []);
     
     const resimulate = useCallback(async () => {
-        if (typeof Matter === 'undefined') return;
+        if (typeof Matter === 'undefined' || !sceneRef.current) return;
         const { shouldResimulate } = await getTiltControlledGravity({ hasDeviceOrientation: false });
         if (shouldResimulate) {
             cleanupMatter();
-            setupMatter();
+            // A short delay to ensure cleanup completes before setup
+            setTimeout(setupMatter, 100);
         }
     }, [cleanupMatter, setupMatter]);
     
     const requestPermission = useCallback(() => {
+        // Check for iOS 13+
         if (typeof (DeviceOrientationEvent as any).requestPermission === 'function') {
             (DeviceOrientationEvent as any).requestPermission()
                 .then((permissionState: 'granted' | 'denied' | 'prompt') => {
-                    if (permissionState === 'granted') {
-                        setHasPermission(true);
-                    } else {
-                        setHasPermission(false);
-                    }
+                    setHasPermission(permissionState === 'granted');
                 })
                 .catch(() => setHasPermission(false));
         } else {
+            // Handle non-iOS 13+ devices
              if ('ondeviceorientation' in window) {
                 setHasPermission(true);
             } else {
@@ -158,21 +162,23 @@ export const StackSimulation = () => {
     }, []);
 
     useEffect(() => {
-        let matterJsCheck: NodeJS.Timeout | null = null;
+        let checkInterval: NodeJS.Timeout;
+
         const init = () => {
             if (typeof Matter !== 'undefined') {
-                if (matterJsCheck) clearInterval(matterJsCheck);
+                clearInterval(checkInterval);
                 setupMatter();
                 if (typeof (DeviceOrientationEvent as any).requestPermission !== 'function' && 'ondeviceorientation' in window) {
-                    setHasPermission(true);
+                   // For non-iOS devices that support it, but don't require permission.
+                   // We don't set to true immediately to still show the button for devices that need it.
                 }
             }
-        }
-        
-        matterJsCheck = setInterval(init, 100);
+        };
+
+        checkInterval = setInterval(init, 100);
 
         return () => {
-            if (matterJsCheck) clearInterval(matterJsCheck);
+            clearInterval(checkInterval);
             cleanupMatter();
         };
     }, [setupMatter, cleanupMatter]);
@@ -187,11 +193,15 @@ export const StackSimulation = () => {
     }, [hasPermission, handleOrientation]);
 
     useEffect(() => {
-        let resimulateInterval: NodeJS.Timeout;
+        let resimulateInterval: NodeJS.Timeout | undefined;
         if (hasPermission === false) {
              resimulateInterval = setInterval(resimulate, 8000);
         }
-        return () => clearInterval(resimulateInterval);
+        return () => {
+            if (resimulateInterval) {
+                clearInterval(resimulateInterval);
+            }
+        };
     }, [hasPermission, resimulate]);
 
     return (
