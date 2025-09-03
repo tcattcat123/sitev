@@ -92,18 +92,21 @@ export default function Home() {
                 <p className="text-primary mt-1"><Typewriter text={cvData.email} /></p>
             </div>
             <div className="font-mono text-xs sm:text-sm">
-              <div className="bg-background/50 text-foreground p-3 rounded-lg border border-primary/20 w-full shadow-inner backdrop-blur-sm">
-                  <div className="flex items-baseline justify-between mb-2 pb-2 border-b border-border">
-                      <Button variant="ghost" size="sm" onClick={checkAvailability} className="text-xs h-auto p-1 text-green-500">CHECK</Button>
-                      <span className="text-primary"><Typewriter text={`TIME: ${cvData.time}`} speed={50} /></span>
-                  </div>
-                  
-                  <a href={`https://t.me/${cvData.telegram}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline inline-flex items-center gap-2">
-                      <Send size={12} className="inline-block" />
-                      <Typewriter text={`@${cvData.telegram}`} speed={50} delay={800} />
-                  </a>
-                  {availabilityMessage && <div className="text-green-500 mt-2"><Typewriter text={availabilityMessage} /></div>}
-              </div>
+                <div className="bg-background/50 text-foreground p-3 rounded-lg border border-primary/20 w-full shadow-inner backdrop-blur-sm">
+                    <div className="flex items-center justify-between mb-2 pb-2 border-b border-border">
+                        <div className="flex items-center gap-1.5">
+                            <span className="w-3 h-3 rounded-full bg-red-500"></span>
+                            <span className="w-3 h-3 rounded-full bg-yellow-500"></span>
+                            <span className="w-3 h-3 rounded-full bg-green-500"></span>
+                        </div>
+                        <span className="text-primary"><Typewriter text={`TIME: ${cvData.time}`} speed={50} /></span>
+                    </div>
+                    
+                    <a href={`https://t.me/${cvData.telegram}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline inline-flex items-center gap-2">
+                        <Send size={12} className="inline-block" />
+                        <Typewriter text={`@${cvData.telegram}`} speed={50} delay={800} />
+                    </a>
+                </div>
             </div>
         </header>
 
