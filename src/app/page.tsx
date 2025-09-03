@@ -15,7 +15,6 @@ export default function Home() {
   const [showGif, setShowGif] = useState(false);
   const [showCvAvatar, setShowCvAvatar] = useState(false);
   const [chinaTime, setChinaTime] = useState('');
-  const [executingService, setExecutingService] = useState<string | null>(null);
 
   const handleNavClick = (content: 'main' | 'cv') => {
     setActiveContent(content);
@@ -23,12 +22,10 @@ export default function Home() {
   }
 
   const handleServiceClick = (serviceName: string, description: string) => {
-    setExecutingService(serviceName);
     toast({
       title: `C:\\> ${serviceName.toUpperCase()}.EXE`,
       description: description,
     })
-    setTimeout(() => setExecutingService(null), 1000);
   };
 
 
@@ -57,13 +54,13 @@ export default function Home() {
   ];
   
   const cvContent = (
-    <div className="text-sm font-mono text-gray-800 bg-gray-100 p-4 sm:p-6 rounded-lg relative z-[100]">
+    <div className="text-sm font-mono text-gray-800 bg-gray-100 p-4 sm:p-6 rounded-lg">
       <header className="grid grid-cols-1 md:grid-cols-3 gap-4 border-b border-gray-300 pb-4 mb-4 items-start">
-        <div className="col-span-1 md:col-span-2">
+        <div className="md:col-span-2">
             <h1 className="text-4xl font-bold text-black">Vitaliy Petrov</h1>
             <p className="text-blue-600 mt-1">terakot2022@gmail.com</p>
         </div>
-        <div className="text-left text-black text-xs sm:text-sm md:text-right">
+        <div className="text-left md:text-right text-black text-xs sm:text-sm">
             <p>My time: {chinaTime}</p>
             <a href="https://t.me/yofox" target="_blank" rel="noopener noreferrer" className="text-blue-600 inline-flex items-center gap-2 hover:underline">
                 <Send size={14} />
@@ -202,13 +199,12 @@ export default function Home() {
                           variant="ghost" 
                           className="justify-between w-full h-auto text-left p-2 hover:bg-accent"
                           onClick={() => handleServiceClick(service.name, service.description)}
-                          disabled={!!executingService}
                         >
                           <div className="flex flex-col">
                               <span>{service.name}</span>
                               <span className="text-xs text-muted-foreground">{service.fileType}</span>
                           </div>
-                          {executingService === service.name ? <Loader2 className="animate-spin" size={16} /> : <span className="text-2xl leading-none">→</span>}
+                          <span className="text-2xl leading-none">→</span>
                         </Button>
                       ))}
                     </CardContent>
