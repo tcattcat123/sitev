@@ -61,31 +61,25 @@ export const StackSimulation = () => {
     const sceneRef = useRef<HTMLDivElement>(null);
     const engineRef = useRef<any>();
     const [bodies, setBodies] = useState<BodyState[]>([]);
-    const [permissionGranted, setPermissionGranted] = useState(false);
-    const [isMobile, setIsMobile] = useState(false);
-
-    useEffect(() => {
-      setIsMobile(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
-    }, []);
-
+    
     const requestDeviceOrientationPermission = async () => {
         if (typeof window !== 'undefined' && window.DeviceOrientationEvent && typeof window.DeviceOrientationEvent.requestPermission === 'function') {
             try {
                 const permissionState = await window.DeviceOrientationEvent.requestPermission();
                 if (permissionState === 'granted') {
-                    setPermissionGranted(true);
+                    return true;
                 }
+                return false;
             } catch (error) {
                 console.error("DeviceOrientationEvent.requestPermission() failed:", error);
+                return false;
             }
-        } else {
-            // For non-iOS 13+ devices, permission is not required
-            setPermissionGranted(true);
         }
+        // For non-iOS 13+ devices, permission is not required or granted by default
+        return true;
     };
 
     useEffect(() => {
-        if (isMobile && !permissionGranted) return;
         if (typeof Matter === 'undefined') {
             console.error("Matter.js not loaded");
             return;
@@ -176,9 +170,15 @@ export const StackSimulation = () => {
             engine.gravity.y = gravityY;
         };
 
-        if (permissionGranted) {
-             window.addEventListener('deviceorientation', handleOrientation);
-        }
+        const setupGyro = async () => {
+            const granted = await requestDeviceOrientationPermission();
+            if (granted) {
+                 window.addEventListener('deviceorientation', handleOrientation);
+            }
+        };
+        
+        // Automatically try to setup gyro on component mount
+        setupGyro();
 
         return () => {
             if (engineRef.current) {
@@ -186,21 +186,12 @@ export const StackSimulation = () => {
                 Engine.clear(engineRef.current.engine);
             }
             window.removeEventListener('resize', handleResize);
-            if (permissionGranted) {
-                window.removeEventListener('deviceorientation', handleOrientation);
-            }
+            window.removeEventListener('deviceorientation', handleOrientation);
         };
-    }, [permissionGranted, isMobile]);
+    }, []);
 
     return (
         <div ref={sceneRef} className="w-full h-full relative overflow-hidden bg-background">
-            {isMobile && !permissionGranted && (
-                <div className="absolute inset-0 flex items-center justify-center z-20">
-                    <Button onClick={requestDeviceOrientationPermission}>
-                        Включить гироскоп
-                    </Button>
-                </div>
-            )}
             {bodies.map(body => (
                 <div
                     key={body.id}
