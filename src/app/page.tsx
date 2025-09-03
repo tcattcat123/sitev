@@ -58,6 +58,7 @@ export default function Home() {
                     width={100}
                     height={100}
                     unoptimized
+                    className="grayscale"
                     onLoadingComplete={() => setTimeout(() => setShowGif(false), 3000)}
                  />
               ) : (
