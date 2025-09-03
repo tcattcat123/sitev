@@ -91,7 +91,7 @@ export default function Home() {
             <div className="font-mono text-xs sm:text-sm w-full md:w-auto md:max-w-xs shrink-0">
                 <div className="bg-background/50 text-foreground p-3 rounded-lg border border-primary/20 w-full shadow-inner backdrop-blur-sm">
                     <div className="flex items-center justify-between mb-2 pb-2 border-b border-border">
-                        <span className="text-foreground"><Typewriter text={`My TIME ${cvData.time}`} speed={50} /></span>
+                        <span className="text-foreground">{chinaTime && <Typewriter text={`My TIME ${cvData.time}`} speed={50} />}</span>
                     </div>
                     
                     <a href={`https://t.me/${cvData.telegram}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline inline-flex items-center gap-2">
@@ -291,5 +291,3 @@ export default function Home() {
     </main>
   );
 }
-
-    
