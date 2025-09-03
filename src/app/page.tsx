@@ -267,6 +267,13 @@ export default function Home() {
                   &gt; BUSINESS_AUTOMATION READY<br />
                   &gt; REMOTE_ACCESS ENABLED<br />
                   &gt; GLOBAL_MANAGEMENT ACTIVE</p>
+                  <br />
+                  <p className="font-bold">*** STOP: 0x00000000 BUSINESS_SUCCESS ***</p>
+                  <p>VITALIY.DEV - SYSTEM HALTED FOR PROFIT OPTIMIZATION</p>
+                  <br />
+                  <p>SITE BUILT WITH: Next.js, React, Tailwind CSS, ShadCN, Genkit AI, Matter.js</p>
+                  <br />
+                  <p>PRESS ANY KEY TO CONTINUE... OR CONTACT FOR SERVICES <span className="cursor-blink">_</span></p>
                 </CardContent>
               </Card>
             </section>
@@ -284,20 +291,9 @@ export default function Home() {
           </>
         )}
         
-        <section>
-          <Card className="w-full p-4 border-green-500 bg-green-500/20 text-foreground">
-            <CardContent className="p-0 font-mono text-sm">
-              <p className="font-bold">*** STOP: 0x00000000 BUSINESS_SUCCESS ***</p>
-              <p>VITALIY.DEV - SYSTEM HALTED FOR PROFIT OPTIMIZATION</p>
-              <br />
-              <p>SITE BUILT WITH: Next.js, React, Tailwind CSS, ShadCN, Genkit AI, Matter.js</p>
-              <br />
-              <p>PRESS ANY KEY TO CONTINUE... OR CONTACT FOR SERVICES <span className="cursor-blink">_</span></p>
-            </CardContent>
-          </Card>
-        </section>
-
       </div>
     </main>
   );
 }
+
+    
