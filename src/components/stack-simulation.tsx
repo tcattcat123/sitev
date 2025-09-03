@@ -88,7 +88,7 @@ export const StackSimulation = () => {
             return;
         }
 
-        const { Engine, Runner, Bodies, Composite, Events, Mouse, MouseConstraint } = Matter;
+        const { Engine, Runner, Bodies, Composite, Events, Mouse, MouseConstraint, Body } = Matter;
 
         const container = sceneRef.current;
         if (!container) return;
@@ -151,22 +151,22 @@ export const StackSimulation = () => {
         const handleResize = () => {
              if (!container || !engineRef.current) return;
              
-             Bodies.setPosition(ground, { x: container.clientWidth / 2, y: container.clientHeight });
-             Bodies.setVertices(ground, [
+             Body.setPosition(ground, { x: container.clientWidth / 2, y: container.clientHeight });
+             Body.setVertices(ground, [
                 { x: -10, y: container.clientHeight - 5 },
                 { x: container.clientWidth + 10, y: container.clientHeight - 5 },
                 { x: container.clientWidth + 10, y: container.clientHeight + 5 },
                 { x: -10, y: container.clientHeight + 5 }
              ]);
-             Bodies.setPosition(wallRight, { x: container.clientWidth + 5, y: container.clientHeight / 2 });
-             Bodies.setPosition(wallLeft, { x: -5, y: container.clientHeight / 2 });
-             Matter.Body.setVertices(wallLeft, [
+             Body.setPosition(wallRight, { x: container.clientWidth + 5, y: container.clientHeight / 2 });
+             Body.setPosition(wallLeft, { x: -5, y: container.clientHeight / 2 });
+             Body.setVertices(wallLeft, [
                 { x: -10, y: 0 },
                 { x: 0, y: 0 },
                 { x: 0, y: container.clientHeight },
                 { x: -10, y: container.clientHeight }
             ]);
-            Matter.Body.setVertices(wallRight, [
+            Body.setVertices(wallRight, [
                 { x: container.clientWidth, y: 0 },
                 { x: container.clientWidth + 10, y: 0 },
                 { x: container.clientWidth + 10, y: container.clientHeight },
