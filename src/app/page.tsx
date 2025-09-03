@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { ChevronDown, HardDrive } from 'lucide-react';
 
 export default function Home() {
-  const [activeContent, setActiveContent] = useState<'main' | 'about'>('main');
+  const [activeContent, setActiveContent] = useState<'main' | 'cv'>('main');
   const [showGif, setShowGif] = useState(false);
 
   const services = [
@@ -21,23 +21,68 @@ export default function Home() {
     { name: 'UI/UX', fileType: '.CFG' },
   ];
   
-  const aboutContent = (
-    <div className="text-sm">
-      <p className="font-bold">Стек:</p>
-      <p><span className="font-bold">Backend:</span> Go, Node.js, Python (Flask, FastAPI, Aiogram), PHP</p>
-      <p><span className="font-bold">Frontend:</span> Next.js, Tailwind CSS, ShadCN, MUI</p>
-      <p><span className="font-bold">DB:</span> PostgreSQL, GraphQL, MySQL, MSSQL, Supabase (другие реляционные не реляционные СУБД)</p>
-      <p><span className="font-bold">Tools:</span> Telegram API, Instagram API, парсеры, OpenAI API, Redis, Docker, UX/UI</p>
-      <br />
-      <p className="font-bold">Экспертиза в Telegram:</p>
-      <p>Боты на Aiogram (асинхронные, FSM, вебхуки)</p>
-      <p>Мини-приложения (Web Apps)</p>
-      <p>Платежи (Telegram)</p>
-      <p>Высоконагруженные системы (Redis, кеш, очереди)</p>
-      <br />
-      <p>Мой боевой опыт позволяет самостоятельно закрывать полный цикл разработки проекта от создания архитектуры до финального развертывания и поддержки.</p>
-      <br />
-      <p>У вас в распоряжении есть мощная единица и гибкий выбор технологий. Мои знания позволяют быстро адаптироваться к новым задачам.</p>
+  const cvContent = (
+    <div className="text-sm font-mono text-gray-800 bg-gray-100 p-6 rounded-lg">
+      <header className="grid grid-cols-1 md:grid-cols-3 gap-4 border-b border-gray-300 pb-4 mb-4">
+        <h1 className="text-4xl font-bold col-span-2 text-black">Alexander Balaban</h1>
+        <div className="text-left md:text-right text-black">
+          <p>Minsk</p>
+          <p>+375(29)813-70-67</p>
+          <p className="text-blue-600">balsas2908@gmail.com</p>
+        </div>
+      </header>
+  
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="md:col-span-2">
+          <section className="mb-6">
+            <h2 className="text-xl font-bold text-blue-700 mb-2">Objective</h2>
+            <ul className="list-none space-y-1 text-black">
+              <li>Windows applications development,</li>
+              <li>WEB applications development,</li>
+              <li>Highly communicative and interpersonal skills,</li>
+              <li>Self-motivated</li>
+            </ul>
+          </section>
+  
+          <section>
+            <h2 className="text-xl font-bold text-blue-700 mb-2">Experience</h2>
+            <div className="mb-4">
+              <h3 className="text-lg font-bold text-black">Dubz, PHP(Laravel framework)</h3>
+              <p className="text-sm text-gray-600">Jan 2025- now</p>
+              <p className="mt-2 text-black"><span className="font-bold">Project description:</span> Delivery system development. Main feature of the system to create tasks for agents for baggage delivery (from/to airport). Develop a B2C project to make orders for baggage delivery for customers from different airports. The main goal of this project is to redevelop existing one project but make it for multiple airports with self administrators.</p>
+              <p className="mt-2 text-black"><span className="font-bold">Responsibilities:</span> CRUD development, Swagger OA, take part in meetings to discuss tasks.</p>
+              <p className="mt-2 text-black"><span className="font-bold">Technologies and Tools:</span> PHP, MySQL, Laravel, Composer, Docker, GIT.</p>
+            </div>
+          </section>
+        </div>
+  
+        <div>
+          <h2 className="text-xl font-bold text-blue-700 mb-2">Skills</h2>
+          <ul className="list-none space-y-1 text-black">
+            <li>PHP (7.5 y)</li>
+            <li>Wordpress (6.5 y)</li>
+            <li>Laravel (6.5 y)</li>
+            <li>Symfony (4.5 y)</li>
+            <li>React (1.5 y)</li>
+            <li>Docker (4.5 y)</li>
+            <li>Oxid (0.5 y )</li>
+            <li>MySQL (7.5 y)</li>
+            <li>PostgreSQL(4 y)</li>
+            <li>.Net (1 y)</li>
+            <li>Oracle db (1 y)</li>
+            <li>Javascript (7.5 y)</li>
+            <li>HTML (7.5 y)</li>
+            <li>CSS (7.5 y)</li>
+            <li>Git (7 y)</li>
+            <li>Bitrix24 (4.5 y)</li>
+            <li>Telegram bot API (4.5 y)</li>
+            <li>Ubuntu (7 y)</li>
+            <li>Flutter (1 y)</li>
+            <li>Node.js (1 y)</li>
+            <li>Composer (7.5 y)</li>
+          </ul>
+        </div>
+      </div>
     </div>
   );
 
@@ -69,19 +114,15 @@ export default function Home() {
             </CardHeader>
           </Card>
           <nav className="col-span-2 flex flex-col gap-2">
-            <Button variant="outline" className="justify-start h-full text-base border-primary hover:bg-accent" onClick={() => setActiveContent(activeContent === 'about' ? 'main' : 'about')}>C:\&gt; ABOUT</Button>
+            <Button variant="outline" className="justify-start h-full text-base border-primary hover:bg-accent" onClick={() => setActiveContent(activeContent === 'cv' ? 'main' : 'cv')}>C:\&gt; CV</Button>
             <Button variant="outline" className="justify-start h-full text-base border-primary hover:bg-accent">C:\&gt; PROJECTS</Button>
             <Button variant="outline" className="justify-start h-full text-base border-primary hover:bg-accent">C:\&gt; CONTACT</Button>
           </nav>
         </header>
         
-        {activeContent === 'about' && (
+        {activeContent === 'cv' && (
           <section>
-            <Card className="w-full p-4 border-2 border-green-500 bg-green-500/20 text-foreground">
-              <CardContent className="p-0 font-mono">
-                {aboutContent}
-              </CardContent>
-            </Card>
+            {cvContent}
           </section>
         )}
 
