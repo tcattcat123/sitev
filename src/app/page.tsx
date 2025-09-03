@@ -85,8 +85,8 @@ export default function Home() {
     <div className="text-sm font-mono text-foreground bg-card p-4 sm:p-6 rounded-lg relative overflow-hidden border border-border">
         <header className="flex flex-col md:flex-row justify-between md:items-start gap-6 border-b border-border pb-4 mb-4">
             <div className="flex-grow">
-                <h1 className="text-4xl font-bold text-foreground">{cvData.name}</h1>
-                <p className="text-primary mt-1"><Typewriter text={cvData.email} /></p>
+                <h1 className="text-3xl sm:text-4xl font-bold text-foreground">{cvData.name}</h1>
+                <p className="text-primary mt-1 text-sm sm:text-base"><Typewriter text={cvData.email} /></p>
             </div>
             <div className="font-mono text-xs sm:text-sm w-full md:w-auto md:max-w-xs shrink-0">
                 <div className="bg-background/50 text-foreground p-3 rounded-lg border border-primary/20 w-full shadow-inner backdrop-blur-sm">
@@ -105,14 +105,14 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="md:col-span-2">
                 <section className="mb-6">
-                    <h2 className="text-xl font-bold text-primary mb-2">Objective</h2>
-                    <p className="text-foreground"><Typewriter text={cvData.objective} /></p>
+                    <h2 className="text-lg sm:text-xl font-bold text-primary mb-2">Objective</h2>
+                    <p className="text-foreground text-xs sm:text-sm"><Typewriter text={cvData.objective} /></p>
                 </section>
 
                 <section>
-                    <h2 className="text-xl font-bold text-primary mb-2">Experience</h2>
-                    <div className="mb-4 space-y-2 text-foreground">
-                        <h3 className="text-lg font-bold">{cvData.experience.title}</h3>
+                    <h2 className="text-lg sm:text-xl font-bold text-primary mb-2">Experience</h2>
+                    <div className="mb-4 space-y-2 text-foreground text-xs sm:text-sm">
+                        <h3 className="text-base sm:text-lg font-bold">{cvData.experience.title}</h3>
                         <p><span className="font-bold">Project description:</span> <Typewriter text={cvData.experience.project} /></p>
                         <p><span className="font-bold">Responsibilities:</span> <Typewriter text={cvData.experience.responsibilities} /></p>
                         <p><span className="font-bold">Expertise in Telegram:</span> <Typewriter text={cvData.experience.telegramExpertise} /></p>
@@ -121,8 +121,8 @@ export default function Home() {
             </div>
 
             <div className="md:col-span-1">
-                <h2 className="text-xl font-bold text-primary mb-2">Skills</h2>
-                <ul className="list-none space-y-1 text-foreground">
+                <h2 className="text-lg sm:text-xl font-bold text-primary mb-2">Skills</h2>
+                <ul className="list-none space-y-1 text-foreground text-xs sm:text-sm">
                     {cvData.skills.map((skill, index) => (
                         <li key={index}><Typewriter text={skill} delay={index * 50} /></li>
                     ))}
@@ -163,7 +163,7 @@ export default function Home() {
     return (
       <Button 
         variant="outline" 
-        className="justify-start h-full text-base border-primary hover:bg-accent" 
+        className="justify-start h-full text-sm sm:text-base border-primary hover:bg-accent" 
         onClick={() => {
           if (label === '..') handleNavClick('main')
           else if (content === 'projects' || content === 'cv') handleNavClick(content)
@@ -180,9 +180,9 @@ export default function Home() {
     <main className="flex flex-col items-center min-h-screen p-2 sm:p-4">
       <div className="w-full max-w-lg mx-auto space-y-2">
         
-        <header className="grid grid-cols-3 gap-2">
+        <header className="flex gap-2">
           <Card 
-            className="col-span-1 aspect-square flex items-center justify-center text-center p-2 border-primary cursor-pointer relative overflow-hidden"
+            className="w-1/3 aspect-square flex items-center justify-center text-center p-2 border-primary cursor-pointer relative overflow-hidden"
             onClick={() => !showGif && setShowGif(true)}
           >
               {showGif ? (
@@ -211,7 +211,7 @@ export default function Home() {
                 </CardHeader>
               )}
           </Card>
-          <nav className="col-span-2 flex flex-col gap-2">
+          <nav className="w-2/3 flex flex-col gap-2">
             {activeContent !== 'main' ? navButton('..', 'main') : navButton('CV', 'cv')}
             {activeContent === 'main' ? navButton('PROJECTS', 'projects') : activeContent === 'projects' ? null : navButton('PROJECTS', 'projects')}
             {activeContent !== 'projects' && navButton('CONTACT', 'main')}
@@ -249,7 +249,7 @@ export default function Home() {
                           onClick={() => handleServiceClick(service.name, service.description)}
                         >
                           <div className="flex flex-col">
-                              <span>{service.name}</span>
+                              <span className="text-sm sm:text-base">{service.name}</span>
                               <span className="text-xs text-muted-foreground">{service.fileType}</span>
                           </div>
                           <span className="text-2xl leading-none">→</span>
@@ -261,7 +261,7 @@ export default function Home() {
             
             <section>
               <Card className="w-full p-4 border-primary bg-primary/20 text-foreground">
-                <CardContent className="p-0 font-mono text-sm">
+                <CardContent className="p-0 font-mono text-xs sm:text-sm">
                   <p className="font-bold">*** STOP: 0x00000000 BUSINESS_SUCCESS ***</p>
                   <p>VITALIY.DEV - SYSTEM HALTED FOR PROFIT OPTIMIZATION</p>
                   <br />
@@ -292,3 +292,5 @@ export default function Home() {
     </main>
   );
 }
+
+    
