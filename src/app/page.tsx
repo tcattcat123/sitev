@@ -1,6 +1,6 @@
 
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { TextScramble } from '@/components/text-scramble';
 import { StackSimulation } from '@/components/stack-simulation';
@@ -11,6 +11,22 @@ import { ChevronDown, HardDrive } from 'lucide-react';
 export default function Home() {
   const [activeContent, setActiveContent] = useState<'main' | 'cv'>('main');
   const [showGif, setShowGif] = useState(false);
+  const [chinaTime, setChinaTime] = useState('');
+
+  useEffect(() => {
+    const getChinaTime = () => {
+      const now = new Date();
+      const utcOffset = now.getTimezoneOffset() * 60000;
+      const chinaOffset = 8 * 3600000;
+      const chinaDate = new Date(now.getTime() + utcOffset + chinaOffset);
+      return chinaDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+    };
+
+    setChinaTime(getChinaTime());
+    const timer = setInterval(() => setChinaTime(getChinaTime()), 60000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   const services = [
     { name: 'Боты', fileType: '.EXE' },
@@ -26,9 +42,9 @@ export default function Home() {
       <header className="grid grid-cols-1 md:grid-cols-3 gap-4 border-b border-gray-300 pb-4 mb-4">
         <h1 className="text-4xl font-bold col-span-2 text-black">Vitaliy Petrov</h1>
         <div className="text-left md:text-right text-black">
-          <p>Minsk</p>
-          <p>+375(29)813-70-67</p>
-          <p className="text-blue-600">balsas2908@gmail.com</p>
+            <p>My time: {chinaTime}</p>
+            <p className="text-blue-600">telegram: @yofox</p>
+            <p className="text-blue-600">terakot2022@gmail.com</p>
         </div>
       </header>
   
@@ -184,3 +200,5 @@ export default function Home() {
     </main>
   );
 }
+
+    
