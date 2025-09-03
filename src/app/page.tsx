@@ -274,12 +274,12 @@ export default function Home() {
               </Card>
             </section>
 
-            <section className="h-64">
-                <Card className="w-full h-full p-1 border-primary">
-                  <CardHeader className="absolute p-2 z-10">
+            <section className="flex-grow min-h-[256px]">
+                <Card className="w-full h-full p-1 border-primary flex flex-col">
+                  <CardHeader className="p-2 z-10">
                     <CardTitle className="text-xs text-muted-foreground">C:\&gt; LOAD STACK</CardTitle>
                   </CardHeader>
-                  <CardContent className="p-0 h-full w-full overflow-hidden">
+                  <CardContent className="p-0 h-full w-full overflow-hidden flex-grow">
                     <StackSimulation />
                   </CardContent>
                 </Card>

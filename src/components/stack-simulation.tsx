@@ -149,10 +149,10 @@ export const StackSimulation = () => {
              
              Bodies.setPosition(ground, { x: container.clientWidth / 2, y: container.clientHeight + 5 });
              Bodies.setVertices(ground, [
-                { x: 0, y: container.clientHeight - 5 },
-                { x: container.clientWidth, y: container.clientHeight - 5 },
-                { x: container.clientWidth, y: container.clientHeight + 15 },
-                { x: 0, y: container.clientHeight + 15 }
+                { x: -10, y: container.clientHeight },
+                { x: container.clientWidth + 10, y: container.clientHeight },
+                { x: container.clientWidth + 10, y: container.clientHeight + 10 },
+                { x: -10, y: container.clientHeight + 10 }
              ]);
              Bodies.setPosition(wallRight, { x: container.clientWidth + 5, y: container.clientHeight / 2 });
              Bodies.setPosition(wallLeft, { x: -5, y: container.clientHeight / 2 });
@@ -170,6 +170,8 @@ export const StackSimulation = () => {
             ]);
         };
         window.addEventListener('resize', handleResize);
+        handleResize();
+
 
         const handleOrientation = (event: DeviceOrientationEvent) => {
             if (!engine.gravity || !event.gamma || !event.beta) return;
