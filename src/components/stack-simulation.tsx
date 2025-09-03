@@ -18,20 +18,20 @@ declare global {
 type StackCategory = 'frontend' | 'backend' | 'tool';
 
 const stackItems: { name: string; category: StackCategory; width: number, height: number }[] = [
-    { name: 'React', category: 'frontend', width: 60, height: 24 },
-    { name: 'Next.js', category: 'frontend', width: 70, height: 24 },
-    { name: 'Tailwind', category: 'frontend', width: 80, height: 24 },
-    { name: 'Go', category: 'backend', width: 40, height: 24 },
-    { name: 'Node.js', category: 'backend', width: 70, height: 24 },
-    { name: 'Python', category: 'backend', width: 70, height: 24 },
-    { name: 'PHP', category: 'backend', width: 50, height: 24 },
-    { name: 'PostgreSQL', category: 'backend', width: 100, height: 24 },
-    { name: 'MySQL', category: 'backend', width: 60, height: 24 },
-    { name: 'MongoDB', category: 'backend', width: 90, height: 24 },
-    { name: 'Supabase', category: 'tool', width: 80, height: 24 },
-    { name: 'OpenAI', category: 'tool', width: 60, height: 24 },
-    { name: 'Telegram', category: 'tool', width: 80, height: 24 },
-    { name: 'Parsers', category: 'tool', width: 70, height: 24 },
+    { name: 'React', category: 'frontend', width: 30, height: 12 },
+    { name: 'Next.js', category: 'frontend', width: 35, height: 12 },
+    { name: 'Tailwind', category: 'frontend', width: 40, height: 12 },
+    { name: 'Go', category: 'backend', width: 20, height: 12 },
+    { name: 'Node.js', category: 'backend', width: 35, height: 12 },
+    { name: 'Python', category: 'backend', width: 35, height: 12 },
+    { name: 'PHP', category: 'backend', width: 25, height: 12 },
+    { name: 'PostgreSQL', category: 'backend', width: 50, height: 12 },
+    { name: 'MySQL', category: 'backend', width: 30, height: 12 },
+    { name: 'MongoDB', category: 'backend', width: 45, height: 12 },
+    { name: 'Supabase', category: 'tool', width: 40, height: 12 },
+    { name: 'OpenAI', category: 'tool', width: 30, height: 12 },
+    { name: 'Telegram', category: 'tool', width: 40, height: 12 },
+    { name: 'Parsers', category: 'tool', width: 35, height: 12 },
 ];
 
 const categoryColors: Record<StackCategory, string> = {
@@ -107,9 +107,9 @@ export const StackSimulation = () => {
             )
         );
 
-        const ground = Bodies.rectangle(container.clientWidth / 2, 288, container.clientWidth + 20, 10, { isStatic: true, render: { visible: false } });
-        const wallLeft = Bodies.rectangle(-5, 144, 10, 288, { isStatic: true, render: { visible: false } });
-        const wallRight = Bodies.rectangle(container.clientWidth + 5, 144, 10, 288, { isStatic: true, render: { visible: false } });
+        const ground = Bodies.rectangle(container.clientWidth / 2, 192, container.clientWidth + 20, 10, { isStatic: true, render: { visible: false } });
+        const wallLeft = Bodies.rectangle(-5, 96, 10, 192, { isStatic: true, render: { visible: false } });
+        const wallRight = Bodies.rectangle(container.clientWidth + 5, 96, 10, 192, { isStatic: true, render: { visible: false } });
 
         Composite.add(engine.world, [...matterBodies, ground, wallLeft, wallRight]);
         
@@ -146,14 +146,14 @@ export const StackSimulation = () => {
         const handleResize = () => {
              if (!container || !engineRef.current) return;
              
-             Bodies.setPosition(ground, { x: container.clientWidth / 2, y: 288 });
+             Bodies.setPosition(ground, { x: container.clientWidth / 2, y: 192 });
              Bodies.setVertices(ground, [
-                { x: 0, y: 288 },
-                { x: container.clientWidth, y: 288 },
-                { x: container.clientWidth, y: 298 },
-                { x: 0, y: 298 }
+                { x: 0, y: 192 },
+                { x: container.clientWidth, y: 202 },
+                { x: container.clientWidth, y: 202 },
+                { x: 0, y: 192 }
              ]);
-             Bodies.setPosition(wallRight, { x: container.clientWidth + 5, y: 144 });
+             Bodies.setPosition(wallRight, { x: container.clientWidth + 5, y: 96 });
         };
         window.addEventListener('resize', handleResize);
 

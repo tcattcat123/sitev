@@ -274,7 +274,7 @@ export default function Home() {
               </Card>
             </section>
 
-            <section className="h-64">
+            <section className="h-48">
                 <Card className="w-full h-full p-1 border-primary">
                   <CardHeader className="absolute p-2 z-10">
                     <CardTitle className="text-xs text-muted-foreground">C:\&gt; LOAD STACK</CardTitle>
