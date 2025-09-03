@@ -62,7 +62,7 @@ export default function Home() {
   ];
   
   const cvContent = (
-    <div className="text-sm font-mono text-gray-800 bg-gray-100 p-4 sm:p-6 rounded-lg">
+    <div className="text-sm font-mono text-gray-800 bg-gray-100 p-4 sm:p-6 rounded-lg relative z-[2001]">
       <header className="grid grid-cols-1 md:grid-cols-3 gap-4 border-b border-gray-300 pb-4 mb-4">
         <h1 className="text-4xl font-bold col-span-1 md:col-span-2 text-black">Vitaliy Petrov</h1>
         <div className="text-left text-black text-xs sm:text-sm">
