@@ -7,7 +7,7 @@ import { StackSimulation } from '@/components/stack-simulation';
 import { Typewriter } from '@/components/typewriter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { HardDrive, Loader2, Send } from 'lucide-react';
+import { HardDrive, Send, Check } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast"
 
 export default function Home() {
@@ -82,11 +82,10 @@ export default function Home() {
                 <p className="text-primary mt-1"><Typewriter text={cvData.email} /></p>
             </div>
             <div className="font-mono text-xs sm:text-sm">
-              <div className="bg-background text-foreground p-3 rounded-lg border border-border w-full shadow-inner">
+              <div className="bg-background/50 text-foreground p-3 rounded-lg border border-primary/20 w-full shadow-inner backdrop-blur-sm">
                   <div className="flex items-center mb-2 pb-2 border-b border-border">
-                      <div className="w-2.5 h-2.5 rounded-full bg-red-500 mr-1.5"></div>
-                      <div className="w-2.5 h-2.5 rounded-full bg-yellow-500 mr-1.5"></div>
-                      <div className="w-2.5 h-2.5 rounded-full bg-green-500"></div>
+                      <Check size={16} className="text-green-500" />
+                      <span className="ml-2 text-xs text-green-500">ACCESS GRANTED</span>
                   </div>
                   <div className="text-primary"><Typewriter text={`> TIME: ${cvData.time}`} speed={50} /></div>
                   
@@ -268,3 +267,5 @@ export default function Home() {
     </main>
   );
 }
+
+    
