@@ -102,8 +102,8 @@ export default function Home() {
             </div>
         </header>
 
-        <div className="grid grid-cols-3 gap-8">
-            <div className="col-span-3 md:col-span-2">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="md:col-span-2">
                 <section className="mb-6">
                     <h2 className="text-xl font-bold text-primary mb-2">Objective</h2>
                     <p className="text-foreground"><Typewriter text={cvData.objective} /></p>
@@ -120,7 +120,7 @@ export default function Home() {
                 </section>
             </div>
 
-            <div className="col-span-3 md:col-span-1">
+            <div className="md:col-span-1">
                 <h2 className="text-xl font-bold text-primary mb-2">Skills</h2>
                 <ul className="list-none space-y-1 text-foreground">
                     {cvData.skills.map((skill, index) => (
@@ -178,11 +178,11 @@ export default function Home() {
 
   return (
     <main className="flex flex-col items-center min-h-screen p-2 sm:p-4">
-      <div className="w-full max-w-md mx-auto space-y-2">
+      <div className="w-full max-w-lg mx-auto space-y-2">
         
         <header className="grid grid-cols-3 gap-2">
           <Card 
-            className="col-span-2 sm:col-span-1 aspect-square flex items-center justify-center text-center p-2 border-primary cursor-pointer relative overflow-hidden"
+            className="col-span-1 aspect-square flex items-center justify-center text-center p-2 border-primary cursor-pointer relative overflow-hidden"
             onClick={() => !showGif && setShowGif(true)}
           >
               {showGif ? (
@@ -211,7 +211,7 @@ export default function Home() {
                 </CardHeader>
               )}
           </Card>
-          <nav className="col-span-1 sm:col-span-2 flex flex-col gap-2">
+          <nav className="col-span-2 flex flex-col gap-2">
             {activeContent !== 'main' ? navButton('..', 'main') : navButton('CV', 'cv')}
             {activeContent === 'main' ? navButton('PROJECTS', 'projects') : activeContent === 'projects' ? null : navButton('PROJECTS', 'projects')}
             {activeContent !== 'projects' && navButton('CONTACT', 'main')}
@@ -265,7 +265,7 @@ export default function Home() {
                   <p className="font-bold">*** STOP: 0x00000000 BUSINESS_SUCCESS ***</p>
                   <p>VITALIY.DEV - SYSTEM HALTED FOR PROFIT OPTIMIZATION</p>
                   <br />
-                  <p>SITE BUILT WITH: Next.js, React, Tailwind CSS, ShadCN, Genkit AI, Matter.js</p>
+                  <p>SITE BUILT WITH: Next.js, React, Tailwind CSS, ShadCN, Genkit AI, Matter.js, Framer Motion</p>
                   <br />
                   <div className="relative">
                      <p>PRESS ANY KEY TO CONTINUE...<span className="cursor-blink">_</span></p>

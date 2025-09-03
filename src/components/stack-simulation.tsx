@@ -4,27 +4,33 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { getTiltControlledGravity, type TiltControlledGravityInput } from '@/ai/flows/dynamic-stack-tilt';
 import { Button } from './ui/button';
+import Matter from 'matter-js';
+import { motion } from 'framer-motion';
+import { Badge } from './ui/badge';
 
-declare var Matter: any;
+const stackItems = [
+    { name: 'React' }, { name: 'Next.js' }, { name: 'Tailwind' },
+    { name: 'Go' }, { name: 'Node.js' }, { name: 'Python' }, 
+    { name: 'PHP' }, { name: 'PostgreSQL' }, { name: 'MySQL' }, 
+    { name: 'Supabase' }, { name: 'MongoDB' }, { name: 'OpenAI' }, 
+    { name: 'Telegram' }, { name: 'Parsers' },
+];
 
 export const StackSimulation = () => {
     const sceneRef = useRef<HTMLDivElement>(null);
-    const engineRef = useRef<any>(null);
-    const runnerRef = useRef<any>(null);
-    const renderRef = useRef<any>(null);
+    const engineRef = useRef<Matter.Engine | null>(null);
+    const runnerRef = useRef<Matter.Runner | null>(null);
+    const renderRef = useRef<Matter.Render | null>(null);
     const [hasPermission, setHasPermission] = useState<boolean | null>(null);
     const isSetup = useRef(false);
+    const [isClient, setIsClient] = useState(false);
 
-    const stackItems = [
-        { name: 'React' }, { name: 'Next.js' }, { name: 'Tailwind' },
-        { name: 'Go' }, { name: 'Node.js' }, { name: 'Python' }, 
-        { name: 'PHP' }, { name: 'PostgreSQL' }, { name: 'MySQL' }, 
-        { name: 'Supabase' }, { name: 'MongoDB' }, { name: 'OpenAI' }, 
-        { name: 'Telegram' }, { name: 'Parsers' },
-    ];
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const cleanupMatter = useCallback(() => {
-        if (typeof Matter === 'undefined' || !isSetup.current) return;
+        if (!isSetup.current) return;
         if (renderRef.current) {
             Matter.Render.stop(renderRef.current);
             if (renderRef.current.canvas) {
@@ -47,7 +53,7 @@ export const StackSimulation = () => {
     }, []);
 
     const setupMatter = useCallback(() => {
-        if (!sceneRef.current || typeof Matter === 'undefined' || isSetup.current) return;
+        if (!sceneRef.current || isSetup.current) return;
         
         isSetup.current = true;
 
@@ -128,23 +134,30 @@ export const StackSimulation = () => {
             hasDeviceOrientation: true,
         };
 
-        const { gravityX, gravityY } = await getTiltControlledGravity(input);
-        engineRef.current.world.gravity.x = gravityX;
-        engineRef.current.world.gravity.y = gravityY;
+        try {
+            const { gravityX, gravityY } = await getTiltControlledGravity(input);
+            if(engineRef.current) {
+                engineRef.current.world.gravity.x = gravityX;
+                engineRef.current.world.gravity.y = gravityY;
+            }
+        } catch(e) {
+        }
+
     }, []);
     
     const resimulate = useCallback(async () => {
-        if (typeof Matter === 'undefined' || !sceneRef.current) return;
-        const { shouldResimulate } = await getTiltControlledGravity({ hasDeviceOrientation: false });
-        if (shouldResimulate) {
-            cleanupMatter();
-            // A short delay to ensure cleanup completes before setup
-            setTimeout(setupMatter, 100);
+        try {
+            const { shouldResimulate } = await getTiltControlledGravity({ hasDeviceOrientation: false });
+            if (shouldResimulate) {
+                cleanupMatter();
+                setTimeout(setupMatter, 100);
+            }
+        } catch(e) {
+
         }
     }, [cleanupMatter, setupMatter]);
     
     const requestPermission = useCallback(() => {
-        // Check for iOS 13+
         if (typeof (DeviceOrientationEvent as any).requestPermission === 'function') {
             (DeviceOrientationEvent as any).requestPermission()
                 .then((permissionState: 'granted' | 'denied' | 'prompt') => {
@@ -152,7 +165,6 @@ export const StackSimulation = () => {
                 })
                 .catch(() => setHasPermission(false));
         } else {
-            // Handle non-iOS 13+ devices
              if ('ondeviceorientation' in window) {
                 setHasPermission(true);
             } else {
@@ -162,37 +174,35 @@ export const StackSimulation = () => {
     }, []);
 
     useEffect(() => {
-        let checkInterval: NodeJS.Timeout;
+        if(!isClient) return;
+        
+        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        if(isTouchDevice) {
+            setHasPermission(null);
+        } else {
+            setHasPermission(false);
+        }
 
-        const init = () => {
-            if (typeof Matter !== 'undefined') {
-                clearInterval(checkInterval);
-                setupMatter();
-                if (typeof (DeviceOrientationEvent as any).requestPermission !== 'function' && 'ondeviceorientation' in window) {
-                   // For non-iOS devices that support it, but don't require permission.
-                   // We don't set to true immediately to still show the button for devices that need it.
-                }
-            }
-        };
-
-        checkInterval = setInterval(init, 100);
+        setupMatter();
 
         return () => {
-            clearInterval(checkInterval);
             cleanupMatter();
         };
-    }, [setupMatter, cleanupMatter]);
+    }, [isClient, setupMatter, cleanupMatter]);
 
     useEffect(() => {
+        if(!isClient) return;
+
         if (hasPermission) {
             window.addEventListener('deviceorientation', handleOrientation);
         } else {
             window.removeEventListener('deviceorientation', handleOrientation);
         }
         return () => window.removeEventListener('deviceorientation', handleOrientation);
-    }, [hasPermission, handleOrientation]);
+    }, [hasPermission, handleOrientation, isClient]);
 
     useEffect(() => {
+        if(!isClient) return;
         let resimulateInterval: NodeJS.Timeout | undefined;
         if (hasPermission === false) {
              resimulateInterval = setInterval(resimulate, 8000);
@@ -202,17 +212,49 @@ export const StackSimulation = () => {
                 clearInterval(resimulateInterval);
             }
         };
-    }, [hasPermission, resimulate]);
+    }, [hasPermission, resimulate, isClient]);
+
+
+    if (!isClient) {
+        return null; 
+    }
+
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+    if (isTouchDevice && hasPermission !== true) {
+        return (
+            <div className="relative h-full w-full flex flex-wrap items-center justify-center gap-2 p-4 overflow-hidden">
+                {hasPermission === null && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 z-10 p-4">
+                        <Button variant="outline" className="w-full" onClick={requestPermission}>
+                            ENABLE TILT CONTROLS
+                        </Button>
+                    </div>
+                )}
+                {stackItems.map((item, index) => (
+                    <motion.div
+                        key={index}
+                        drag
+                        dragConstraints={{
+                            top: -50,
+                            left: -50,
+                            right: 50,
+                            bottom: 50,
+                        }}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                    >
+                        <Badge variant="secondary" className="text-sm font-mono cursor-pointer bg-primary text-primary-foreground">
+                            {item.name}
+                        </Badge>
+                    </motion.div>
+                ))}
+            </div>
+        )
+    }
 
     return (
         <div ref={sceneRef} className="h-full w-full relative">
-            {hasPermission === null && (
-                 <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 z-10 p-4">
-                    <Button variant="outline" className="w-full" onClick={requestPermission}>
-                        ENABLE TILT CONTROLS
-                    </Button>
-                </div>
-            )}
             {hasPermission === false && (
                 <div className="absolute bottom-2 left-2 text-xs text-muted-foreground z-10">
                     Tilt controls disabled. Auto-simulating...
