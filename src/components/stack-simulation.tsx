@@ -18,20 +18,20 @@ declare global {
 type StackCategory = 'frontend' | 'backend' | 'tool';
 
 const stackItems: { name: string; category: StackCategory; width: number, height: number }[] = [
-    { name: 'React', category: 'frontend', width: 30, height: 12 },
-    { name: 'Next.js', category: 'frontend', width: 35, height: 12 },
-    { name: 'Tailwind', category: 'frontend', width: 40, height: 12 },
-    { name: 'Go', category: 'backend', width: 20, height: 12 },
-    { name: 'Node.js', category: 'backend', width: 35, height: 12 },
-    { name: 'Python', category: 'backend', width: 35, height: 12 },
-    { name: 'PHP', category: 'backend', width: 25, height: 12 },
-    { name: 'PostgreSQL', category: 'backend', width: 50, height: 12 },
-    { name: 'MySQL', category: 'backend', width: 30, height: 12 },
-    { name: 'MongoDB', category: 'backend', width: 45, height: 12 },
-    { name: 'Supabase', category: 'tool', width: 40, height: 12 },
-    { name: 'OpenAI', category: 'tool', width: 30, height: 12 },
-    { name: 'Telegram', category: 'tool', width: 40, height: 12 },
-    { name: 'Parsers', category: 'tool', width: 35, height: 12 },
+    { name: 'React', category: 'frontend', width: 15, height: 6 },
+    { name: 'Next.js', category: 'frontend', width: 17, height: 6 },
+    { name: 'Tailwind', category: 'frontend', width: 20, height: 6 },
+    { name: 'Go', category: 'backend', width: 10, height: 6 },
+    { name: 'Node.js', category: 'backend', width: 17, height: 6 },
+    { name: 'Python', category: 'backend', width: 17, height: 6 },
+    { name: 'PHP', category: 'backend', width: 12, height: 6 },
+    { name: 'PostgreSQL', category: 'backend', width: 25, height: 6 },
+    { name: 'MySQL', category: 'backend', width: 15, height: 6 },
+    { name: 'MongoDB', category: 'backend', width: 22, height: 6 },
+    { name: 'Supabase', category: 'tool', width: 20, height: 6 },
+    { name: 'OpenAI', category: 'tool', width: 15, height: 6 },
+    { name: 'Telegram', category: 'tool', width: 20, height: 6 },
+    { name: 'Parsers', category: 'tool', width: 17, height: 6 },
 ];
 
 const categoryColors: Record<StackCategory, string> = {
@@ -107,7 +107,7 @@ export const StackSimulation = () => {
             )
         );
 
-        const ground = Bodies.rectangle(container.clientWidth / 2, 172, container.clientWidth + 20, 10, { isStatic: true, render: { visible: false } });
+        const ground = Bodies.rectangle(container.clientWidth / 2, 182, container.clientWidth + 20, 10, { isStatic: true, render: { visible: false } });
         const wallLeft = Bodies.rectangle(-5, 96, 10, 192, { isStatic: true, render: { visible: false } });
         const wallRight = Bodies.rectangle(container.clientWidth + 5, 96, 10, 192, { isStatic: true, render: { visible: false } });
 
@@ -146,12 +146,12 @@ export const StackSimulation = () => {
         const handleResize = () => {
              if (!container || !engineRef.current) return;
              
-             Bodies.setPosition(ground, { x: container.clientWidth / 2, y: 172 });
+             Bodies.setPosition(ground, { x: container.clientWidth / 2, y: 182 });
              Bodies.setVertices(ground, [
-                { x: 0, y: 172 },
+                { x: 0, y: 182 },
                 { x: container.clientWidth, y: 182 },
-                { x: container.clientWidth, y: 182 },
-                { x: 0, y: 172 }
+                { x: container.clientWidth, y: 192 },
+                { x: 0, y: 192 }
              ]);
              Bodies.setPosition(wallRight, { x: container.clientWidth + 5, y: 96 });
         };
