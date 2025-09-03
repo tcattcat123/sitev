@@ -76,7 +76,7 @@ export default function Home() {
         
         {activeContent === 'about' && (
           <section>
-            <Card className="w-full p-4 border-2 border-blue-500 bg-blue-900/80 text-white">
+            <Card className="w-full p-4 border-2 border-primary bg-blue-900/80 text-white">
               <CardContent className="p-0 font-mono">
                 {aboutContent}
               </CardContent>
@@ -109,7 +109,7 @@ export default function Home() {
             </section>
             
             <section>
-              <Card className="w-full p-4 border-2 border-blue-500 bg-blue-900/80 text-white">
+              <Card className="w-full p-4 border-primary bg-blue-900/80 text-white">
                 <CardContent className="p-0 font-mono text-sm">
                   <p>SYSTEM STATUS: OPERATIONAL<br />
                   &gt; PROFIT_INCREASE.EXE RUNNING...<br />
@@ -135,7 +135,7 @@ export default function Home() {
         )}
         
         <section>
-          <Card className="w-full p-4 border-2 border-blue-500 bg-blue-900/80 text-white">
+          <Card className="w-full p-4 border-primary bg-blue-900/80 text-white">
             <CardContent className="p-0 font-mono">
               <p className="font-bold">*** STOP: 0x00000000 BUSINESS_SUCCESS ***</p>
               <p>VITALIY.DEV - SYSTEM HALTED FOR PROFIT OPTIMIZATION</p>
