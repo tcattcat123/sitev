@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 
-export const Typewriter: React.FC<{ text: string; speed?: number; delay?: number; className?: string }> = ({ text, speed = 2, delay = 0, className }) => {
+export const Typewriter: React.FC<{ text: string; speed?: number; delay?: number; className?: string }> = ({ text, speed = 20, delay = 0, className }) => {
   const [displayedText, setDisplayedText] = useState('');
   const [startTyping, setStartTyping] = useState(false);
   const containerRef = useRef<HTMLSpanElement>(null);
@@ -30,7 +30,7 @@ export const Typewriter: React.FC<{ text: string; speed?: number; delay?: number
     setDisplayedText(''); // Reset on text change after delay
     let i = 0;
     const typingInterval = setInterval(() => {
-      if (i < textLength) {
+      if (i < text.length) {
         // Use original text with HTML for rendering
         setDisplayedText(text.substring(0, i + 1));
         i++;
@@ -44,7 +44,7 @@ export const Typewriter: React.FC<{ text: string; speed?: number; delay?: number
     return () => {
       clearInterval(typingInterval);
     };
-  }, [text, speed, startTyping, textLength]);
+  }, [text, speed, startTyping]);
   
   // Check if final text is fully displayed
   const isCompleted = (() => {

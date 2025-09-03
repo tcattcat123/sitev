@@ -81,12 +81,20 @@ export default function Home() {
                 <h1 className="text-4xl font-bold text-black">{cvData.name}</h1>
                 <p className="text-blue-600 mt-1">{cvData.email}</p>
             </div>
-            <div className="text-left md:text-right text-black text-xs sm:text-sm">
-                <p>My time: {cvData.time}</p>
-                <a href={`https://t.me/${cvData.telegram}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 inline-flex items-center gap-2 hover:underline">
-                    <Send size={14} />
-                    <span>telegram: @{cvData.telegram}</span>
-                </a>
+            <div className="font-mono text-xs sm:text-sm">
+              <div className="bg-black text-green-400 p-3 rounded-lg border border-green-500 w-full">
+                  <div className="flex items-center mb-2">
+                      <div className="w-2.5 h-2.5 rounded-full bg-red-500 mr-1.5"></div>
+                      <div className="w-2.5 h-2.5 rounded-full bg-yellow-500 mr-1.5"></div>
+                      <div className="w-2.5 h-2.5 rounded-full bg-green-500"></div>
+                  </div>
+                  <Typewriter text={`> TIME: ${cvData.time}`} speed={50} />
+                  <br />
+                  <a href={`https://t.me/${cvData.telegram}`} target="_blank" rel="noopener noreferrer" className="text-green-400 hover:underline inline-flex items-center gap-2">
+                      <Send size={12} className="inline-block" />
+                      <Typewriter text={`@${cvData.telegram}`} speed={50} delay={1000} />
+                  </a>
+              </div>
             </div>
         </header>
 
@@ -112,7 +120,7 @@ export default function Home() {
                 <h2 className="text-xl font-bold text-blue-700 mb-2">Skills</h2>
                 <ul className="list-none space-y-1 text-black">
                     {cvData.skills.map((skill, index) => (
-                        <li key={index}><Typewriter text={skill} delay={index * 100} /></li>
+                        <li key={index}><Typewriter text={skill} delay={index * 50} /></li>
                     ))}
                 </ul>
             </div>
