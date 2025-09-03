@@ -176,8 +176,8 @@ export default function Home() {
 
   return (
     <main className="p-2 sm:p-4 min-h-screen flex flex-col relative">
-      <div className="w-full max-w-xl mx-auto flex flex-col flex-grow">
       <Toaster />
+      <div className="w-full max-w-xl mx-auto flex flex-col flex-grow">
         
         <header className="flex gap-2 mb-2">
           <Card 
