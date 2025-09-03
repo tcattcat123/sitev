@@ -3,7 +3,6 @@
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import Matter from 'matter-js';
-import { getTiltControlledGravity, TiltControlledGravityInput } from '@/ai/flows/dynamic-stack-tilt';
 
 const stackItems = [
     { name: 'React' }, { name: 'Next.js' }, { name: 'Tailwind' },
@@ -24,67 +23,42 @@ const colors = [
 
 export const StackSimulation = () => {
     const sceneRef = useRef<HTMLDivElement>(null);
+    const [isClient, setIsClient] = useState(false);
     const engineRef = useRef<Matter.Engine | null>(null);
     const runnerRef = useRef<Matter.Runner | null>(null);
     const renderRef = useRef<Matter.Render | null>(null);
-    const [isClient, setIsClient] = useState(false);
-    const isSetup = useRef(false);
-    const [hasDeviceOrientation, setHasDeviceOrientation] = useState(false);
-    const tiltLR = useRef(0);
-    const tiltFB = useRef(0);
-    const simulationIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
         setIsClient(true);
     }, []);
 
-    const handleOrientation = useCallback((event: DeviceOrientationEvent) => {
-        if (event.gamma !== null && event.beta !== null) {
-            if (!hasDeviceOrientation) setHasDeviceOrientation(true);
-            tiltLR.current = event.gamma; // left-right tilt in degrees, range [-90, 90]
-            tiltFB.current = event.beta;  // front-back tilt in degrees, range [-180, 180]
-        }
-    }, [hasDeviceOrientation]);
-
-    const cleanupMatter = useCallback(() => {
-        if (simulationIntervalRef.current) {
-            clearInterval(simulationIntervalRef.current);
-            simulationIntervalRef.current = null;
-        }
-        if (!isSetup.current) return;
-        
+    const cleanup = useCallback(() => {
         if (renderRef.current) {
             Matter.Render.stop(renderRef.current);
             if (renderRef.current.canvas) {
                 renderRef.current.canvas.remove();
             }
-            renderRef.current = null;
         }
         if (runnerRef.current) {
             Matter.Runner.stop(runnerRef.current);
-            runnerRef.current = null;
         }
         if (engineRef.current) {
             Matter.Engine.clear(engineRef.current);
-            engineRef.current = null;
         }
-        isSetup.current = false;
+        engineRef.current = null;
+        runnerRef.current = null;
+        renderRef.current = null;
     }, []);
 
-    const setupMatter = useCallback(() => {
-        if (!sceneRef.current || isSetup.current || !isClient) return;
-        
-        isSetup.current = true;
+    const setup = useCallback(() => {
+        if (!sceneRef.current) return;
+        cleanup();
 
         const { Engine, Render, Runner, Bodies, Composite, Events, Mouse, MouseConstraint } = Matter;
         const container = sceneRef.current;
-        if (!container) return;
-        
-        const engine = Engine.create({
-             gravity: { x: 0, y: 1, scale: 0.001 }
-        });
+        const engine = Engine.create({ gravity: { x: 0, y: 1 } });
         engineRef.current = engine;
-        
+
         const render = Render.create({
             element: container,
             engine: engine,
@@ -96,19 +70,19 @@ export const StackSimulation = () => {
             }
         });
         renderRef.current = render;
-        
+
         const stackBodies = stackItems.map((item, index) => {
-            const textWidth = item.name.length * 8 + 16;
+            const textWidth = item.name.length * 8 + 20; 
             return Bodies.rectangle(
-                Math.random() * container.clientWidth * 0.8 + container.clientWidth * 0.1,
-                Math.random() * -container.clientHeight,
+                container.clientWidth / 2 + (Math.random() - 0.5) * 50,
+                -50 - (Math.random() * 200),
                 textWidth,
-                28,
+                30,
                 {
-                    restitution: 0.5,
-                    friction: 0.6,
+                    restitution: 0.6,
+                    friction: 0.5,
                     label: item.name,
-                    chamfer: { radius: 14 },
+                    chamfer: { radius: 15 },
                     render: {
                         fillStyle: colors[index % colors.length],
                     }
@@ -117,31 +91,28 @@ export const StackSimulation = () => {
         });
 
         Composite.add(engine.world, [
-            Bodies.rectangle(container.clientWidth / 2, container.clientHeight + 20, container.clientWidth, 40, { isStatic: true, render: { visible: false } }),
-            Bodies.rectangle(-20, container.clientHeight / 2, 40, container.clientHeight, { isStatic: true, render: { visible: false } }),
-            Bodies.rectangle(container.clientWidth + 20, container.clientHeight / 2, 40, container.clientHeight, { isStatic: true, render: { visible: false } }),
+            Bodies.rectangle(container.clientWidth / 2, container.clientHeight + 30, container.clientWidth, 60, { isStatic: true, render: { visible: false } }),
+            Bodies.rectangle(-30, container.clientHeight / 2, 60, container.clientHeight, { isStatic: true, render: { visible: false } }),
+            Bodies.rectangle(container.clientWidth + 30, container.clientHeight / 2, 60, container.clientHeight, { isStatic: true, render: { visible: false } }),
             ...stackBodies
         ]);
-        
+
         const mouse = Mouse.create(render.canvas);
         const mouseConstraint = MouseConstraint.create(engine, {
             mouse: mouse,
             constraint: {
                 stiffness: 0.2,
-                render: {
-                    visible: false
-                }
+                render: { visible: false }
             }
         });
         Composite.add(engine.world, mouseConstraint);
         render.mouse = mouse;
 
-
         Events.on(render, 'afterRender', () => {
-            if (!render.context) return;
             const context = render.context;
+            if (!context) return;
             context.font = '14px "Share Tech Mono", monospace';
-            context.fillStyle = 'hsl(var(--primary-foreground))';
+            context.fillStyle = 'hsl(var(--card-foreground))';
             context.textAlign = 'center';
             context.textBaseline = 'middle';
             
@@ -153,56 +124,37 @@ export const StackSimulation = () => {
                 context.restore();
             });
         });
-        
+
         const runner = Runner.create();
         runnerRef.current = runner;
         Render.run(render);
         Runner.run(runner, engine);
 
-        const updateGravity = async () => {
-            const input: TiltControlledGravityInput = {
-                hasDeviceOrientation,
-                tiltLR: tiltLR.current,
-                tiltFB: tiltFB.current,
-            };
-            const result = await getTiltControlledGravity(input);
+    }, [cleanup]);
 
-            if (engineRef.current) {
-                engineRef.current.gravity.x = result.gravityX;
-                engineRef.current.gravity.y = result.gravityY;
-            }
-        };
-
-        simulationIntervalRef.current = setInterval(updateGravity, 100);
-
-    }, [isClient, hasDeviceOrientation]);
-    
     useEffect(() => {
         if (isClient) {
-            window.addEventListener('deviceorientation', handleOrientation);
-
-            cleanupMatter();
-            setupMatter();
+            setup();
 
             const handleResize = () => {
-                cleanupMatter();
-                setupMatter();
+                if (sceneRef.current && sceneRef.current.clientWidth > 0) {
+                   setup();
+                }
             };
-            window.addEventListener('resize', handleResize);
+            
+            const resizeObserver = new ResizeObserver(handleResize);
+            if(sceneRef.current) {
+                resizeObserver.observe(sceneRef.current);
+            }
 
             return () => {
-                window.removeEventListener('deviceorientation', handleOrientation);
-                window.removeEventListener('resize', handleResize);
-                cleanupMatter();
+                resizeObserver.disconnect();
+                cleanup();
             };
         }
-    }, [isClient, setupMatter, cleanupMatter, handleOrientation]);
-
-    if (!isClient) {
-        return null; 
-    }
+    }, [isClient, setup, cleanup]);
 
     return (
-        <div ref={sceneRef} className="h-full w-full relative" />
+        <div ref={sceneRef} className="h-full w-full" />
     );
 };
