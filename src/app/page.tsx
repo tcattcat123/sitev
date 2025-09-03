@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { TextScramble } from '@/components/text-scramble';
 import { StackSimulation } from '@/components/stack-simulation';
+import { Typewriter } from '@/components/typewriter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { HardDrive, Loader2, Send } from 'lucide-react';
@@ -53,64 +54,69 @@ export default function Home() {
     { name: 'UI/UX', fileType: '.CFG', description: 'Проектирование интуитивно понятных пользовательских интерфейсов.' },
   ];
   
+  const cvData = {
+    name: 'Vitaliy Petrov',
+    email: 'terakot2022@gmail.com',
+    time: chinaTime,
+    telegram: 'yofox',
+    objective: 'Мой боевой опыт позволяет самостоятельно закрывать полный цикл разработки проекта от&nbsp;создания архитектуры до&nbsp;финального развертывания и&nbsp;поддержки. У&nbsp;вас в&nbsp;распоряжении есть мощная единица и&nbsp;гибкий выбор технологий. Мои знания позволяют быстро адаптироваться к&nbsp;новым задачам.',
+    experience: {
+      title: 'Full-Stack Developer',
+      project: 'Разработка широкого спектра IT-решений, включая внутренние бизнес-системы, клиентские веб-приложения и&nbsp;API. Основное внимание уделяется созданию масштабируемых, высокопроизводительных и&nbsp;безопасных приложений.',
+      responsibilities: 'Полный цикл разработки: от&nbsp;сбора требований и&nbsp;проектирования архитектуры до&nbsp;реализации, тестирования, развертывания и&nbsp;последующей поддержки. Интеграция со&nbsp;сторонними сервисами и&nbsp;API.',
+      telegramExpertise: 'Боты на&nbsp;Aiogram (асинхронные, FSM, вебхуки), Мини-приложения (Web Apps), Платежи (Telegram), Высоконагруженные системы (Redis, кеш, очереди).'
+    },
+    skills: [
+      'Go', 'Node.js', 'Python (Flask, FastAPI, Aiogram)', 'PHP', 'Next.js',
+      'Tailwind CSS', 'PostgreSQL', 'GraphQL', 'MySQL', 'MSSQL', 'Supabase',
+      'Telegram API', 'Instagram API', 'Parsers', 'OpenAI API', 'Redis',
+      'Docker', 'UX/UI'
+    ]
+  };
+
   const cvContent = (
     <div className="text-sm font-mono text-gray-800 bg-gray-100 p-4 sm:p-6 rounded-lg relative overflow-hidden">
-      <header className="grid grid-cols-1 md:grid-cols-3 gap-4 border-b border-gray-300 pb-4 mb-4 items-start">
-        <div className="md:col-span-2">
-            <h1 className="text-4xl font-bold text-black">Vitaliy Petrov</h1>
-            <p className="text-blue-600 mt-1">terakot2022@gmail.com</p>
-        </div>
-        <div className="text-left md:text-right text-black text-xs sm:text-sm">
-            <p>My time: {chinaTime}</p>
-            <a href="https://t.me/yofox" target="_blank" rel="noopener noreferrer" className="text-blue-600 inline-flex items-center gap-2 hover:underline">
-                <Send size={14} />
-                <span>telegram: @yofox</span>
-            </a>
-        </div>
-      </header>
-  
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="md:col-span-2">
-          <section className="mb-6">
-            <h2 className="text-xl font-bold text-blue-700 mb-2">Objective</h2>
-            <p className="text-black" dangerouslySetInnerHTML={{ __html: "Мой боевой опыт позволяет самостоятельно закрывать полный цикл разработки проекта от&nbsp;создания архитектуры до&nbsp;финального развертывания и&nbsp;поддержки. У&nbsp;вас в&nbsp;распоряжении есть мощная единица и&nbsp;гибкий выбор технологий. Мои знания позволяют быстро адаптироваться к&nbsp;новым задачам." }} />
-          </section>
-  
-          <section>
-            <h2 className="text-xl font-bold text-blue-700 mb-2">Experience</h2>
-            <div className="mb-4">
-              <h3 className="text-lg font-bold text-black">Full-Stack Developer</h3>
-              <p className="mt-2 text-black"><span className="font-bold">Project description:</span> Разработка широкого спектра IT-решений, включая внутренние бизнес-системы, клиентские веб-приложения и&nbsp;API. Основное внимание уделяется созданию масштабируемых, высокопроизводительных и&nbsp;безопасных приложений.</p>
-              <p className="mt-2 text-black"><span className="font-bold">Responsibilities:</span> Полный цикл разработки: от&nbsp;сбора требований и&nbsp;проектирования архитектуры до&nbsp;реализации, тестирования, развертывания и&nbsp;последующей поддержки. Интеграция со&nbsp;сторонними сервисами и&nbsp;API.</p>
-              <p className="mt-2 text-black"><span className="font-bold">Expertise in Telegram:</span> Боты на&nbsp;Aiogram (асинхронные, FSM, вебхуки), Мини-приложения (Web Apps), Платежи (Telegram), Высоконагруженные системы (Redis, кеш, очереди).</p>
+        <header className="grid grid-cols-1 md:grid-cols-3 gap-4 border-b border-gray-300 pb-4 mb-4 items-start">
+            <div className="md:col-span-2">
+                <h1 className="text-4xl font-bold text-black">{cvData.name}</h1>
+                <p className="text-blue-600 mt-1">{cvData.email}</p>
             </div>
-          </section>
+            <div className="text-left md:text-right text-black text-xs sm:text-sm">
+                <p>My time: {cvData.time}</p>
+                <a href={`https://t.me/${cvData.telegram}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 inline-flex items-center gap-2 hover:underline">
+                    <Send size={14} />
+                    <span>telegram: @{cvData.telegram}</span>
+                </a>
+            </div>
+        </header>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="md:col-span-2">
+                <section className="mb-6">
+                    <h2 className="text-xl font-bold text-blue-700 mb-2">Objective</h2>
+                    <Typewriter text={cvData.objective} className="text-black" />
+                </section>
+
+                <section>
+                    <h2 className="text-xl font-bold text-blue-700 mb-2">Experience</h2>
+                    <div className="mb-4">
+                        <h3 className="text-lg font-bold text-black">{cvData.experience.title}</h3>
+                        <p className="mt-2 text-black"><span className="font-bold">Project description:</span> <Typewriter text={cvData.experience.project} /></p>
+                        <p className="mt-2 text-black"><span className="font-bold">Responsibilities:</span> <Typewriter text={cvData.experience.responsibilities} /></p>
+                        <p className="mt-2 text-black"><span className="font-bold">Expertise in Telegram:</span> <Typewriter text={cvData.experience.telegramExpertise} /></p>
+                    </div>
+                </section>
+            </div>
+
+            <div>
+                <h2 className="text-xl font-bold text-blue-700 mb-2">Skills</h2>
+                <ul className="list-none space-y-1 text-black">
+                    {cvData.skills.map((skill, index) => (
+                        <li key={index}><Typewriter text={skill} delay={index * 100} /></li>
+                    ))}
+                </ul>
+            </div>
         </div>
-  
-        <div>
-          <h2 className="text-xl font-bold text-blue-700 mb-2">Skills</h2>
-          <ul className="list-none space-y-1 text-black">
-            <li>Go</li>
-            <li>Node.js</li>
-            <li>Python (Flask, FastAPI, Aiogram)</li>
-            <li>PHP</li>
-            <li>Next.js</li>
-            <li>Tailwind CSS</li>
-            <li>PostgreSQL</li>
-            <li>GraphQL</li>
-            <li>MySQL</li>
-            <li>MSSQL</li>
-            <li>Supabase</li>
-            <li>Telegram API</li>
-            <li>Instagram API</li>
-            <li>Parsers</li>
-            <li>OpenAI API</li>
-            <li>Redis</li>
-            <li>Docker</li>
-            <li>UX/UI</li>
-          </ul>
-        </div>
-      </div>
     </div>
   );
 
