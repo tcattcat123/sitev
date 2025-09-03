@@ -3,6 +3,7 @@
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import Matter from 'matter-js';
+import { getTiltControlledGravity, TiltControlledGravityInput } from '@/ai/flows/dynamic-stack-tilt';
 
 const stackItems = [
     { name: 'React' }, { name: 'Next.js' }, { name: 'Tailwind' },
@@ -28,12 +29,28 @@ export const StackSimulation = () => {
     const renderRef = useRef<Matter.Render | null>(null);
     const [isClient, setIsClient] = useState(false);
     const isSetup = useRef(false);
+    const [hasDeviceOrientation, setHasDeviceOrientation] = useState(false);
+    const tiltLR = useRef(0);
+    const tiltFB = useRef(0);
+    const simulationIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
         setIsClient(true);
     }, []);
 
+    const handleOrientation = useCallback((event: DeviceOrientationEvent) => {
+        if (event.gamma !== null && event.beta !== null) {
+            if (!hasDeviceOrientation) setHasDeviceOrientation(true);
+            tiltLR.current = event.gamma; // left-right tilt in degrees, range [-90, 90]
+            tiltFB.current = event.beta;  // front-back tilt in degrees, range [-180, 180]
+        }
+    }, [hasDeviceOrientation]);
+
     const cleanupMatter = useCallback(() => {
+        if (simulationIntervalRef.current) {
+            clearInterval(simulationIntervalRef.current);
+            simulationIntervalRef.current = null;
+        }
         if (!isSetup.current) return;
         
         if (renderRef.current) {
@@ -64,7 +81,7 @@ export const StackSimulation = () => {
         if (!container) return;
         
         const engine = Engine.create({
-            gravity: { x: 0, y: 1, scale: 0.001 }
+             gravity: { x: 0, y: 1, scale: 0.001 }
         });
         engineRef.current = engine;
         
@@ -141,26 +158,45 @@ export const StackSimulation = () => {
         runnerRef.current = runner;
         Render.run(render);
         Runner.run(runner, engine);
-    }, [isClient]);
+
+        const updateGravity = async () => {
+            const input: TiltControlledGravityInput = {
+                hasDeviceOrientation,
+                tiltLR: tiltLR.current,
+                tiltFB: tiltFB.current,
+            };
+            const result = await getTiltControlledGravity(input);
+
+            if (engineRef.current) {
+                engineRef.current.gravity.x = result.gravityX;
+                engineRef.current.gravity.y = result.gravityY;
+            }
+        };
+
+        simulationIntervalRef.current = setInterval(updateGravity, 100);
+
+    }, [isClient, hasDeviceOrientation]);
     
     useEffect(() => {
         if (isClient) {
+            window.addEventListener('deviceorientation', handleOrientation);
+
             cleanupMatter();
             setupMatter();
+
+            const handleResize = () => {
+                cleanupMatter();
+                setupMatter();
+            };
+            window.addEventListener('resize', handleResize);
+
+            return () => {
+                window.removeEventListener('deviceorientation', handleOrientation);
+                window.removeEventListener('resize', handleResize);
+                cleanupMatter();
+            };
         }
-
-        const handleResize = () => {
-            cleanupMatter();
-            setupMatter();
-        };
-
-        window.addEventListener('resize', handleResize);
-
-        return () => {
-            window.removeEventListener('resize', handleResize);
-            cleanupMatter();
-        };
-    }, [isClient, setupMatter, cleanupMatter]);
+    }, [isClient, setupMatter, cleanupMatter, handleOrientation]);
 
     if (!isClient) {
         return null; 
