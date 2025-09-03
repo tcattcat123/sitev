@@ -18,20 +18,20 @@ declare global {
 type StackCategory = 'frontend' | 'backend' | 'tool';
 
 const stackItems: { name: string; category: StackCategory; width: number, height: number }[] = [
-    { name: 'React', category: 'frontend', width: 33, height: 13 },
-    { name: 'Next.js', category: 'frontend', width: 38, height: 13 },
-    { name: 'Tailwind', category: 'frontend', width: 45, height: 13 },
-    { name: 'Go', category: 'backend', width: 22, height: 13 },
-    { name: 'Node.js', category: 'backend', width: 38, height: 13 },
-    { name: 'Python', category: 'backend', width: 38, height: 13 },
-    { name: 'PHP', category: 'backend', width: 27, height: 13 },
-    { name: 'PostgreSQL', category: 'backend', width: 55, height: 13 },
-    { name: 'MySQL', category: 'backend', width: 33, height: 13 },
-    { name: 'MongoDB', category: 'backend', width: 49, height: 13 },
-    { name: 'Supabase', category: 'tool', width: 45, height: 13 },
-    { name: 'OpenAI', category: 'tool', width: 33, height: 13 },
-    { name: 'Telegram', category: 'tool', width: 45, height: 13 },
-    { name: 'Parsers', category: 'tool', width: 38, height: 13 },
+    { name: 'React', category: 'frontend', width: 66, height: 26 },
+    { name: 'Next.js', category: 'frontend', width: 76, height: 26 },
+    { name: 'Tailwind', category: 'frontend', width: 90, height: 26 },
+    { name: 'Go', category: 'backend', width: 44, height: 26 },
+    { name: 'Node.js', category: 'backend', width: 76, height: 26 },
+    { name: 'Python', category: 'backend', width: 76, height: 26 },
+    { name: 'PHP', category: 'backend', width: 54, height: 26 },
+    { name: 'PostgreSQL', category: 'backend', width: 110, height: 26 },
+    { name: 'MySQL', category: 'backend', width: 66, height: 26 },
+    { name: 'MongoDB', category: 'backend', width: 98, height: 26 },
+    { name: 'Supabase', category: 'tool', width: 90, height: 26 },
+    { name: 'OpenAI', category: 'tool', width: 66, height: 26 },
+    { name: 'Telegram', category: 'tool', width: 90, height: 26 },
+    { name: 'Parsers', category: 'tool', width: 76, height: 26 },
 ];
 
 const categoryColors: Record<StackCategory, string> = {
@@ -107,7 +107,7 @@ export const StackSimulation = () => {
             )
         );
 
-        const ground = Bodies.rectangle(container.clientWidth / 2, container.clientHeight - 5, container.clientWidth + 20, 10, { isStatic: true, render: { visible: false } });
+        const ground = Bodies.rectangle(container.clientWidth / 2, container.clientHeight + 5, container.clientWidth + 20, 10, { isStatic: true, render: { visible: false } });
         const wallLeft = Bodies.rectangle(-5, container.clientHeight / 2, 10, container.clientHeight, { isStatic: true, render: { visible: false } });
         const wallRight = Bodies.rectangle(container.clientWidth + 5, container.clientHeight / 2, 10, container.clientHeight, { isStatic: true, render: { visible: false } });
 
@@ -147,12 +147,12 @@ export const StackSimulation = () => {
         const handleResize = () => {
              if (!container || !engineRef.current) return;
              
-             Bodies.setPosition(ground, { x: container.clientWidth / 2, y: container.clientHeight - 5 });
+             Bodies.setPosition(ground, { x: container.clientWidth / 2, y: container.clientHeight + 5 });
              Bodies.setVertices(ground, [
                 { x: 0, y: container.clientHeight - 5 },
                 { x: container.clientWidth, y: container.clientHeight - 5 },
-                { x: container.clientWidth, y: container.clientHeight + 5 },
-                { x: 0, y: container.clientHeight + 5 }
+                { x: container.clientWidth, y: container.clientHeight + 15 },
+                { x: 0, y: container.clientHeight + 15 }
              ]);
              Bodies.setPosition(wallRight, { x: container.clientWidth + 5, y: container.clientHeight / 2 });
              Bodies.setPosition(wallLeft, { x: -5, y: container.clientHeight / 2 });
@@ -221,10 +221,10 @@ export const StackSimulation = () => {
                         alignItems: 'center',
                         justifyContent: 'center',
                         fontFamily: "'Share Tech Mono', monospace",
-                        fontSize: '10px',
+                        fontSize: '18px',
                         fontWeight: 'bold',
                         borderRadius: '4px',
-                        border: '1px solid rgba(0,0,0,0.2)'
+                        border: '2px solid rgba(0,0,0,0.3)'
                     }}
                 >
                     {body.name}
