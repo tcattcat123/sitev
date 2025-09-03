@@ -23,9 +23,9 @@ export default function Home() {
     setShowCvAvatar(content === 'cv');
   }
 
-  const handleServiceClick = (serviceName: string, description: string) => {
+  const handleServiceClick = (serviceName: string, description: string, fileType: string) => {
     toast({
-      title: `C:\\> ${serviceName.toUpperCase()}.EXE`,
+      title: `C:\\> ${serviceName.toUpperCase()}${fileType}`,
       description: description,
     })
   };
@@ -83,7 +83,7 @@ export default function Home() {
 
   const cvContent = (
     <div className="text-sm font-mono text-foreground bg-card p-4 sm:p-6 rounded-lg relative overflow-hidden border border-border">
-        <header className="flex flex-col md:flex-row justify-between md:items-start gap-6 border-b border-border pb-4 mb-4">
+        <header className="flex flex-col md:flex-row justify-between md:items-start gap-4 md:gap-6 border-b border-border pb-4 mb-4">
             <div className="flex-grow">
                 <h1 className="text-3xl sm:text-4xl font-bold text-foreground">{cvData.name}</h1>
                 <p className="text-primary mt-1 text-sm sm:text-base"><Typewriter text={cvData.email} /></p>
@@ -102,8 +102,8 @@ export default function Home() {
             </div>
         </header>
 
-        <div className="grid grid-cols-3 gap-4 md:gap-8">
-            <div className="col-span-2">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
+            <div className="col-span-2 md:col-span-2">
                 <section className="mb-6">
                     <h2 className="text-lg sm:text-xl font-bold text-primary mb-2">Objective</h2>
                     <p className="text-foreground text-xs sm:text-sm"><Typewriter text={cvData.objective} /></p>
@@ -120,7 +120,7 @@ export default function Home() {
                 </section>
             </div>
 
-            <div className="col-span-1">
+            <div className="col-span-2 md:col-span-1">
                 <h2 className="text-lg sm:text-xl font-bold text-primary mb-2">Skills</h2>
                 <ul className="list-none space-y-1 text-foreground text-xs sm:text-sm">
                     {cvData.skills.map((skill, index) => (
@@ -178,7 +178,7 @@ export default function Home() {
 
   return (
     <main className="flex flex-col items-center min-h-screen p-2 sm:p-4">
-      <div className="w-full max-w-lg mx-auto space-y-2">
+      <div className="w-full max-w-xl mx-auto space-y-2">
         
         <header className="flex gap-2">
           <Card 
@@ -246,7 +246,7 @@ export default function Home() {
                           key={service.name} 
                           variant="ghost" 
                           className="justify-between w-full h-auto text-left p-2 hover:bg-accent"
-                          onClick={() => handleServiceClick(service.name, service.description)}
+                          onClick={() => handleServiceClick(service.name, service.description, service.fileType)}
                         >
                           <div className="flex flex-col">
                               <span className="text-sm sm:text-base">{service.name}</span>
