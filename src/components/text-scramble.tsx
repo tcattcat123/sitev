@@ -3,10 +3,15 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 export const TextScramble: React.FC<{ text: string; className?: string }> = ({ text, className }) => {
-  const [currentText, setCurrentText] = useState('');
+  const [currentText, setCurrentText] = useState(text);
   const textRef = useRef(text);
   const intervalRef = useRef<NodeJS.Timeout>();
   const [isRevealed, setIsRevealed] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const scramble = useCallback(() => {
     setIsRevealed(false);
@@ -39,16 +44,24 @@ export const TextScramble: React.FC<{ text: string; className?: string }> = ({ t
 
   useEffect(() => {
     textRef.current = text;
-    scramble();
-  }, [text, scramble]);
+    if (isClient) {
+      scramble();
+    }
+  }, [text, scramble, isClient]);
 
   useEffect(() => {
-    const initialDelay = setTimeout(scramble, 500);
-    return () => {
-        clearTimeout(initialDelay);
-        clearInterval(intervalRef.current!);
+    if (isClient) {
+      const initialDelay = setTimeout(scramble, 500);
+      return () => {
+          clearTimeout(initialDelay);
+          clearInterval(intervalRef.current!);
+      }
     }
-  }, [scramble]);
+  }, [scramble, isClient]);
+  
+  if (!isClient) {
+    return <span className={className}>{text}</span>;
+  }
 
   return (
     <>
@@ -57,3 +70,5 @@ export const TextScramble: React.FC<{ text: string; className?: string }> = ({ t
     </>
   );
 };
+
+    
