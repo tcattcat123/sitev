@@ -10,9 +10,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['Inter', 'sans-serif'],
-        headline: ['Inter', 'sans-serif'],
-        code: ['monospace'],
+        body: ['"Share Tech Mono"', 'monospace'],
+        headline: ['"Share Tech Mono"', 'monospace'],
+        code: ['"Share Tech Mono"', 'monospace'],
       },
       colors: {
         background: 'hsl(var(--background))',
@@ -68,8 +68,8 @@ export default {
       },
       borderRadius: {
         lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
+        md: 'var(--radius)',
+        sm: 'var(--radius)',
       },
       keyframes: {
         'accordion-down': {

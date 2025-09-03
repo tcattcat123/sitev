@@ -1,0 +1,63 @@
+'use server';
+
+/**
+ * @fileOverview Handles the dynamic simulation of the technology stack based on device tilt.
+ *
+ * - getTiltControlledGravity - A function that adjusts gravity based on device orientation or triggers automatic re-simulation.
+ * - TiltControlledGravityInput - The input type for the getTiltControlledGravity function.
+ * - TiltControlledGravityOutput - The return type for the getTiltControlledGravity function.
+ */
+
+import {ai} from '@/ai/genkit';
+import {z} from 'genkit';
+
+const TiltControlledGravityInputSchema = z.object({
+  tiltLR: z.number().optional().describe('Left-right tilt in degrees.'),
+  tiltFB: z.number().optional().describe('Front-back tilt in degrees.'),
+  hasDeviceOrientation: z.boolean().describe('Whether the device orientation is available.'),
+});
+export type TiltControlledGravityInput = z.infer<typeof TiltControlledGravityInputSchema>;
+
+const TiltControlledGravityOutputSchema = z.object({
+  gravityX: z.number().describe('X component of gravity (-1 to 1).'),
+  gravityY: z.number().describe('Y component of gravity (-1 to 1).'),
+  shouldResimulate: z.boolean().describe('Indicates if the simulation should be re-simulated.'),
+});
+export type TiltControlledGravityOutput = z.infer<typeof TiltControlledGravityOutputSchema>;
+
+export async function getTiltControlledGravity(input: TiltControlledGravityInput): Promise<TiltControlledGravityOutput> {
+  return tiltControlledGravityFlow(input);
+}
+
+const tiltControlledGravityPrompt = ai.definePrompt({
+  name: 'tiltControlledGravityPrompt',
+  input: {schema: TiltControlledGravityInputSchema},
+  output: {schema: TiltControlledGravityOutputSchema},
+  prompt: `You are a physics simulation controller. Based on the device orientation data provided, you will output the appropriate gravity values for a 2D physics engine.
+
+  If device orientation is available, use the tiltLR and tiltFB values to calculate gravityX and gravityY, respectively.  Gravity values should be normalized to a range between -1 and 1.
+
+  If device orientation is not available, set shouldResimulate to true, indicating that the simulation should be re-simulated automatically.
+
+  Here's the device orientation data:
+  Has Device Orientation: {{{hasDeviceOrientation}}}
+  Tilt Left-Right (gamma): {{{tiltLR}}}
+  Tilt Front-Back (beta): {{{tiltFB}}}
+
+  Consider the following when deciding whether to enable re-simulation:
+  - Re-simulation should occur if device orientation data is unavailable.
+  - If re-simulation is enabled, gravityX and gravityY should be set to 0.
+  `,
+});
+
+const tiltControlledGravityFlow = ai.defineFlow(
+  {
+    name: 'tiltControlledGravityFlow',
+    inputSchema: TiltControlledGravityInputSchema,
+    outputSchema: TiltControlledGravityOutputSchema,
+  },
+  async input => {
+    const {output} = await tiltControlledGravityPrompt(input);
+    return output!;
+  }
+);
