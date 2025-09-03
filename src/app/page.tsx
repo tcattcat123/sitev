@@ -102,8 +102,8 @@ export default function Home() {
             </div>
         </header>
 
-        <div className="flex flex-col md:flex-row gap-4 md:gap-8">
-            <div className="w-full md:w-2/3">
+        <div className="flex flex-row">
+            <div className="w-2/3 pr-4">
                 <section className="mb-6">
                     <h2 className="text-lg sm:text-xl font-bold text-primary mb-2">Objective</h2>
                     <p className="text-foreground text-xs sm:text-sm"><Typewriter text={cvData.objective} /></p>
@@ -119,7 +119,7 @@ export default function Home() {
                     </div>
                 </section>
             </div>
-            <div className="w-full md:w-1/3">
+            <div className="w-1/3">
                  <h2 className="text-lg sm:text-xl font-bold text-primary mb-2">Skills</h2>
                 <ul className="list-none space-y-1 text-foreground text-xs sm:text-sm">
                     {cvData.skills.map((skill, index) => (
