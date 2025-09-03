@@ -1,8 +1,8 @@
 
 "use client";
 
-import React, { useEffect, useRef, useState, useCallback } from 'react';
-import Matter from 'matter-js';
+import React, { useRef } from 'react';
+import { motion } from 'framer-motion';
 
 const stackItems = [
     { name: 'React' }, { name: 'Next.js' }, { name: 'Tailwind' },
@@ -22,139 +22,38 @@ const colors = [
 ];
 
 export const StackSimulation = () => {
-    const sceneRef = useRef<HTMLDivElement>(null);
-    const [isClient, setIsClient] = useState(false);
-    const engineRef = useRef<Matter.Engine | null>(null);
-    const runnerRef = useRef<Matter.Runner | null>(null);
-    const renderRef = useRef<Matter.Render | null>(null);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
-
-    const cleanup = useCallback(() => {
-        if (renderRef.current) {
-            Matter.Render.stop(renderRef.current);
-            if (renderRef.current.canvas) {
-                renderRef.current.canvas.remove();
-            }
-        }
-        if (runnerRef.current) {
-            Matter.Runner.stop(runnerRef.current);
-        }
-        if (engineRef.current) {
-            Matter.Engine.clear(engineRef.current);
-        }
-        engineRef.current = null;
-        runnerRef.current = null;
-        renderRef.current = null;
-    }, []);
-
-    const setup = useCallback(() => {
-        if (!sceneRef.current) return;
-        cleanup();
-
-        const { Engine, Render, Runner, Bodies, Composite, Events, Mouse, MouseConstraint } = Matter;
-        const container = sceneRef.current;
-        const engine = Engine.create({ gravity: { x: 0, y: 1 } });
-        engineRef.current = engine;
-
-        const render = Render.create({
-            element: container,
-            engine: engine,
-            options: {
-                width: container.clientWidth,
-                height: container.clientHeight,
-                wireframes: false,
-                background: 'transparent',
-            }
-        });
-        renderRef.current = render;
-
-        const stackBodies = stackItems.map((item, index) => {
-            const textWidth = item.name.length * 8 + 20; 
-            return Bodies.rectangle(
-                container.clientWidth / 2 + (Math.random() - 0.5) * 50,
-                -50 - (Math.random() * 200),
-                textWidth,
-                30,
-                {
-                    restitution: 0.6,
-                    friction: 0.5,
-                    label: item.name,
-                    chamfer: { radius: 15 },
-                    render: {
-                        fillStyle: colors[index % colors.length],
-                    }
-                }
-            );
-        });
-
-        Composite.add(engine.world, [
-            Bodies.rectangle(container.clientWidth / 2, container.clientHeight + 30, container.clientWidth, 60, { isStatic: true, render: { visible: false } }),
-            Bodies.rectangle(-30, container.clientHeight / 2, 60, container.clientHeight, { isStatic: true, render: { visible: false } }),
-            Bodies.rectangle(container.clientWidth + 30, container.clientHeight / 2, 60, container.clientHeight, { isStatic: true, render: { visible: false } }),
-            ...stackBodies
-        ]);
-
-        const mouse = Mouse.create(render.canvas);
-        const mouseConstraint = MouseConstraint.create(engine, {
-            mouse: mouse,
-            constraint: {
-                stiffness: 0.2,
-                render: { visible: false }
-            }
-        });
-        Composite.add(engine.world, mouseConstraint);
-        render.mouse = mouse;
-
-        Events.on(render, 'afterRender', () => {
-            const context = render.context;
-            if (!context) return;
-            context.font = '14px "Share Tech Mono", monospace';
-            context.fillStyle = 'hsl(var(--card-foreground))';
-            context.textAlign = 'center';
-            context.textBaseline = 'middle';
-            
-            stackBodies.forEach(body => {
-                context.save();
-                context.translate(body.position.x, body.position.y);
-                context.rotate(body.angle);
-                context.fillText(body.label, 0, 0);
-                context.restore();
-            });
-        });
-
-        const runner = Runner.create();
-        runnerRef.current = runner;
-        Render.run(render);
-        Runner.run(runner, engine);
-
-    }, [cleanup]);
-
-    useEffect(() => {
-        if (isClient) {
-            setup();
-
-            const handleResize = () => {
-                if (sceneRef.current && sceneRef.current.clientWidth > 0) {
-                   setup();
-                }
-            };
-            
-            const resizeObserver = new ResizeObserver(handleResize);
-            if(sceneRef.current) {
-                resizeObserver.observe(sceneRef.current);
-            }
-
-            return () => {
-                resizeObserver.disconnect();
-                cleanup();
-            };
-        }
-    }, [isClient, setup, cleanup]);
+    const constraintsRef = useRef(null);
 
     return (
-        <div ref={sceneRef} className="h-full w-full" />
+        <motion.div ref={constraintsRef} className="relative h-full w-full">
+            {stackItems.map((item, index) => (
+                <motion.div
+                    key={item.name}
+                    drag
+                    dragConstraints={constraintsRef}
+                    initial={{ opacity: 0, scale: 0.5, y: -100, x: (Math.random() - 0.5) * 200 }}
+                    animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
+                    transition={{
+                        type: "spring",
+                        stiffness: 50,
+                        damping: 10,
+                        delay: index * 0.1,
+                    }}
+                    whileTap={{ scale: 1.1, zIndex: 10 }}
+                    whileHover={{ scale: 1.05 }}
+                    className="absolute top-1/2 left-1/2 cursor-grab rounded-full px-4 py-2 font-mono text-sm font-medium text-card-foreground shadow-lg"
+                    style={{ 
+                        backgroundColor: colors[index % colors.length],
+                        width: `${item.name.length * 8 + 32}px`,
+                        height: '40px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
+                >
+                    {item.name}
+                </motion.div>
+            ))}
+        </motion.div>
     );
 };
