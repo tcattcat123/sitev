@@ -68,7 +68,7 @@ export default function Home() {
             </CardHeader>
           </Card>
           <nav className="col-span-2 flex flex-col gap-2">
-            <Button variant="outline" className="justify-start h-full text-base border-primary hover:bg-accent" onClick={() => setActiveContent('about')}>C:\&gt; ABOUT</Button>
+            <Button variant="outline" className="justify-start h-full text-base border-primary hover:bg-accent" onClick={() => setActiveContent(activeContent === 'about' ? 'main' : 'about')}>C:\&gt; ABOUT</Button>
             <Button variant="outline" className="justify-start h-full text-base border-primary hover:bg-accent">C:\&gt; PROJECTS</Button>
             <Button variant="outline" className="justify-start h-full text-base border-primary hover:bg-accent">C:\&gt; CONTACT</Button>
           </nav>
@@ -106,6 +106,19 @@ export default function Home() {
                       ))}
                     </CardContent>
                 </Card>
+            </section>
+            
+            <section>
+              <Card className="w-full p-4 border-2 border-blue-500 bg-blue-900/80 text-white">
+                <CardContent className="p-0 font-mono text-sm">
+                  <p>SYSTEM STATUS: OPERATIONAL<br />
+                  &gt; PROFIT_INCREASE.EXE RUNNING...<br />
+                  &gt; IT_SOLUTIONS.DLL LOADED<br />
+                  &gt; BUSINESS_AUTOMATION READY<br />
+                  &gt; REMOTE_ACCESS ENABLED<br />
+                  &gt; GLOBAL_MANAGEMENT ACTIVE</p>
+                </CardContent>
+              </Card>
             </section>
 
             <section>
