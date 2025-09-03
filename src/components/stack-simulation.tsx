@@ -1,7 +1,9 @@
 "use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useRef } from 'react';
+
+// Declare Matter.js since it's loaded from a script tag
+declare const Matter: any;
 
 type StackCategory = 'frontend' | 'backend' | 'tool';
 
@@ -23,46 +25,149 @@ const stackItems: { name: string; category: StackCategory }[] = [
 ];
 
 const categoryColors: Record<StackCategory, string> = {
-    backend: 'hsl(var(--primary))', // Dark Blue
-    frontend: 'hsl(142.1 76.2% 36.3%)', // Green
-    tool: 'hsl(var(--foreground))', // Black (using foreground which is nearly black)
+    backend: 'hsl(var(--primary))',
+    frontend: 'hsl(142.1 76.2% 36.3%)',
+    tool: 'hsl(var(--foreground))',
 };
 
 const categoryTextColors: Record<StackCategory, string> = {
     backend: 'hsl(var(--primary-foreground))',
     frontend: 'hsl(var(--primary-foreground))',
     tool: 'hsl(var(--background))',
-}
-
+};
 
 export const StackSimulation = () => {
-    return (
-        <div className="relative w-full h-full">
-            {stackItems.map((item, index) => (
-                <motion.div
-                    key={item.name}
-                    drag
-                    dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
-                    dragElastic={0.5}
-                    initial={{ opacity: 0, scale: 0.5, x: Math.random() * 200 - 100, y: Math.random() * 100 - 50 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className="absolute flex items-center justify-center cursor-grab"
-                    style={{
-                        backgroundColor: categoryColors[item.category],
-                        color: categoryTextColors[item.category],
-                        borderRadius: '0.125rem',
-                        padding: '0.1rem 0.3rem',
-                        fontSize: '0.5rem',
-                        height: 'auto',
-                        top: `${20 + (index % 5) * 15}%`,
-                        left: `${10 + Math.floor(index / 5) * 20 + (Math.random() - 0.5) * 10}%`,
-                    }}
-                    whileTap={{ cursor: "grabbing", scale: 1.1 }}
-                >
-                    {item.name}
-                </motion.div>
-            ))}
-        </div>
-    );
+    const sceneRef = useRef<HTMLDivElement>(null);
+    const engineRef = useRef<any>();
+
+    useEffect(() => {
+        if (typeof Matter === 'undefined') {
+            console.error("Matter.js not loaded");
+            return;
+        }
+
+        const { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint } = Matter;
+
+        const container = sceneRef.current;
+        if (!container) return;
+
+        // Clear previous simulation if any
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+        if (engineRef.current) {
+            Runner.stop(engineRef.current.runner);
+            Engine.clear(engineRef.current.engine);
+        }
+
+        const engine = Engine.create({ gravity: { y: 0.4 } });
+        const runner = Runner.create();
+        
+        engineRef.current = { engine, runner };
+
+        const render = Render.create({
+            element: container,
+            engine: engine,
+            options: {
+                width: container.clientWidth,
+                height: 288, // h-72
+                background: 'transparent',
+                wireframes: false,
+            }
+        });
+
+        const bodies = stackItems.map(item => {
+            const elWidth = item.name.length * 8 + 10;
+            return Bodies.rectangle(
+                Math.random() * container.clientWidth,
+                Math.random() * -200, // Start above the canvas
+                elWidth,
+                24, // h-6
+                {
+                    restitution: 0.5,
+                    friction: 0.3,
+                    render: {
+                        fillStyle: categoryColors[item.category],
+                        strokeStyle: 'transparent',
+                    }
+                }
+            );
+        });
+
+        const ground = Bodies.rectangle(container.clientWidth / 2, 288, container.clientWidth + 20, 10, { isStatic: true, render: { visible: false } });
+        const wallLeft = Bodies.rectangle(-5, 144, 10, 288, { isStatic: true, render: { visible: false } });
+        const wallRight = Bodies.rectangle(container.clientWidth + 5, 144, 10, 288, { isStatic: true, render: { visible: false } });
+
+        Composite.add(engine.world, [...bodies, ground, wallLeft, wallRight]);
+        
+        // Add mouse control
+        const mouse = Mouse.create(render.canvas);
+        const mouseConstraint = MouseConstraint.create(engine, {
+            mouse: mouse,
+            constraint: {
+                stiffness: 0.2,
+                render: {
+                    visible: false
+                }
+            }
+        });
+        Composite.add(engine.world, mouseConstraint);
+        render.mouse = mouse;
+
+        Render.run(render);
+        Runner.run(runner, engine);
+
+        // Custom rendering to draw text on bodies
+        const customRender = () => {
+            const context = render.context;
+            bodies.forEach((body, index) => {
+                const { x, y } = body.position;
+                context.save();
+                context.translate(x, y);
+                context.rotate(body.angle);
+                context.fillStyle = categoryTextColors[stackItems[index].category];
+                context.font = "8px 'Share Tech Mono', monospace";
+                context.textAlign = "center";
+                context.textBaseline = "middle";
+                context.fillText(stackItems[index].name, 0, 0);
+                context.restore();
+            });
+            requestAnimationFrame(customRender);
+        };
+        
+        requestAnimationFrame(customRender);
+        
+        // Handle resize
+        const handleResize = () => {
+             if (!container || !render || !engineRef.current) return;
+             render.canvas.width = container.clientWidth;
+             Render.lookAt(render, {
+                min: { x: 0, y: 0 },
+                max: { x: container.clientWidth, y: 288 }
+            });
+            // update ground and wall positions
+            Bodies.setPosition(ground, { x: container.clientWidth / 2, y: 288 });
+            Bodies.setPosition(wallRight, { x: container.clientWidth + 5, y: 144 });
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            if (engineRef.current) {
+                Runner.stop(engineRef.current.runner);
+                Render.stop(render);
+                Engine.clear(engineRef.current.engine);
+            }
+            if (render.canvas) {
+                render.canvas.remove();
+            }
+            if (render.textures) {
+                // @ts-ignore
+                render.textures = {};
+            }
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+    return <div ref={sceneRef} className="w-full h-full" />;
 };
