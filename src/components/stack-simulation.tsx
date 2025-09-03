@@ -60,11 +60,6 @@ export const StackSimulation = () => {
     const sceneRef = useRef<HTMLDivElement>(null);
     const engineRef = useRef<any>();
     const [bodies, setBodies] = useState<BodyState[]>([]);
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
     
     const requestDeviceOrientationPermission = async () => {
         if (typeof window !== 'undefined' && window.DeviceOrientationEvent && typeof window.DeviceOrientationEvent.requestPermission === 'function') {
@@ -84,7 +79,7 @@ export const StackSimulation = () => {
     };
 
     useEffect(() => {
-        if (!isClient || typeof Matter === 'undefined' || !sceneRef.current) {
+        if (typeof Matter === 'undefined' || !sceneRef.current) {
             return;
         }
 
@@ -206,11 +201,11 @@ export const StackSimulation = () => {
             window.removeEventListener('resize', handleResize);
             window.removeEventListener('deviceorientation', handleOrientation);
         };
-    }, [isClient]);
+    }, []);
 
     return (
-        <div ref={sceneRef} className="w-full h-full relative overflow-hidden bg-background">
-            {isClient && bodies.map(body => (
+        <div ref={sceneRef} className="w-full h-full absolute inset-0 bg-background">
+            {bodies.map(body => (
                 <div
                     key={body.id}
                     style={{
