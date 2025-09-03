@@ -7,18 +7,17 @@ import { StackSimulation } from '@/components/stack-simulation';
 import { Typewriter } from '@/components/typewriter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { HardDrive, Send, Check } from 'lucide-react';
+import { HardDrive, Send } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast"
 
 export default function Home() {
   const { toast } = useToast()
-  const [activeContent, setActiveContent] = useState<'main' | 'cv'>('main');
+  const [activeContent, setActiveContent] = useState<'main' | 'cv' | 'projects'>('main');
   const [showGif, setShowGif] = useState(false);
   const [showCvAvatar, setShowCvAvatar] = useState(false);
   const [chinaTime, setChinaTime] = useState('');
-  const [availabilityMessage, setAvailabilityMessage] = useState('');
 
-  const handleNavClick = (content: 'main' | 'cv') => {
+  const handleNavClick = (content: 'main' | 'cv' | 'projects') => {
     setActiveContent(content);
     setShowCvAvatar(content === 'cv');
   }
@@ -30,16 +29,6 @@ export default function Home() {
     })
   };
   
-  const checkAvailability = () => {
-    const hour = parseInt(chinaTime.split(':')[0], 10);
-    if (hour >= 9 && hour < 22) {
-      setAvailabilityMessage('> STATUS: ONLINE. Писать можно.');
-    } else {
-      setAvailabilityMessage('> STATUS: OFFLINE. Лучше завтра.');
-    }
-  };
-
-
   useEffect(() => {
     const getChinaTime = () => {
       const now = new Date();
@@ -134,16 +123,29 @@ export default function Home() {
         </div>
     </div>
   );
+  
+  const projectsContent = (
+    <div className="grid grid-cols-2 gap-2">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div 
+          key={i}
+          className="aspect-square bg-card border border-primary flex items-center justify-center text-foreground font-mono text-lg transition-all duration-300 ease-in-out hover:rounded-full hover:bg-primary/20 cursor-pointer"
+        >
+          &lt;/name&gt;
+        </div>
+      ))}
+    </div>
+  );
 
-  const navButton = (label: string, content: 'main' | 'cv') => {
+  const navButton = (label: string, content: 'main' | 'cv' | 'projects') => {
     const command = `C:\\> ${label}`;
     return (
       <Button 
         variant="outline" 
         className="justify-start h-full text-base border-primary hover:bg-accent" 
         onClick={() => {
-          if (label === 'CV') handleNavClick(content)
-          else if (label === '..') handleNavClick('main')
+          if (label === '..') handleNavClick('main')
+          else if (content === 'projects' || content === 'cv') handleNavClick(content)
           else toast({ title: 'C:\\> ' + label, description: 'Раздел в разработке.'})
         }}
       >
@@ -189,15 +191,21 @@ export default function Home() {
               )}
           </Card>
           <nav className="col-span-2 flex flex-col gap-2">
-            {activeContent === 'cv' ? navButton('..', 'main') : navButton('CV', 'cv')}
-            {navButton('PROJECTS', 'main')}
-            {navButton('CONTACT', 'main')}
+            {activeContent !== 'main' ? navButton('..', 'main') : navButton('CV', 'cv')}
+            {activeContent === 'main' ? navButton('PROJECTS', 'projects') : activeContent === 'projects' ? null : navButton('PROJECTS', 'projects')}
+            {activeContent !== 'projects' && navButton('CONTACT', 'main')}
           </nav>
         </header>
         
         {activeContent === 'cv' && (
           <section>
             {cvContent}
+          </section>
+        )}
+        
+        {activeContent === 'projects' && (
+          <section>
+            {projectsContent}
           </section>
         )}
 
@@ -273,3 +281,5 @@ export default function Home() {
     </main>
   );
 }
+
+    
