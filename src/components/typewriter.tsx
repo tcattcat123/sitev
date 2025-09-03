@@ -30,10 +30,20 @@ export const Typewriter: React.FC<{ text: string; speed?: number; delay?: number
     setDisplayedText(''); // Reset on text change after delay
     let i = 0;
     const typingInterval = setInterval(() => {
+      // Use original text with HTML for rendering
+      // Find the next character in the original text, skipping HTML tags
+      let nextCharIndex = i;
+      if (text[nextCharIndex] === '<') {
+        while(text[nextCharIndex] !== '>' && nextCharIndex < text.length) {
+          nextCharIndex++;
+        }
+      }
+
+      const substringToShow = text.substring(0, nextCharIndex + 1);
+
       if (i < text.length) {
-        // Use original text with HTML for rendering
-        setDisplayedText(text.substring(0, i + 1));
-        i++;
+        setDisplayedText(substringToShow);
+        i = nextCharIndex + 1;
       } else {
         clearInterval(typingInterval);
         // Ensure the final state includes all HTML
@@ -48,6 +58,7 @@ export const Typewriter: React.FC<{ text: string; speed?: number; delay?: number
   
   // Check if final text is fully displayed
   const isCompleted = (() => {
+    if (typeof window === 'undefined') return displayedText === text;
     const temp1 = document.createElement('div');
     temp1.innerHTML = displayedText;
     const temp2 = document.createElement('div');

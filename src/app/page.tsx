@@ -75,24 +75,24 @@ export default function Home() {
   };
 
   const cvContent = (
-    <div className="text-sm font-mono text-gray-800 bg-gray-100 p-4 sm:p-6 rounded-lg relative overflow-hidden">
-        <header className="grid grid-cols-1 md:grid-cols-3 gap-4 border-b border-gray-300 pb-4 mb-4 items-start">
+    <div className="text-sm font-mono text-foreground bg-card p-4 sm:p-6 rounded-lg relative overflow-hidden border border-border">
+        <header className="grid grid-cols-1 md:grid-cols-3 gap-6 border-b border-border pb-4 mb-4 items-start">
             <div className="md:col-span-2">
-                <h1 className="text-4xl font-bold text-black">{cvData.name}</h1>
-                <p className="text-blue-600 mt-1">{cvData.email}</p>
+                <h1 className="text-4xl font-bold text-foreground">{cvData.name}</h1>
+                <p className="text-primary mt-1"><Typewriter text={cvData.email} /></p>
             </div>
             <div className="font-mono text-xs sm:text-sm">
-              <div className="bg-black text-green-400 p-3 rounded-lg border border-green-500 w-full">
-                  <div className="flex items-center mb-2">
+              <div className="bg-background text-foreground p-3 rounded-lg border border-border w-full shadow-inner">
+                  <div className="flex items-center mb-2 pb-2 border-b border-border">
                       <div className="w-2.5 h-2.5 rounded-full bg-red-500 mr-1.5"></div>
                       <div className="w-2.5 h-2.5 rounded-full bg-yellow-500 mr-1.5"></div>
                       <div className="w-2.5 h-2.5 rounded-full bg-green-500"></div>
                   </div>
-                  <Typewriter text={`> TIME: ${cvData.time}`} speed={50} />
-                  <br />
-                  <a href={`https://t.me/${cvData.telegram}`} target="_blank" rel="noopener noreferrer" className="text-green-400 hover:underline inline-flex items-center gap-2">
+                  <div className="text-primary"><Typewriter text={`> TIME: ${cvData.time}`} speed={50} /></div>
+                  
+                  <a href={`https://t.me/${cvData.telegram}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline inline-flex items-center gap-2 mt-1">
                       <Send size={12} className="inline-block" />
-                      <Typewriter text={`@${cvData.telegram}`} speed={50} delay={1000} />
+                      <Typewriter text={`@${cvData.telegram}`} speed={50} delay={800} />
                   </a>
               </div>
             </div>
@@ -101,24 +101,24 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="md:col-span-2">
                 <section className="mb-6">
-                    <h2 className="text-xl font-bold text-blue-700 mb-2">Objective</h2>
-                    <Typewriter text={cvData.objective} className="text-black" />
+                    <h2 className="text-xl font-bold text-primary mb-2">Objective</h2>
+                    <p className="text-foreground"><Typewriter text={cvData.objective} /></p>
                 </section>
 
                 <section>
-                    <h2 className="text-xl font-bold text-blue-700 mb-2">Experience</h2>
-                    <div className="mb-4">
-                        <h3 className="text-lg font-bold text-black">{cvData.experience.title}</h3>
-                        <p className="mt-2 text-black"><span className="font-bold">Project description:</span> <Typewriter text={cvData.experience.project} /></p>
-                        <p className="mt-2 text-black"><span className="font-bold">Responsibilities:</span> <Typewriter text={cvData.experience.responsibilities} /></p>
-                        <p className="mt-2 text-black"><span className="font-bold">Expertise in Telegram:</span> <Typewriter text={cvData.experience.telegramExpertise} /></p>
+                    <h2 className="text-xl font-bold text-primary mb-2">Experience</h2>
+                    <div className="mb-4 space-y-2 text-foreground">
+                        <h3 className="text-lg font-bold">{cvData.experience.title}</h3>
+                        <p><span className="font-bold">Project description:</span> <Typewriter text={cvData.experience.project} /></p>
+                        <p><span className="font-bold">Responsibilities:</span> <Typewriter text={cvData.experience.responsibilities} /></p>
+                        <p><span className="font-bold">Expertise in Telegram:</span> <Typewriter text={cvData.experience.telegramExpertise} /></p>
                     </div>
                 </section>
             </div>
 
             <div>
-                <h2 className="text-xl font-bold text-blue-700 mb-2">Skills</h2>
-                <ul className="list-none space-y-1 text-black">
+                <h2 className="text-xl font-bold text-primary mb-2">Skills</h2>
+                <ul className="list-none space-y-1 text-foreground">
                     {cvData.skills.map((skill, index) => (
                         <li key={index}><Typewriter text={skill} delay={index * 50} /></li>
                     ))}
