@@ -24,9 +24,11 @@ export const StackSimulation = () => {
     const [hasPermission, setHasPermission] = useState<boolean | null>(null);
     const isSetup = useRef(false);
     const [isClient, setIsClient] = useState(false);
+    const [isTouchDevice, setIsTouchDevice] = useState(false);
 
     useEffect(() => {
         setIsClient(true);
+        setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
     }, []);
 
     const cleanupMatter = useCallback(() => {
@@ -104,6 +106,7 @@ export const StackSimulation = () => {
         ]);
 
         Events.on(render, 'afterRender', () => {
+            if (!render.context) return;
             const context = render.context;
             context.font = '14px "Share Tech Mono", monospace';
             context.fillStyle = 'hsl(var(--primary-foreground))';
@@ -123,7 +126,7 @@ export const StackSimulation = () => {
         runnerRef.current = runner;
         Render.run(render);
         Runner.run(runner, engine);
-    }, [stackItems]);
+    }, []);
 
     const handleOrientation = useCallback(async (event: DeviceOrientationEvent) => {
         if (!engineRef.current || !event.gamma || !event.beta) return;
@@ -172,12 +175,12 @@ export const StackSimulation = () => {
             }
         }
     }, []);
-
+    
     useEffect(() => {
-        if(!isClient) return;
+        if (!isClient || isTouchDevice) return;
         
-        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-        if(isTouchDevice) {
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        if(isIOS) {
             setHasPermission(null);
         } else {
             setHasPermission(false);
@@ -188,10 +191,10 @@ export const StackSimulation = () => {
         return () => {
             cleanupMatter();
         };
-    }, [isClient, setupMatter, cleanupMatter]);
+    }, [isClient, isTouchDevice, setupMatter, cleanupMatter]);
 
     useEffect(() => {
-        if(!isClient) return;
+        if(!isClient || isTouchDevice) return;
 
         if (hasPermission) {
             window.addEventListener('deviceorientation', handleOrientation);
@@ -199,10 +202,10 @@ export const StackSimulation = () => {
             window.removeEventListener('deviceorientation', handleOrientation);
         }
         return () => window.removeEventListener('deviceorientation', handleOrientation);
-    }, [hasPermission, handleOrientation, isClient]);
+    }, [hasPermission, handleOrientation, isClient, isTouchDevice]);
 
     useEffect(() => {
-        if(!isClient) return;
+        if(!isClient || isTouchDevice) return;
         let resimulateInterval: NodeJS.Timeout | undefined;
         if (hasPermission === false) {
              resimulateInterval = setInterval(resimulate, 8000);
@@ -212,25 +215,16 @@ export const StackSimulation = () => {
                 clearInterval(resimulateInterval);
             }
         };
-    }, [hasPermission, resimulate, isClient]);
+    }, [hasPermission, resimulate, isClient, isTouchDevice]);
 
 
     if (!isClient) {
         return null; 
     }
 
-    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
-    if (isTouchDevice && hasPermission !== true) {
+    if (isTouchDevice) {
         return (
             <div className="relative h-full w-full flex flex-wrap items-center justify-center gap-2 p-4 overflow-hidden">
-                {hasPermission === null && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 z-10 p-4">
-                        <Button variant="outline" className="w-full" onClick={requestPermission}>
-                            ENABLE TILT CONTROLS
-                        </Button>
-                    </div>
-                )}
                 {stackItems.map((item, index) => (
                     <motion.div
                         key={index}
@@ -255,6 +249,13 @@ export const StackSimulation = () => {
 
     return (
         <div ref={sceneRef} className="h-full w-full relative">
+             {hasPermission === null && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 z-20 p-4">
+                    <Button variant="outline" className="w-full" onClick={requestPermission}>
+                        ENABLE TILT CONTROLS
+                    </Button>
+                </div>
+            )}
             {hasPermission === false && (
                 <div className="absolute bottom-2 left-2 text-xs text-muted-foreground z-10">
                     Tilt controls disabled. Auto-simulating...
