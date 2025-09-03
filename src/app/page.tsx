@@ -41,9 +41,9 @@ export default function Home() {
     <div className="text-sm font-mono text-gray-800 bg-gray-100 p-6 rounded-lg">
       <header className="grid grid-cols-1 md:grid-cols-3 gap-4 border-b border-gray-300 pb-4 mb-4">
         <h1 className="text-4xl font-bold col-span-2 text-black">Vitaliy Petrov</h1>
-        <div className="text-left md:text-right text-black">
+        <div className="text-left text-black">
             <p>My time: {chinaTime}</p>
-            <p className="text-blue-600">telegram: @yofox</p>
+            <a href="https://t.me/yofox" target="_blank" rel="noopener noreferrer" className="text-blue-600 block hover:underline">telegram: @yofox</a>
             <p className="text-blue-600">terakot2022@gmail.com</p>
         </div>
       </header>
@@ -200,5 +200,7 @@ export default function Home() {
     </main>
   );
 }
+
+    
 
     
