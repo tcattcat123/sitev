@@ -49,7 +49,7 @@ export default function Home() {
     { name: 'Автоматизация', fileType: '.SYS', description: 'Автоматизация бизнес-процессов и рутинных задач.' },
     { name: 'Сайты', fileType: '.COM', description: 'Создание современных и быстрых веб-сайтов и приложений.' },
     { name: 'Программы', fileType: '.APP', description: 'Разработка десктопных и серверных приложений.' },
-    { name: 'Интерфейсы', fileType: '.DLL', description: 'Создание графических материалов и интерфейсов.' },
+    { name: 'CV', fileType: '.DLL', description: 'Создание графических материалов и интерфейсов.' },
     { name: 'UI/UX', fileType: '.CFG', description: 'Проектирование интуитивно понятных пользовательских интерфейсов.' },
   ];
   
@@ -305,3 +305,4 @@ export default function Home() {
     
 
     
+
