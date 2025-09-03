@@ -137,7 +137,7 @@ export default function Home() {
       {projectsData.map((project, i) => (
         <div 
           key={i}
-          className="aspect-square bg-card border border-primary flex items-center justify-center text-foreground font-mono text-lg transition-all duration-300 ease-in-out hover:rounded-full hover:bg-primary/20 cursor-pointer relative group overflow-hidden"
+          className="aspect-square bg-card border border-primary flex items-center justify-center text-foreground font-mono text-sm transition-all duration-300 ease-in-out hover:rounded-full hover:bg-primary/20 cursor-pointer relative group overflow-hidden"
         >
           {project.image ? (
             <>
@@ -292,3 +292,5 @@ export default function Home() {
     </main>
   );
 }
+
+    
