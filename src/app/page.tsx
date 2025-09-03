@@ -24,7 +24,7 @@ export default function Home() {
   const cvContent = (
     <div className="text-sm font-mono text-gray-800 bg-gray-100 p-6 rounded-lg">
       <header className="grid grid-cols-1 md:grid-cols-3 gap-4 border-b border-gray-300 pb-4 mb-4">
-        <h1 className="text-4xl font-bold col-span-2 text-black">Alexander Balaban</h1>
+        <h1 className="text-4xl font-bold col-span-2 text-black">Vitaliy Petrov</h1>
         <div className="text-left md:text-right text-black">
           <p>Minsk</p>
           <p>+375(29)813-70-67</p>
@@ -36,22 +36,18 @@ export default function Home() {
         <div className="md:col-span-2">
           <section className="mb-6">
             <h2 className="text-xl font-bold text-blue-700 mb-2">Objective</h2>
-            <ul className="list-none space-y-1 text-black">
-              <li>Windows applications development,</li>
-              <li>WEB applications development,</li>
-              <li>Highly communicative and interpersonal skills,</li>
-              <li>Self-motivated</li>
-            </ul>
+            <p className="text-black">
+              Мой боевой опыт позволяет самостоятельно закрывать полный цикл разработки проекта от создания архитектуры до финального развертывания и поддержки. У вас в распоряжении есть мощная единица и гибкий выбор технологий. Мои знания позволяют быстро адаптироваться к новым задачам.
+            </p>
           </section>
   
           <section>
             <h2 className="text-xl font-bold text-blue-700 mb-2">Experience</h2>
             <div className="mb-4">
-              <h3 className="text-lg font-bold text-black">Dubz, PHP(Laravel framework)</h3>
-              <p className="text-sm text-gray-600">Jan 2025- now</p>
-              <p className="mt-2 text-black"><span className="font-bold">Project description:</span> Delivery system development. Main feature of the system to create tasks for agents for baggage delivery (from/to airport). Develop a B2C project to make orders for baggage delivery for customers from different airports. The main goal of this project is to redevelop existing one project but make it for multiple airports with self administrators.</p>
-              <p className="mt-2 text-black"><span className="font-bold">Responsibilities:</span> CRUD development, Swagger OA, take part in meetings to discuss tasks.</p>
-              <p className="mt-2 text-black"><span className="font-bold">Technologies and Tools:</span> PHP, MySQL, Laravel, Composer, Docker, GIT.</p>
+              <h3 className="text-lg font-bold text-black">Full-Stack Developer</h3>
+              <p className="mt-2 text-black"><span className="font-bold">Project description:</span> Разработка широкого спектра IT-решений, включая внутренние бизнес-системы, клиентские веб-приложения и API. Основное внимание уделяется созданию масштабируемых, высокопроизводительных и безопасных приложений.</p>
+              <p className="mt-2 text-black"><span className="font-bold">Responsibilities:</span> Полный цикл разработки: от сбора требований и проектирования архитектуры до реализации, тестирования, развертывания и последующей поддержки. Интеграция со сторонними сервисами и API.</p>
+              <p className="mt-2 text-black"><span className="font-bold">Expertise in Telegram:</span> Боты на Aiogram (асинхронные, FSM, вебхуки), Мини-приложения (Web Apps), Платежи (Telegram), Высоконагруженные системы (Redis, кеш, очереди).</p>
             </div>
           </section>
         </div>
@@ -59,27 +55,24 @@ export default function Home() {
         <div>
           <h2 className="text-xl font-bold text-blue-700 mb-2">Skills</h2>
           <ul className="list-none space-y-1 text-black">
-            <li>PHP (7.5 y)</li>
-            <li>Wordpress (6.5 y)</li>
-            <li>Laravel (6.5 y)</li>
-            <li>Symfony (4.5 y)</li>
-            <li>React (1.5 y)</li>
-            <li>Docker (4.5 y)</li>
-            <li>Oxid (0.5 y )</li>
-            <li>MySQL (7.5 y)</li>
-            <li>PostgreSQL(4 y)</li>
-            <li>.Net (1 y)</li>
-            <li>Oracle db (1 y)</li>
-            <li>Javascript (7.5 y)</li>
-            <li>HTML (7.5 y)</li>
-            <li>CSS (7.5 y)</li>
-            <li>Git (7 y)</li>
-            <li>Bitrix24 (4.5 y)</li>
-            <li>Telegram bot API (4.5 y)</li>
-            <li>Ubuntu (7 y)</li>
-            <li>Flutter (1 y)</li>
-            <li>Node.js (1 y)</li>
-            <li>Composer (7.5 y)</li>
+            <li>Go</li>
+            <li>Node.js</li>
+            <li>Python (Flask, FastAPI, Aiogram)</li>
+            <li>PHP</li>
+            <li>Next.js</li>
+            <li>Tailwind CSS</li>
+            <li>PostgreSQL</li>
+            <li>GraphQL</li>
+            <li>MySQL</li>
+            <li>MSSQL</li>
+            <li>Supabase</li>
+            <li>Telegram API</li>
+            <li>Instagram API</li>
+            <li>Parsers</li>
+            <li>OpenAI API</li>
+            <li>Redis</li>
+            <li>Docker</li>
+            <li>UX/UI</li>
           </ul>
         </div>
       </div>
