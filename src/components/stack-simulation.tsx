@@ -125,7 +125,7 @@ export const StackSimulation = () => {
                 context.save();
                 context.translate(x, y);
                 context.rotate(body.angle);
-                context.fillStyle = categoryTextColors[stackItems[index].category];
+                context.fillStyle = 'white';
                 context.font = "8px 'Share Tech Mono', monospace";
                 context.textAlign = "center";
                 context.textBaseline = "middle";
