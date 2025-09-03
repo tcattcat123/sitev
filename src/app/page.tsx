@@ -102,26 +102,37 @@ export default function Home() {
             </div>
         </header>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
-            <div className="col-span-2 md:col-span-2">
-                <section className="mb-6">
-                    <h2 className="text-lg sm:text-xl font-bold text-primary mb-2">Objective</h2>
-                    <p className="text-foreground text-xs sm:text-sm"><Typewriter text={cvData.objective} /></p>
-                </section>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
+            <div className="md:col-span-2">
+                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-8">
+                    <div className="sm:col-span-2 md:col-span-1">
+                        <section className="mb-6">
+                            <h2 className="text-lg sm:text-xl font-bold text-primary mb-2">Objective</h2>
+                            <p className="text-foreground text-xs sm:text-sm"><Typewriter text={cvData.objective} /></p>
+                        </section>
 
-                <section>
-                    <h2 className="text-lg sm:text-xl font-bold text-primary mb-2">Experience</h2>
-                    <div className="mb-4 space-y-2 text-foreground text-xs sm:text-sm">
-                        <h3 className="text-base sm:text-lg font-bold">{cvData.experience.title}</h3>
-                        <p><span className="font-bold">Project description:</span> <Typewriter text={cvData.experience.project} /></p>
-                        <p><span className="font-bold">Responsibilities:</span> <Typewriter text={cvData.experience.responsibilities} /></p>
-                        <p><span className="font-bold">Expertise in Telegram:</span> <Typewriter text={cvData.experience.telegramExpertise} /></p>
+                        <section>
+                            <h2 className="text-lg sm:text-xl font-bold text-primary mb-2">Experience</h2>
+                            <div className="mb-4 space-y-2 text-foreground text-xs sm:text-sm">
+                                <h3 className="text-base sm:text-lg font-bold">{cvData.experience.title}</h3>
+                                <p><span className="font-bold">Project description:</span> <Typewriter text={cvData.experience.project} /></p>
+                                <p><span className="font-bold">Responsibilities:</span> <Typewriter text={cvData.experience.responsibilities} /></p>
+                                <p><span className="font-bold">Expertise in Telegram:</span> <Typewriter text={cvData.experience.telegramExpertise} /></p>
+                            </div>
+                        </section>
                     </div>
-                </section>
+                    <div className="sm:col-span-2 md:col-span-1">
+                        <h2 className="text-lg sm:text-xl font-bold text-primary mb-2">Skills</h2>
+                        <ul className="list-none space-y-1 text-foreground text-xs sm:text-sm">
+                            {cvData.skills.map((skill, index) => (
+                                <li key={index}><Typewriter text={skill} delay={index * 50} /></li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
             </div>
-
-            <div className="col-span-2 md:col-span-1">
-                <h2 className="text-lg sm:text-xl font-bold text-primary mb-2">Skills</h2>
+            <div className="hidden md:block md:col-span-1">
+                 <h2 className="text-lg sm:text-xl font-bold text-primary mb-2">Skills</h2>
                 <ul className="list-none space-y-1 text-foreground text-xs sm:text-sm">
                     {cvData.skills.map((skill, index) => (
                         <li key={index}><Typewriter text={skill} delay={index * 50} /></li>
