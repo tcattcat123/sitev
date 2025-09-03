@@ -46,7 +46,7 @@ export const StackSimulation = () => {
             return;
         }
 
-        const { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint } = Matter;
+        const { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint, Events } = Matter;
 
         const container = sceneRef.current;
         if (!container) return;
@@ -118,13 +118,12 @@ export const StackSimulation = () => {
         Runner.run(runner, engine);
 
         // Custom rendering to draw text on bodies
-        const customRender = () => {
+        Events.on(render, 'afterRender', () => {
             const context = render.context;
             bodies.forEach((body, index) => {
-                const { x, y } = body.position;
                 const item = stackItems[index];
                 context.save();
-                context.translate(x, y);
+                context.translate(body.position.x, body.position.y);
                 context.rotate(body.angle);
                 context.fillStyle = categoryTextColors[item.category];
                 context.font = "12px 'Share Tech Mono', monospace";
@@ -133,10 +132,7 @@ export const StackSimulation = () => {
                 context.fillText(item.name, 0, 0);
                 context.restore();
             });
-            requestAnimationFrame(customRender);
-        };
-        
-        requestAnimationFrame(customRender);
+        });
         
         // Handle resize
         const handleResize = () => {
@@ -157,6 +153,7 @@ export const StackSimulation = () => {
             if (engineRef.current) {
                 Runner.stop(engineRef.current.runner);
                 Render.stop(render);
+                Events.off(render, 'afterRender');
                 Engine.clear(engineRef.current.engine);
             }
             if (render.canvas) {
