@@ -176,10 +176,10 @@ export default function Home() {
 
 
   return (
-    <main className="flex flex-col items-center min-h-screen p-2 sm:p-4">
-      <div className="w-full max-w-xl mx-auto space-y-2">
+    <main className="flex flex-col h-screen p-2 sm:p-4">
+      <div className="w-full max-w-xl mx-auto flex flex-col flex-1 min-h-0">
         
-        <header className="flex gap-2">
+        <header className="flex gap-2 mb-2">
           <Card 
             className="w-1/3 aspect-square flex items-center justify-center text-center p-2 border-primary cursor-pointer relative overflow-hidden"
             onClick={() => !showGif && setShowGif(true)}
@@ -218,20 +218,20 @@ export default function Home() {
         </header>
         
         {activeContent === 'cv' && (
-          <section>
+          <section className="overflow-y-auto">
             {cvContent}
           </section>
         )}
         
         {activeContent === 'projects' && (
-          <section>
+          <section className="overflow-y-auto">
             {projectsContent}
           </section>
         )}
 
         {activeContent === 'main' && (
-          <>
-            <section>
+          <div className="flex-1 flex flex-col gap-2 min-h-0">
+            <section className="flex-shrink-0">
                 <Card className="w-full p-1 border-primary">
                     <CardHeader className="p-2">
                         <CardTitle className="text-base flex items-center gap-2">
@@ -258,7 +258,7 @@ export default function Home() {
                 </Card>
             </section>
             
-            <section>
+            <section className="flex-shrink-0">
               <Card className="w-full p-4 border-primary bg-primary/20 text-foreground">
                 <CardContent className="p-0 font-mono text-xs sm:text-sm">
                   <p className="font-bold">*** STOP: 0x00000000 BUSINESS_SUCCESS ***</p>
@@ -274,8 +274,8 @@ export default function Home() {
               </Card>
             </section>
 
-            <section>
-                <Card className="w-full h-72 p-1 border-primary">
+            <section className="flex-1 min-h-0">
+                <Card className="w-full h-full p-1 border-primary">
                   <CardHeader className="absolute p-2 z-10">
                     <CardTitle className="text-xs text-muted-foreground">C:\&gt; LOAD STACK</CardTitle>
                   </CardHeader>
@@ -284,7 +284,7 @@ export default function Home() {
                   </CardContent>
                 </Card>
             </section>
-          </>
+          </div>
         )}
       </div>
       <Toaster />
