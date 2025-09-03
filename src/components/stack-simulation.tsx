@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
@@ -22,6 +23,7 @@ export const StackSimulation = () => {
     ];
 
     const cleanupMatter = useCallback(() => {
+        if (typeof Matter === 'undefined') return;
         if (renderRef.current) {
             Matter.Render.stop(renderRef.current);
             if (engineRef.current?.world) {
@@ -31,6 +33,9 @@ export const StackSimulation = () => {
                 Matter.Engine.clear(engineRef.current);
             }
             renderRef.current.canvas?.remove();
+            renderRef.current.canvas = null;
+            renderRef.current.context = null;
+            renderRef.current.textures = {};
             renderRef.current = null;
         }
         if (runnerRef.current) {
@@ -154,19 +159,21 @@ export const StackSimulation = () => {
     }, []);
 
     useEffect(() => {
-        const matterJsCheck = setInterval(() => {
+        let matterJsCheck: NodeJS.Timeout | null = null;
+        const init = () => {
             if (typeof Matter !== 'undefined') {
-                clearInterval(matterJsCheck);
+                if (matterJsCheck) clearInterval(matterJsCheck);
                 setupMatter();
-                // Check if permission is needed
                 if (typeof (DeviceOrientationEvent as any).requestPermission !== 'function' && 'ondeviceorientation' in window) {
                     setHasPermission(true);
                 }
             }
-        }, 100);
+        }
+        
+        matterJsCheck = setInterval(init, 100);
 
         return () => {
-            clearInterval(matterJsCheck);
+            if (matterJsCheck) clearInterval(matterJsCheck);
             cleanupMatter();
         };
     }, [setupMatter, cleanupMatter]);
