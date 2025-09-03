@@ -13,16 +13,18 @@ export default function Home() {
   const { toast } = useToast()
   const [activeContent, setActiveContent] = useState<'main' | 'cv'>('main');
   const [showGif, setShowGif] = useState(false);
+  const [showCvAvatar, setShowCvAvatar] = useState(false);
   const [chinaTime, setChinaTime] = useState('');
   const [executing, setExecuting] = useState<string | null>(null);
   const [executingService, setExecutingService] = useState<string | null>(null);
 
   const handleNavClick = (content: 'main' | 'cv') => {
     setExecuting('C:\\> ' + (content === 'cv' ? 'CV' : '..'));
+    setShowCvAvatar(content === 'cv');
     setTimeout(() => {
       setActiveContent(content);
       setExecuting(null);
-    }, 1000);
+    }, 500);
   }
 
   const handleServiceClick = (serviceName: string, description: string) => {
@@ -33,7 +35,7 @@ export default function Home() {
         title: `C:\\> ${serviceName.toUpperCase()}.EXE`,
         description: description,
       })
-    }, 1500);
+    }, 1000);
   };
 
 
@@ -76,18 +78,16 @@ export default function Home() {
         <div className="md:col-span-2">
           <section className="mb-6">
             <h2 className="text-xl font-bold text-blue-700 mb-2">Objective</h2>
-            <p className="text-black">
-              Мой боевой опыт позволяет самостоятельно закрывать полный цикл разработки проекта от создания архитектуры до финального развертывания и поддержки. У вас в распоряжении есть мощная единица и гибкий выбор технологий. Мои знания позволяют быстро адаптироваться к новым задачам.
-            </p>
+            <p className="text-black" dangerouslySetInnerHTML={{ __html: "Мой боевой опыт позволяет самостоятельно закрывать полный цикл разработки проекта от&nbsp;создания архитектуры до&nbsp;финального развертывания и&nbsp;поддержки. У&nbsp;вас в&nbsp;распоряжении есть мощная единица и&nbsp;гибкий выбор технологий. Мои знания позволяют быстро адаптироваться к&nbsp;новым задачам." }} />
           </section>
   
           <section>
             <h2 className="text-xl font-bold text-blue-700 mb-2">Experience</h2>
             <div className="mb-4">
               <h3 className="text-lg font-bold text-black">Full-Stack Developer</h3>
-              <p className="mt-2 text-black"><span className="font-bold">Project description:</span> Разработка широкого спектра IT-решений, включая внутренние бизнес-системы, клиентские веб-приложения и API. Основное внимание уделяется созданию масштабируемых, высокопроизводительных и безопасных приложений.</p>
-              <p className="mt-2 text-black"><span className="font-bold">Responsibilities:</span> Полный цикл разработки: от сбора требований и проектирования архитектуры до реализации, тестирования, развертывания и последующей поддержки. Интеграция со сторонними сервисами и API.</p>
-              <p className="mt-2 text-black"><span className="font-bold">Expertise in Telegram:</span> Боты на Aiogram (асинхронные, FSM, вебхуки), Мини-приложения (Web Apps), Платежи (Telegram), Высоконагруженные системы (Redis, кеш, очереди).</p>
+              <p className="mt-2 text-black"><span className="font-bold">Project description:</span> Разработка широкого спектра IT-решений, включая внутренние бизнес-системы, клиентские веб-приложения и&nbsp;API. Основное внимание уделяется созданию масштабируемых, высокопроизводительных и&nbsp;безопасных приложений.</p>
+              <p className="mt-2 text-black"><span className="font-bold">Responsibilities:</span> Полный цикл разработки: от&nbsp;сбора требований и&nbsp;проектирования архитектуры до&nbsp;реализации, тестирования, развертывания и&nbsp;последующей поддержки. Интеграция со&nbsp;сторонними сервисами и&nbsp;API.</p>
+              <p className="mt-2 text-black"><span className="font-bold">Expertise in Telegram:</span> Боты на&nbsp;Aiogram (асинхронные, FSM, вебхуки), Мини-приложения (Web Apps), Платежи (Telegram), Высоконагруженные системы (Redis, кеш, очереди).</p>
             </div>
           </section>
         </div>
@@ -121,12 +121,11 @@ export default function Home() {
 
   const navButton = (label: string, content: 'main' | 'cv') => {
     const command = `C:\\> ${label}`;
-    const isActive = executing === command || (activeContent === content && !executing);
     return (
       <Button 
         variant="outline" 
         className="justify-start h-full text-base border-primary hover:bg-accent" 
-        onClick={() => label === 'CV' ? handleNavClick(content) : toast({ title: 'C:\\> ' + label, description: 'Раздел в разработке.'})}
+        onClick={() => label === 'CV' ? handleNavClick(content) : label === '..' ? handleNavClick('main') : toast({ title: 'C:\\> ' + label, description: 'Раздел в разработке.'})}
         disabled={!!executing}
       >
         {executing === command ? (
@@ -162,6 +161,16 @@ export default function Home() {
                     className="grayscale"
                     onLoadingComplete={() => setTimeout(() => setShowGif(false), 3000)}
                  />
+              ) : showCvAvatar ? (
+                <Image 
+                    src="https://picsum.photos/100/100" 
+                    alt="Vitaliy Petrov"
+                    width={100}
+                    height={100}
+                    data-ai-hint="man portrait"
+                    className="grayscale"
+                    style={{imageRendering: 'pixelated'}}
+                 />
               ) : (
                 <CardTitle className="text-xl leading-tight">
                   <TextScramble text="RUN" />
@@ -170,7 +179,7 @@ export default function Home() {
             </CardHeader>
           </Card>
           <nav className="col-span-2 flex flex-col gap-2">
-            {navButton('CV', 'cv')}
+            {activeContent === 'cv' ? navButton('..', 'main') : navButton('CV', 'cv')}
             {navButton('PROJECTS', 'main')}
             {navButton('CONTACT', 'main')}
           </nav>
@@ -255,3 +264,5 @@ export default function Home() {
     </main>
   );
 }
+
+    
