@@ -6,12 +6,36 @@ import { TextScramble } from '@/components/text-scramble';
 import { StackSimulation } from '@/components/stack-simulation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, HardDrive } from 'lucide-react';
+import { HardDrive, Loader2 } from 'lucide-react';
+import { useToast } from "@/hooks/use-toast"
 
 export default function Home() {
+  const { toast } = useToast()
   const [activeContent, setActiveContent] = useState<'main' | 'cv'>('main');
   const [showGif, setShowGif] = useState(false);
   const [chinaTime, setChinaTime] = useState('');
+  const [executing, setExecuting] = useState<string | null>(null);
+  const [executingService, setExecutingService] = useState<string | null>(null);
+
+  const handleNavClick = (content: 'main' | 'cv') => {
+    setExecuting('C:\\> ' + (content === 'cv' ? 'CV' : '..'));
+    setTimeout(() => {
+      setActiveContent(content);
+      setExecuting(null);
+    }, 1000);
+  }
+
+  const handleServiceClick = (serviceName: string, description: string) => {
+    setExecutingService(serviceName);
+    setTimeout(() => {
+      setExecutingService(null);
+      toast({
+        title: `C:\\> ${serviceName.toUpperCase()}.EXE`,
+        description: description,
+      })
+    }, 1500);
+  };
+
 
   useEffect(() => {
     const getChinaTime = () => {
@@ -29,12 +53,12 @@ export default function Home() {
   }, []);
 
   const services = [
-    { name: 'Боты', fileType: '.EXE' },
-    { name: 'Автоматизация', fileType: '.SYS' },
-    { name: 'Сайты', fileType: '.COM' },
-    { name: 'Программы', fileType: '.APP' },
-    { name: 'Графика', fileType: '.DLL' },
-    { name: 'UI/UX', fileType: '.CFG' },
+    { name: 'Боты', fileType: '.EXE', description: 'Разработка Telegram-ботов любой сложности.' },
+    { name: 'Автоматизация', fileType: '.SYS', description: 'Автоматизация бизнес-процессов и рутинных задач.' },
+    { name: 'Сайты', fileType: '.COM', description: 'Создание современных и быстрых веб-сайтов и приложений.' },
+    { name: 'Программы', fileType: '.APP', description: 'Разработка десктопных и серверных приложений.' },
+    { name: 'Графика', fileType: '.DLL', description: 'Создание графических материалов и интерфейсов.' },
+    { name: 'UI/UX', fileType: '.CFG', description: 'Проектирование интуитивно понятных пользовательских интерфейсов.' },
   ];
   
   const cvContent = (
@@ -95,6 +119,29 @@ export default function Home() {
     </div>
   );
 
+  const navButton = (label: string, content: 'main' | 'cv') => {
+    const command = `C:\\> ${label}`;
+    const isActive = executing === command || (activeContent === content && !executing);
+    return (
+      <Button 
+        variant="outline" 
+        className="justify-start h-full text-base border-primary hover:bg-accent" 
+        onClick={() => label === 'CV' ? handleNavClick(content) : toast({ title: 'C:\\> ' + label, description: 'Раздел в разработке.'})}
+        disabled={!!executing}
+      >
+        {executing === command ? (
+          <>
+            <Loader2 className="animate-spin mr-2" size={16}/>
+            <span>{command}<span className="cursor-blink">_</span></span>
+          </>
+        ) : (
+          <span>{command}</span>
+        )}
+      </Button>
+    )
+  };
+
+
   return (
     <main className="flex flex-col items-center min-h-screen p-2 sm:p-4">
       <div className="w-full max-w-md mx-auto space-y-2">
@@ -102,7 +149,7 @@ export default function Home() {
         <header className="grid grid-cols-3 gap-2">
           <Card 
             className="col-span-1 aspect-square flex items-center justify-center text-center p-2 border-primary cursor-pointer"
-            onClick={() => setShowGif(true)}
+            onClick={() => !showGif && setShowGif(true)}
           >
             <CardHeader className="p-0">
               {showGif ? (
@@ -117,15 +164,15 @@ export default function Home() {
                  />
               ) : (
                 <CardTitle className="text-xl leading-tight">
-                  <TextScramble text="Vitaliy" />
+                  <TextScramble text="RUN" />
                 </CardTitle>
               )}
             </CardHeader>
           </Card>
           <nav className="col-span-2 flex flex-col gap-2">
-            <Button variant="outline" className="justify-start h-full text-base border-primary hover:bg-accent" onClick={() => setActiveContent(activeContent === 'cv' ? 'main' : 'cv')}>C:\&gt; CV</Button>
-            <Button variant="outline" className="justify-start h-full text-base border-primary hover:bg-accent">C:\&gt; PROJECTS</Button>
-            <Button variant="outline" className="justify-start h-full text-base border-primary hover:bg-accent">C:\&gt; CONTACT</Button>
+            {navButton('CV', 'cv')}
+            {navButton('PROJECTS', 'main')}
+            {navButton('CONTACT', 'main')}
           </nav>
         </header>
         
@@ -147,12 +194,18 @@ export default function Home() {
                     </CardHeader>
                     <CardContent className="p-2 grid grid-cols-2 gap-2">
                       {services.map((service) => (
-                        <Button key={service.name} variant="ghost" className="justify-between w-full h-auto text-left p-2 hover:bg-accent">
+                        <Button 
+                          key={service.name} 
+                          variant="ghost" 
+                          className="justify-between w-full h-auto text-left p-2 hover:bg-accent"
+                          onClick={() => handleServiceClick(service.name, service.description)}
+                          disabled={!!executingService}
+                        >
                           <div className="flex flex-col">
                               <span>{service.name}</span>
                               <span className="text-xs text-muted-foreground">{service.fileType}</span>
                           </div>
-                          <ChevronDown size={16} />
+                          {executingService === service.name ? <Loader2 className="animate-spin" size={16} /> : <span className="text-2xl leading-none">→</span>}
                         </Button>
                       ))}
                     </CardContent>
