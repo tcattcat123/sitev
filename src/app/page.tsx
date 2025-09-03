@@ -38,10 +38,10 @@ export default function Home() {
   ];
   
   const cvContent = (
-    <div className="text-sm font-mono text-gray-800 bg-gray-100 p-6 rounded-lg">
+    <div className="text-sm font-mono text-gray-800 bg-gray-100 p-4 sm:p-6 rounded-lg">
       <header className="grid grid-cols-1 md:grid-cols-3 gap-4 border-b border-gray-300 pb-4 mb-4">
-        <h1 className="text-4xl font-bold col-span-2 text-black">Vitaliy Petrov</h1>
-        <div className="text-left text-black">
+        <h1 className="text-4xl font-bold col-span-1 md:col-span-2 text-black">Vitaliy Petrov</h1>
+        <div className="text-left text-black text-xs sm:text-sm">
             <p>My time: {chinaTime}</p>
             <a href="https://t.me/yofox" target="_blank" rel="noopener noreferrer" className="text-blue-600 block hover:underline">telegram: @yofox</a>
             <p className="text-blue-600">terakot2022@gmail.com</p>
@@ -187,9 +187,11 @@ export default function Home() {
         
         <section>
           <Card className="w-full p-4 border-green-500 bg-green-500/20 text-foreground">
-            <CardContent className="p-0 font-mono">
+            <CardContent className="p-0 font-mono text-sm">
               <p className="font-bold">*** STOP: 0x00000000 BUSINESS_SUCCESS ***</p>
               <p>VITALIY.DEV - SYSTEM HALTED FOR PROFIT OPTIMIZATION</p>
+              <br />
+              <p>SITE BUILT WITH: Next.js, React, Tailwind CSS, ShadCN, Genkit AI, Matter.js</p>
               <br />
               <p>PRESS ANY KEY TO CONTINUE... OR CONTACT FOR SERVICES <span className="cursor-blink">_</span></p>
             </CardContent>
@@ -200,7 +202,3 @@ export default function Home() {
     </main>
   );
 }
-
-    
-
-    
