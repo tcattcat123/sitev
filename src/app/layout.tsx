@@ -1,10 +1,9 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
-  title: 'RetroTerm',
-  description: 'Vitaliy - IT Solutions',
+  title: 'Vitaliy Petrov - IT Solutions',
+  description: 'Full-stack разработчик, специализирующийся на MVP, стартапах, автоматизации и ИИ. Работаю с проектами от макета до финального развертывания. Стек: Go, Python, React, Next.js.',
 };
 
 export default function RootLayout({
@@ -23,7 +22,6 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased">
         {children}
-        <Toaster />
       </body>
     </html>
   );

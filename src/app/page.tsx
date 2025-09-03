@@ -7,9 +7,8 @@ import { StackSimulation } from '@/components/stack-simulation';
 import { Typewriter } from '@/components/typewriter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { HardDrive, Send } from 'lucide-react';
+import { HardDrive } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast"
-import { Textarea } from '@/components/ui/textarea';
 
 export default function Home() {
   const { toast } = useToast()
@@ -24,10 +23,7 @@ export default function Home() {
   }
 
   const handleServiceClick = (serviceName: string, description: string) => {
-    toast({
-      title: `C:\\> ${serviceName.toUpperCase()}.EXE`,
-      description: description,
-    })
+    alert(`C:\\> ${serviceName.toUpperCase()}.EXE\n\n${description}`);
   };
   
   useEffect(() => {
@@ -95,7 +91,7 @@ export default function Home() {
                     </div>
                     
                     <a href={`https://t.me/${cvData.telegram}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline inline-flex items-center gap-2">
-                        <Send size={12} className="inline-block" />
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
                         <Typewriter text={`@${cvData.telegram}`} speed={50} delay={800} />
                     </a>
                 </div>
@@ -167,7 +163,7 @@ export default function Home() {
         onClick={() => {
           if (label === '..') handleNavClick('main')
           else if (content === 'projects' || content === 'cv') handleNavClick(content)
-          else toast({ title: 'C:\\> ' + label, description: 'Раздел в разработке.'})
+          else alert('C:\\> ' + label + '\n\nРаздел в разработке.')
         }}
       >
         <span>{command}</span>
