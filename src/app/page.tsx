@@ -34,22 +34,6 @@ export default function Home() {
         </header>
 
         <section>
-          <Card className="w-full p-4 border-2 border-blue-500 bg-blue-800 text-white">
-            <CardContent className="p-0 font-mono">
-              <p className="font-bold">A fatal exception 0E has occurred at 0028:C0011E36 in VXD VMM(01) + 00010E36.</p>
-              <br />
-              <p>Увеличение вашей прибыли за счет IT - решений. Делаем ваш бизнес удобным, с доступом управления из любой точки мира.</p>
-              <br />
-              <p>* Press any key to terminate the current application.</p>
-              <p>* Press CTRL+ALT+DEL again to restart your computer. You will lose any unsaved information in all applications.</p>
-              <div className="text-center mt-4">
-                 Press any key to continue <span className="cursor-blink">_</span>
-              </div>
-            </CardContent>
-          </Card>
-        </section>
-
-        <section>
             <Card className="w-full p-1 border-primary">
                 <CardHeader className="p-2">
                     <CardTitle className="text-base flex items-center gap-2">
@@ -80,6 +64,17 @@ export default function Home() {
                 <StackSimulation />
               </CardContent>
             </Card>
+        </section>
+        
+        <section>
+          <Card className="w-full p-4 border-2 border-blue-500 bg-blue-900/80 text-white">
+            <CardContent className="p-0 font-mono">
+              <p className="font-bold">*** STOP: 0x00000000 BUSINESS_SUCCESS ***</p>
+              <p>VITALIY.DEV - SYSTEM HALTED FOR PROFIT OPTIMIZATION</p>
+              <br />
+              <p>PRESS ANY KEY TO CONTINUE... OR CONTACT FOR SERVICES <span className="cursor-blink">_</span></p>
+            </CardContent>
+          </Card>
         </section>
 
       </div>
