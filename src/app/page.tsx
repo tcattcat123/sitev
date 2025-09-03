@@ -56,7 +56,7 @@ export default function Home() {
   }, []);
 
   const services = [
-    { name: 'Боты', fileType: '.EXE', description: 'Разработка Telegram-ботов любой сложности.' },
+    { name: 'Боты', fileType: '.EXE', description: 'Разработка Telegram-ботов.' },
     { name: 'Автоматизация', fileType: '.SYS', description: 'Автоматизация бизнес-процессов и рутинных задач.' },
     { name: 'Сайты', fileType: '.COM', description: 'Создание современных и быстрых веб-сайтов и приложений.' },
     { name: 'Программы', fileType: '.APP', description: 'Разработка десктопных и серверных приложений.' },
@@ -69,12 +69,12 @@ export default function Home() {
     email: 'terakot2022@gmail.com',
     time: chinaTime,
     telegram: 'yofox',
-    objective: 'Мой боевой опыт позволяет самостоятельно закрывать полный цикл разработки проекта от&nbsp;создания архитектуры до&nbsp;финального развертывания и&nbsp;поддержки. У&nbsp;вас в&nbsp;распоряжении есть мощная единица и&nbsp;гибкий выбор технологий. Мои знания позволяют быстро адаптироваться к&nbsp;новым задачам.',
+    objective: 'Мой конек - быстро понять и реализовать MVP с нуля. Уделяю особое внимание созданию интуитивно понятных интерфейсов и качественных макетов, что позволяет быстро адаптироваться к новым задачам.',
     experience: {
       title: 'Full-Stack Developer',
-      project: 'Разработка широкого спектра IT-решений, включая внутренние бизнес-системы, клиентские веб-приложения и&nbsp;API. Основное внимание уделяется созданию масштабируемых, высокопроизводительных и&nbsp;безопасных приложений.',
-      responsibilities: 'Полный цикл разработки: от&nbsp;сбора требований и&nbsp;проектирования архитектуры до&nbsp;реализации, тестирования, развертывания и&nbsp;последующей поддержки. Интеграция со&nbsp;сторонними сервисами и&nbsp;API.',
-      telegramExpertise: 'Боты на&nbsp;Aiogram (асинхронные, FSM, вебхуки), Мини-приложения (Web Apps), Платежи (Telegram), Высоконагруженные системы (Redis, кеш, очереди).'
+      project: 'Разработка широкого спектра IT-решений, включая внутренние бизнес-системы и клиентские веб-приложения. Основное внимание — быстрая реализация MVP.',
+      responsibilities: 'Полный цикл разработки: от сбора требований и проектирования архитектуры до реализации, тестирования, развертывания и последующей поддержки. Интеграция со сторонними сервисами и API.',
+      telegramExpertise: 'Боты на Aiogram (асинхронные, FSM, вебхуки), Мини-приложения (Web Apps), Платежи (Telegram).'
     },
     skills: [
       'Go', 'Node.js', 'Python (Flask, FastAPI, Aiogram)', 'PHP', 'Next.js',
@@ -159,36 +159,35 @@ export default function Home() {
         
         <header className="grid grid-cols-3 gap-2">
           <Card 
-            className="col-span-1 aspect-square flex items-center justify-center text-center p-2 border-primary cursor-pointer"
+            className="col-span-1 aspect-square flex items-center justify-center text-center p-2 border-primary cursor-pointer relative overflow-hidden"
             onClick={() => !showGif && setShowGif(true)}
           >
-            <CardHeader className="p-0">
               {showGif ? (
                  <Image 
                     src="https://i.pinimg.com/originals/5a/d1/12/5ad1129aac65a79357551cd652a484e3.gif" 
                     alt="matrix gif"
-                    width={100}
-                    height={100}
+                    layout="fill"
+                    objectFit="cover"
                     unoptimized
                     className="grayscale"
                     onLoadingComplete={() => setTimeout(() => setShowGif(false), 3000)}
                  />
               ) : showCvAvatar ? (
                 <Image 
-                    src="https://picsum.photos/100/100" 
-                    alt="Vitaliy Petrov"
-                    width={100}
-                    height={100}
-                    data-ai-hint="man portrait"
+                    src="https://i.pinimg.com/originals/5a/d1/12/5ad1129aac65a79357551cd652a484e3.gif" 
+                    alt="matrix gif"
+                    layout="fill"
+                    objectFit="cover"
+                    unoptimized
                     className="grayscale"
-                    style={{imageRendering: 'pixelated'}}
                  />
               ) : (
-                <CardTitle className="text-xl leading-tight">
-                  <TextScramble text="RUN" />
-                </CardTitle>
+                <CardHeader className="p-0">
+                    <CardTitle className="text-xl leading-tight">
+                    <TextScramble text="RUN" />
+                    </CardTitle>
+                </CardHeader>
               )}
-            </CardHeader>
           </Card>
           <nav className="col-span-2 flex flex-col gap-2">
             {activeContent === 'cv' ? navButton('..', 'main') : navButton('CV', 'cv')}
@@ -279,6 +278,7 @@ export default function Home() {
     
 
     
+
 
 
 
