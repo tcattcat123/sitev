@@ -152,7 +152,7 @@ export default function Home() {
               <div className="glitch-overlay absolute inset-0 opacity-20 group-hover:opacity-10" />
             </>
           ) : null}
-          <span className="relative z-10">{project.name}</span>
+          <span className="relative z-10 whitespace-nowrap">{project.name}</span>
         </div>
       ))}
     </div>
@@ -292,5 +292,3 @@ export default function Home() {
     </main>
   );
 }
-
-    
