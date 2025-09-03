@@ -2,7 +2,6 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
 
 // Declare Matter.js since it's loaded from a script tag
 declare const Matter: any;
@@ -18,21 +17,21 @@ declare global {
 
 type StackCategory = 'frontend' | 'backend' | 'tool';
 
-const stackItems: { name: string; category: StackCategory; width: number }[] = [
-    { name: 'React', category: 'frontend', width: 80 },
-    { name: 'Next.js', category: 'frontend', width: 90 },
-    { name: 'Tailwind', category: 'frontend', width: 100 },
-    { name: 'Go', category: 'backend', width: 50 },
-    { name: 'Node.js', category: 'backend', width: 90 },
-    { name: 'Python', category: 'backend', width: 90 },
-    { name: 'PHP', category: 'backend', width: 60 },
-    { name: 'PostgreSQL', category: 'backend', width: 120 },
-    { name: 'MySQL', category: 'backend', width: 80 },
-    { name: 'MongoDB', category: 'backend', width: 110 },
-    { name: 'Supabase', category: 'tool', width: 100 },
-    { name: 'OpenAI', category: 'tool', width: 80 },
-    { name: 'Telegram', category: 'tool', width: 100 },
-    { name: 'Parsers', category: 'tool', width: 90 },
+const stackItems: { name: string; category: StackCategory; width: number, height: number }[] = [
+    { name: 'React', category: 'frontend', width: 60, height: 24 },
+    { name: 'Next.js', category: 'frontend', width: 70, height: 24 },
+    { name: 'Tailwind', category: 'frontend', width: 80, height: 24 },
+    { name: 'Go', category: 'backend', width: 40, height: 24 },
+    { name: 'Node.js', category: 'backend', width: 70, height: 24 },
+    { name: 'Python', category: 'backend', width: 70, height: 24 },
+    { name: 'PHP', category: 'backend', width: 50, height: 24 },
+    { name: 'PostgreSQL', category: 'backend', width: 100, height: 24 },
+    { name: 'MySQL', category: 'backend', width: 60, height: 24 },
+    { name: 'MongoDB', category: 'backend', width: 90, height: 24 },
+    { name: 'Supabase', category: 'tool', width: 80, height: 24 },
+    { name: 'OpenAI', category: 'tool', width: 60, height: 24 },
+    { name: 'Telegram', category: 'tool', width: 80, height: 24 },
+    { name: 'Parsers', category: 'tool', width: 70, height: 24 },
 ];
 
 const categoryColors: Record<StackCategory, string> = {
@@ -99,7 +98,7 @@ export const StackSimulation = () => {
                 Math.random() * container.clientWidth,
                 Math.random() * -300,
                 item.width,
-                32,
+                item.height,
                 {
                     restitution: 0.5,
                     friction: 0.3,
@@ -136,7 +135,7 @@ export const StackSimulation = () => {
                     position: body.position,
                     angle: body.angle,
                     width: stackItem.width,
-                    height: 32,
+                    height: stackItem.height,
                     category: stackItem.category,
                     name: stackItem.name
                 };
@@ -208,7 +207,7 @@ export const StackSimulation = () => {
                         alignItems: 'center',
                         justifyContent: 'center',
                         fontFamily: "'Share Tech Mono', monospace",
-                        fontSize: '12px',
+                        fontSize: '10px',
                         fontWeight: 'bold',
                         borderRadius: '2px',
                     }}
