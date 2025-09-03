@@ -18,20 +18,20 @@ declare global {
 type StackCategory = 'frontend' | 'backend' | 'tool';
 
 const stackItems: { name: string; category: StackCategory; width: number, height: number }[] = [
-    { name: 'React', category: 'frontend', width: 15, height: 6 },
-    { name: 'Next.js', category: 'frontend', width: 17, height: 6 },
-    { name: 'Tailwind', category: 'frontend', width: 20, height: 6 },
-    { name: 'Go', category: 'backend', width: 10, height: 6 },
-    { name: 'Node.js', category: 'backend', width: 17, height: 6 },
-    { name: 'Python', category: 'backend', width: 17, height: 6 },
-    { name: 'PHP', category: 'backend', width: 12, height: 6 },
-    { name: 'PostgreSQL', category: 'backend', width: 25, height: 6 },
-    { name: 'MySQL', category: 'backend', width: 15, height: 6 },
-    { name: 'MongoDB', category: 'backend', width: 22, height: 6 },
-    { name: 'Supabase', category: 'tool', width: 20, height: 6 },
-    { name: 'OpenAI', category: 'tool', width: 15, height: 6 },
-    { name: 'Telegram', category: 'tool', width: 20, height: 6 },
-    { name: 'Parsers', category: 'tool', width: 17, height: 6 },
+    { name: 'React', category: 'frontend', width: 7.5, height: 3 },
+    { name: 'Next.js', category: 'frontend', width: 8.5, height: 3 },
+    { name: 'Tailwind', category: 'frontend', width: 10, height: 3 },
+    { name: 'Go', category: 'backend', width: 5, height: 3 },
+    { name: 'Node.js', category: 'backend', width: 8.5, height: 3 },
+    { name: 'Python', category: 'backend', width: 8.5, height: 3 },
+    { name: 'PHP', category: 'backend', width: 6, height: 3 },
+    { name: 'PostgreSQL', category: 'backend', width: 12.5, height: 3 },
+    { name: 'MySQL', category: 'backend', width: 7.5, height: 3 },
+    { name: 'MongoDB', category: 'backend', width: 11, height: 3 },
+    { name: 'Supabase', category: 'tool', width: 10, height: 3 },
+    { name: 'OpenAI', category: 'tool', width: 7.5, height: 3 },
+    { name: 'Telegram', category: 'tool', width: 10, height: 3 },
+    { name: 'Parsers', category: 'tool', width: 8.5, height: 3 },
 ];
 
 const categoryColors: Record<StackCategory, string> = {
@@ -107,7 +107,7 @@ export const StackSimulation = () => {
             )
         );
 
-        const ground = Bodies.rectangle(container.clientWidth / 2, 182, container.clientWidth + 20, 10, { isStatic: true, render: { visible: false } });
+        const ground = Bodies.rectangle(container.clientWidth / 2, 188, container.clientWidth + 20, 10, { isStatic: true, render: { visible: false } });
         const wallLeft = Bodies.rectangle(-5, 96, 10, 192, { isStatic: true, render: { visible: false } });
         const wallRight = Bodies.rectangle(container.clientWidth + 5, 96, 10, 192, { isStatic: true, render: { visible: false } });
 
@@ -146,12 +146,12 @@ export const StackSimulation = () => {
         const handleResize = () => {
              if (!container || !engineRef.current) return;
              
-             Bodies.setPosition(ground, { x: container.clientWidth / 2, y: 182 });
+             Bodies.setPosition(ground, { x: container.clientWidth / 2, y: 188 });
              Bodies.setVertices(ground, [
-                { x: 0, y: 182 },
-                { x: container.clientWidth, y: 182 },
-                { x: container.clientWidth, y: 192 },
-                { x: 0, y: 192 }
+                { x: 0, y: 188 },
+                { x: container.clientWidth, y: 188 },
+                { x: container.clientWidth, y: 198 },
+                { x: 0, y: 198 }
              ]);
              Bodies.setPosition(wallRight, { x: container.clientWidth + 5, y: 96 });
         };
