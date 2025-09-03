@@ -79,8 +79,8 @@ export const StackSimulation = () => {
     };
 
     useEffect(() => {
-        if (typeof Matter === 'undefined') {
-            console.error("Matter.js not loaded");
+        // Ensure Matter.js is loaded and this code runs only on the client
+        if (typeof Matter === 'undefined' || !sceneRef.current) {
             return;
         }
 
