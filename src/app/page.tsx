@@ -75,7 +75,7 @@ export default function Home() {
   
   const projectsData = [
     { name: '</cv mediapipe bot>', image: 'https://i.imgur.com/o96pWfT.jpeg' },
-    { name: '</name>' },
+    { name: '</site>', image: 'https://i.imgur.com/g833t9y.jpeg' },
     { name: '</name>' },
     { name: '</name>' },
   ];
@@ -136,7 +136,7 @@ export default function Home() {
       {projectsData.map((project, i) => (
         <div 
           key={i}
-          className="aspect-square bg-card border border-primary flex items-center justify-center text-foreground font-mono text-lg transition-all duration-300 ease-in-out hover:rounded-full hover:bg-primary/20 cursor-pointer relative group"
+          className="aspect-square bg-card border border-primary flex items-center justify-center text-foreground font-mono text-lg transition-all duration-300 ease-in-out hover:rounded-full hover:bg-primary/20 cursor-pointer relative group overflow-hidden"
         >
           {project.image ? (
             <>
@@ -145,7 +145,7 @@ export default function Home() {
                 alt="Project image"
                 layout="fill"
                 objectFit="cover"
-                className="grayscale opacity-50 group-hover:opacity-75 transition-opacity"
+                className="grayscale opacity-50 group-hover:opacity-75 transition-opacity transform group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-black/50 group-hover:bg-black/30 transition-colors" />
               <div className="glitch-overlay absolute inset-0 opacity-20 group-hover:opacity-10" />
