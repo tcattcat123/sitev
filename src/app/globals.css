@@ -65,6 +65,7 @@
   body {
     @apply bg-background text-foreground;
     text-shadow: 0 0 2px currentColor;
+    filter: grayscale(1) contrast(1.2);
   }
 
   body::before {
@@ -78,9 +79,9 @@
     background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
       linear-gradient(
         90deg,
-        rgba(0, 255, 0, 0.04),
-        rgba(0, 255, 0, 0.02),
-        rgba(0, 255, 0, 0.04)
+        rgba(255, 255, 255, 0.04),
+        rgba(255, 255, 255, 0.02),
+        rgba(255, 255, 255, 0.04)
       );
     z-index: 2000;
     background-size: 100% 2px, 3px 100%;
