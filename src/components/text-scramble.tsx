@@ -1,9 +1,10 @@
+
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 export const TextScramble: React.FC<{ text: string; className?: string }> = ({ text, className }) => {
-  const [currentText, setCurrentText] = useState(text);
+  const [currentText, setCurrentText] = useState('');
   const textRef = useRef(text);
   const intervalRef = useRef<NodeJS.Timeout>();
   const [isRevealed, setIsRevealed] = useState(false);
@@ -70,5 +71,3 @@ export const TextScramble: React.FC<{ text: string; className?: string }> = ({ t
     </>
   );
 };
-
-    

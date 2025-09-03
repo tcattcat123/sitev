@@ -218,78 +218,78 @@ export default function Home() {
           </nav>
         </header>
         
-        {activeContent === 'cv' && (
-          <section className="overflow-y-auto">
-            {cvContent}
-          </section>
-        )}
-        
-        {activeContent === 'projects' && (
-          <section className="overflow-y-auto">
-            {projectsContent}
-          </section>
-        )}
+        <div className="flex flex-col flex-grow min-h-0">
+          {activeContent === 'cv' && (
+            <section className="overflow-y-auto flex-grow">
+              {cvContent}
+            </section>
+          )}
+          
+          {activeContent === 'projects' && (
+            <section className="overflow-y-auto flex-grow">
+              {projectsContent}
+            </section>
+          )}
 
-        {activeContent === 'main' && (
-          <div className="space-y-2 flex flex-col flex-grow">
-            <section>
-                <Card className="w-full p-1 border-primary">
-                    <CardHeader className="p-2">
-                        <CardTitle className="text-base flex items-center gap-2">
-                            <HardDrive size={16} />
-                            <span>DIR C:\SERVICES\*.*</span>
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-2 grid grid-cols-2 gap-2">
-                      {services.map((service) => (
-                        <Button 
-                          key={service.name} 
-                          variant="ghost" 
-                          className="justify-between w-full h-auto text-left p-2 hover:bg-accent"
-                          onClick={() => handleServiceClick(service.name, service.description, service.fileType)}
-                        >
-                          <div className="flex flex-col">
-                              <span className="text-sm sm:text-base">{service.name}</span>
-                              <span className="text-xs text-muted-foreground">{service.fileType}</span>
-                          </div>
-                          <span className="text-2xl leading-none">→</span>
-                        </Button>
-                      ))}
-                    </CardContent>
+          {activeContent === 'main' && (
+            <div className="space-y-2 flex flex-col flex-grow">
+              <section>
+                  <Card className="w-full p-1 border-primary">
+                      <CardHeader className="p-2">
+                          <CardTitle className="text-base flex items-center gap-2">
+                              <HardDrive size={16} />
+                              <span>DIR C:\SERVICES\*.*</span>
+                          </CardTitle>
+                      </CardHeader>
+                      <CardContent className="p-2 grid grid-cols-2 gap-2">
+                        {services.map((service) => (
+                          <Button 
+                            key={service.name} 
+                            variant="ghost" 
+                            className="justify-between w-full h-auto text-left p-2 hover:bg-accent"
+                            onClick={() => handleServiceClick(service.name, service.description, service.fileType)}
+                          >
+                            <div className="flex flex-col">
+                                <span className="text-sm sm:text-base">{service.name}</span>
+                                <span className="text-xs text-muted-foreground">{service.fileType}</span>
+                            </div>
+                            <span className="text-2xl leading-none">→</span>
+                          </Button>
+                        ))}
+                      </CardContent>
+                  </Card>
+              </section>
+              
+              <section>
+                <Card className="w-full p-4 border-primary bg-primary/20 text-foreground">
+                  <CardContent className="p-0 font-mono text-xs sm:text-sm">
+                    <p className="font-bold">*** STOP: 0x00000000 BUSINESS_SUCCESS ***</p>
+                    <p>VITALIY.DEV - SYSTEM HALTED FOR PROFIT OPTIMIZATION</p>
+                    <br />
+                    <p>SITE BUILT WITH: Next.js, React, Tailwind CSS, ShadCN, Genkit AI, Matter.js, Framer Motion</p>
+                    <br />
+                    <div className="relative">
+                       <p>PRESS ANY KEY TO CONTINUE...<span className="cursor-blink">_</span></p>
+                    </div>
+                    <p>OR CONTACT FOR SERVICES</p>
+                  </CardContent>
                 </Card>
-            </section>
-            
-            <section>
-              <Card className="w-full p-4 border-primary bg-primary/20 text-foreground">
-                <CardContent className="p-0 font-mono text-xs sm:text-sm">
-                  <p className="font-bold">*** STOP: 0x00000000 BUSINESS_SUCCESS ***</p>
-                  <p>VITALIY.DEV - SYSTEM HALTED FOR PROFIT OPTIMIZATION</p>
-                  <br />
-                  <p>SITE BUILT WITH: Next.js, React, Tailwind CSS, ShadCN, Genkit AI, Matter.js, Framer Motion</p>
-                  <br />
-                  <div className="relative">
-                     <p>PRESS ANY KEY TO CONTINUE...<span className="cursor-blink">_</span></p>
-                  </div>
-                  <p>OR CONTACT FOR SERVICES</p>
-                </CardContent>
-              </Card>
-            </section>
+              </section>
 
-            <section className="flex-grow min-h-0">
-              <Card className="w-full h-full p-1 border-primary flex flex-col">
-                <CardHeader className="p-2 z-10">
-                  <CardTitle className="text-xs text-muted-foreground">C:\&gt; LOAD STACK</CardTitle>
-                </CardHeader>
-                <CardContent className="p-0 h-full w-full overflow-hidden flex-grow relative">
-                  <StackSimulation />
-                </CardContent>
-              </Card>
-            </section>
-          </div>
-        )}
+              <section className="flex-grow min-h-0">
+                <Card className="w-full h-full p-1 border-primary flex flex-col">
+                  <CardHeader className="p-2 z-10">
+                    <CardTitle className="text-xs text-muted-foreground">C:\&gt; LOAD STACK</CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-0 h-full w-full overflow-hidden flex-grow relative">
+                    <StackSimulation />
+                  </CardContent>
+                </Card>
+              </section>
+            </div>
+          )}
+        </div>
       </div>
     </main>
   );
 }
-
-    
