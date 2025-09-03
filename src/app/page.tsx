@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { HardDrive, Send } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast"
+import { Textarea } from '@/components/ui/textarea';
 
 export default function Home() {
   const { toast } = useToast()
@@ -266,7 +267,15 @@ export default function Home() {
                   <br />
                   <p>SITE BUILT WITH: Next.js, React, Tailwind CSS, ShadCN, Genkit AI, Matter.js</p>
                   <br />
-                  <p>PRESS ANY KEY TO CONTINUE... OR CONTACT FOR SERVICES <span className="cursor-blink">_</span></p>
+                  <div className="relative">
+                    <Textarea
+                      placeholder="PRESS ANY KEY TO CONTINUE..."
+                      className="bg-transparent border-none focus-visible:ring-0 resize-none p-0 overflow-hidden"
+                      rows={1}
+                    />
+                    <span className="absolute right-0 top-0 cursor-blink">_</span>
+                  </div>
+                  <p>OR CONTACT FOR SERVICES</p>
                 </CardContent>
               </Card>
             </section>
