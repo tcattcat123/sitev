@@ -87,19 +87,15 @@ export default function Home() {
   const cvContent = (
     <div className="text-sm font-mono text-foreground bg-card p-4 sm:p-6 rounded-lg relative overflow-hidden border border-border">
         <header className="flex flex-col md:flex-row justify-between md:items-start gap-6 border-b border-border pb-4 mb-4">
-            <div>
+            <div className="flex-grow">
                 <h1 className="text-4xl font-bold text-foreground">{cvData.name}</h1>
                 <p className="text-primary mt-1"><Typewriter text={cvData.email} /></p>
             </div>
             <div className="font-mono text-xs sm:text-sm w-full md:w-auto md:max-w-xs shrink-0">
                 <div className="bg-background/50 text-foreground p-3 rounded-lg border border-primary/20 w-full shadow-inner backdrop-blur-sm">
                     <div className="flex items-center justify-between mb-2 pb-2 border-b border-border">
-                        <div className="flex items-center gap-1.5">
-                            <span className="w-3 h-3 rounded-full bg-red-500"></span>
-                            <span className="w-3 h-3 rounded-full bg-yellow-500"></span>
-                            <span className="w-3 h-3 rounded-full bg-green-500"></span>
-                        </div>
-                        <span className="text-primary"><Typewriter text={`TIME: ${cvData.time}`} speed={50} /></span>
+                        <span className="text-primary">My TIME</span>
+                        <span className="text-primary"><Typewriter text={`${cvData.time}`} speed={50} /></span>
                     </div>
                     
                     <a href={`https://t.me/${cvData.telegram}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline inline-flex items-center gap-2">
@@ -284,4 +280,5 @@ export default function Home() {
     
 
     
+
 
