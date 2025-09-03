@@ -72,6 +72,13 @@ export default function Home() {
       'CV/Tools: MediaPipe, OpenAI API, Telegram API, парсеры'
     ]
   };
+  
+  const projectsData = [
+    { name: '</cv mediapipe bot>', image: 'https://i.imgur.com/o96pWfT.jpeg' },
+    { name: '</name>' },
+    { name: '</name>' },
+    { name: '</name>' },
+  ];
 
   const cvContent = (
     <div className="text-sm font-mono text-foreground bg-card p-4 sm:p-6 rounded-lg relative overflow-hidden border border-border">
@@ -126,12 +133,25 @@ export default function Home() {
   
   const projectsContent = (
     <div className="grid grid-cols-2 gap-2">
-      {Array.from({ length: 4 }).map((_, i) => (
+      {projectsData.map((project, i) => (
         <div 
           key={i}
-          className="aspect-square bg-card border border-primary flex items-center justify-center text-foreground font-mono text-lg transition-all duration-300 ease-in-out hover:rounded-full hover:bg-primary/20 cursor-pointer"
+          className="aspect-square bg-card border border-primary flex items-center justify-center text-foreground font-mono text-lg transition-all duration-300 ease-in-out hover:rounded-full hover:bg-primary/20 cursor-pointer relative group"
         >
-          &lt;/name&gt;
+          {project.image ? (
+            <>
+              <Image
+                src={project.image}
+                alt="Project image"
+                layout="fill"
+                objectFit="cover"
+                className="grayscale opacity-50 group-hover:opacity-75 transition-opacity"
+              />
+              <div className="absolute inset-0 bg-black/50 group-hover:bg-black/30 transition-colors" />
+              <div className="glitch-overlay absolute inset-0 opacity-20 group-hover:opacity-10" />
+            </>
+          ) : null}
+          <span className="relative z-10">{project.name}</span>
         </div>
       ))}
     </div>
@@ -281,5 +301,7 @@ export default function Home() {
     </main>
   );
 }
+
+    
 
     
