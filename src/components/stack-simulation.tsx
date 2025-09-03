@@ -33,7 +33,7 @@ const categoryColors: Record<StackCategory, string> = {
 const categoryTextColors: Record<StackCategory, string> = {
     backend: 'hsl(var(--primary-foreground))',
     frontend: 'hsl(var(--primary-foreground))',
-    tool: 'hsl(var(--primary-foreground))',
+    tool: 'hsl(var(--background))',
 };
 
 export const StackSimulation = () => {
