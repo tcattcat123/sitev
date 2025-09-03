@@ -77,12 +77,12 @@ export const StackSimulation = () => {
         });
 
         const bodies = stackItems.map(item => {
-            const elWidth = item.name.length * 8 + 10;
+            const elWidth = item.name.length * 10 + 20;
             return Bodies.rectangle(
                 Math.random() * container.clientWidth,
                 Math.random() * -200, // Start above the canvas
                 elWidth,
-                24, // h-6
+                32, // h-8
                 {
                     restitution: 0.5,
                     friction: 0.3,
@@ -122,14 +122,15 @@ export const StackSimulation = () => {
             const context = render.context;
             bodies.forEach((body, index) => {
                 const { x, y } = body.position;
+                const item = stackItems[index];
                 context.save();
                 context.translate(x, y);
                 context.rotate(body.angle);
-                context.fillStyle = 'white';
-                context.font = "8px 'Share Tech Mono', monospace";
+                context.fillStyle = categoryTextColors[item.category];
+                context.font = "12px 'Share Tech Mono', monospace";
                 context.textAlign = "center";
                 context.textBaseline = "middle";
-                context.fillText(stackItems[index].name, 0, 0);
+                context.fillText(item.name, 0, 0);
                 context.restore();
             });
             requestAnimationFrame(customRender);
