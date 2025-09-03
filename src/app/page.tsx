@@ -144,7 +144,7 @@ export default function Home() {
               <Image
                 src={project.image}
                 alt="Project image"
-                layout="fill"
+                fill
                 objectFit="cover"
                 className="grayscale opacity-50 group-hover:opacity-75 transition-opacity transform group-hover:scale-110"
               />
@@ -199,7 +199,7 @@ export default function Home() {
                 <Image 
                     src="https://i.pinimg.com/736x/21/f4/12/21f412812347a9c8134a464786ae287d.jpg"
                     alt="pixelated person"
-                    layout="fill"
+                    fill
                     objectFit="cover"
                     className="grayscale"
                  />
@@ -268,12 +268,7 @@ export default function Home() {
                   <p>SITE BUILT WITH: Next.js, React, Tailwind CSS, ShadCN, Genkit AI, Matter.js</p>
                   <br />
                   <div className="relative">
-                    <Textarea
-                      placeholder="PRESS ANY KEY TO CONTINUE..."
-                      className="bg-transparent border-none focus-visible:ring-0 resize-none p-0 overflow-hidden"
-                      rows={1}
-                    />
-                    <span className="absolute right-0 top-0 cursor-blink">_</span>
+                     <p>PRESS ANY KEY TO CONTINUE...<span className="cursor-blink">_</span></p>
                   </div>
                   <p>OR CONTACT FOR SERVICES</p>
                 </CardContent>
