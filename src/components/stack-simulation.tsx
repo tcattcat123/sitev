@@ -3,22 +3,37 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-const stackItems = [
-    { name: 'React' }, { name: 'Next.js' }, { name: 'Tailwind' },
-    { name: 'Go' }, { name: 'Node.js' }, { name: 'Python' }, 
-    { name: 'PHP' }, { name: 'PostgreSQL' }, { name: 'MySQL' }, 
-    { name: 'Supabase' }, { name: 'MongoDB' }, { name: 'OpenAI' }, 
-    { name: 'Telegram' }, { name: 'Parsers' },
+type StackCategory = 'frontend' | 'backend' | 'tool';
+
+const stackItems: { name: string; category: StackCategory }[] = [
+    { name: 'React', category: 'frontend' },
+    { name: 'Next.js', category: 'frontend' },
+    { name: 'Tailwind', category: 'frontend' },
+    { name: 'Go', category: 'backend' },
+    { name: 'Node.js', category: 'backend' },
+    { name: 'Python', category: 'backend' },
+    { name: 'PHP', category: 'backend' },
+    { name: 'PostgreSQL', category: 'backend' },
+    { name: 'MySQL', category: 'backend' },
+    { name: 'MongoDB', category: 'backend' },
+    { name: 'Supabase', category: 'tool' },
+    { name: 'OpenAI', category: 'tool' },
+    { name: 'Telegram', category: 'tool' },
+    { name: 'Parsers', category: 'tool' },
 ];
 
-const colors = [
-    'hsl(var(--chart-1))',
-    'hsl(var(--chart-2))',
-    'hsl(var(--chart-3))',
-    'hsl(var(--chart-4))',
-    'hsl(var(--chart-5))',
-    'hsl(var(--primary))',
-];
+const categoryColors: Record<StackCategory, string> = {
+    backend: 'hsl(var(--primary))', // Dark Blue
+    frontend: 'hsl(142.1 76.2% 36.3%)', // Green
+    tool: 'hsl(var(--foreground))', // Black (using foreground which is nearly black)
+};
+
+const categoryTextColors: Record<StackCategory, string> = {
+    backend: 'hsl(var(--primary-foreground))',
+    frontend: 'hsl(var(--primary-foreground))',
+    tool: 'hsl(var(--background))',
+}
+
 
 export const StackSimulation = () => {
     return (
@@ -34,13 +49,12 @@ export const StackSimulation = () => {
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     className="absolute flex items-center justify-center cursor-grab"
                     style={{
-                        backgroundColor: colors[index % colors.length],
-                        color: 'hsl(var(--card-foreground))',
-                        borderRadius: '0.25rem', // 4px
-                        padding: '0.125rem 0.5rem', // h-2 p-2
-                        fontSize: '0.65rem', // text-xs
+                        backgroundColor: categoryColors[item.category],
+                        color: categoryTextColors[item.category],
+                        borderRadius: '0.125rem',
+                        padding: '0.1rem 0.3rem',
+                        fontSize: '0.5rem',
                         height: 'auto',
-                        // Position elements somewhat randomly to start
                         top: `${20 + (index % 5) * 15}%`,
                         left: `${10 + Math.floor(index / 5) * 20 + (Math.random() - 0.5) * 10}%`,
                     }}
