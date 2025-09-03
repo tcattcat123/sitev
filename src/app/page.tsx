@@ -176,7 +176,8 @@ export default function Home() {
 
 
   return (
-    <main className="p-2 sm:p-4 min-h-screen flex flex-col">
+    <main className="p-2 sm:p-4 min-h-screen flex flex-col relative">
+      <Toaster />
       <div className="w-full max-w-xl mx-auto flex flex-col flex-grow">
         
         <header className="flex gap-2 mb-2">
@@ -274,20 +275,21 @@ export default function Home() {
               </Card>
             </section>
 
-            <section className="flex-grow min-h-[192px]">
-                <Card className="w-full h-full p-1 border-primary flex flex-col">
-                  <CardHeader className="p-2 z-10">
-                    <CardTitle className="text-xs text-muted-foreground">C:\&gt; LOAD STACK</CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-0 h-full w-full overflow-hidden flex-grow">
-                    <StackSimulation />
-                  </CardContent>
-                </Card>
+            <section className="flex-grow min-h-[256px]">
+              <Card className="w-full h-full p-1 border-primary flex flex-col">
+                <CardHeader className="p-2 z-10">
+                  <CardTitle className="text-xs text-muted-foreground">C:\&gt; LOAD STACK</CardTitle>
+                </CardHeader>
+                <CardContent className="p-0 h-full w-full overflow-hidden flex-grow">
+                  <StackSimulation />
+                </CardContent>
+              </Card>
             </section>
           </div>
         )}
       </div>
-      <Toaster />
     </main>
   );
 }
+
+    

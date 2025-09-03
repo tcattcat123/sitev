@@ -60,6 +60,11 @@ export const StackSimulation = () => {
     const sceneRef = useRef<HTMLDivElement>(null);
     const engineRef = useRef<any>();
     const [bodies, setBodies] = useState<BodyState[]>([]);
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
     
     const requestDeviceOrientationPermission = async () => {
         if (typeof window !== 'undefined' && window.DeviceOrientationEvent && typeof window.DeviceOrientationEvent.requestPermission === 'function') {
@@ -79,8 +84,7 @@ export const StackSimulation = () => {
     };
 
     useEffect(() => {
-        // Ensure Matter.js is loaded and this code runs only on the client
-        if (typeof Matter === 'undefined' || !sceneRef.current) {
+        if (!isClient || typeof Matter === 'undefined' || !sceneRef.current) {
             return;
         }
 
@@ -107,7 +111,7 @@ export const StackSimulation = () => {
             )
         );
 
-        const ground = Bodies.rectangle(container.clientWidth / 2, container.clientHeight + 5, container.clientWidth + 20, 10, { isStatic: true, render: { visible: false } });
+        const ground = Bodies.rectangle(container.clientWidth / 2, container.clientHeight, container.clientWidth + 20, 10, { isStatic: true, render: { visible: false } });
         const wallLeft = Bodies.rectangle(-5, container.clientHeight / 2, 10, container.clientHeight, { isStatic: true, render: { visible: false } });
         const wallRight = Bodies.rectangle(container.clientWidth + 5, container.clientHeight / 2, 10, container.clientHeight, { isStatic: true, render: { visible: false } });
 
@@ -147,12 +151,12 @@ export const StackSimulation = () => {
         const handleResize = () => {
              if (!container || !engineRef.current) return;
              
-             Bodies.setPosition(ground, { x: container.clientWidth / 2, y: container.clientHeight + 5 });
+             Bodies.setPosition(ground, { x: container.clientWidth / 2, y: container.clientHeight });
              Bodies.setVertices(ground, [
-                { x: -10, y: container.clientHeight },
-                { x: container.clientWidth + 10, y: container.clientHeight },
-                { x: container.clientWidth + 10, y: container.clientHeight + 10 },
-                { x: -10, y: container.clientHeight + 10 }
+                { x: -10, y: container.clientHeight - 5 },
+                { x: container.clientWidth + 10, y: container.clientHeight - 5 },
+                { x: container.clientWidth + 10, y: container.clientHeight + 5 },
+                { x: -10, y: container.clientHeight + 5 }
              ]);
              Bodies.setPosition(wallRight, { x: container.clientWidth + 5, y: container.clientHeight / 2 });
              Bodies.setPosition(wallLeft, { x: -5, y: container.clientHeight / 2 });
@@ -192,7 +196,6 @@ export const StackSimulation = () => {
             }
         };
         
-        // Automatically try to setup gyro on component mount
         setupGyro();
 
         return () => {
@@ -203,11 +206,11 @@ export const StackSimulation = () => {
             window.removeEventListener('resize', handleResize);
             window.removeEventListener('deviceorientation', handleOrientation);
         };
-    }, []);
+    }, [isClient]);
 
     return (
         <div ref={sceneRef} className="w-full h-full relative overflow-hidden bg-background">
-            {bodies.map(body => (
+            {isClient && bodies.map(body => (
                 <div
                     key={body.id}
                     style={{
@@ -235,3 +238,5 @@ export const StackSimulation = () => {
         </div>
     );
 };
+
+    
