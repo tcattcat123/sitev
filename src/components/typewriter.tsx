@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export const Typewriter: React.FC<{ text: string; speed?: number; delay?: number; className?: string }> = ({ text, speed = 20, delay = 0, className }) => {
   const [displayedText, setDisplayedText] = useState('');
@@ -12,7 +12,9 @@ export const Typewriter: React.FC<{ text: string; speed?: number; delay?: number
   }, []);
 
   useEffect(() => {
-    if (!isClient) return;
+    if (!isClient || !text) return;
+    
+    setDisplayedText(''); // Reset on text change
 
     const startTypingTimer = setTimeout(() => {
       let i = 0;
@@ -32,13 +34,15 @@ export const Typewriter: React.FC<{ text: string; speed?: number; delay?: number
   }, [text, speed, delay, isClient]);
 
   if (!isClient) {
+    // Render nothing on the server to avoid mismatch
     return <span className={className}></span>;
   }
 
   return (
     <span className={className}>
       <span>{displayedText}</span>
-      {displayedText.length < text.length && <span className="cursor-blink">_</span>}
+      {/* Only show cursor if typing is in progress */}
+      {isClient && displayedText.length < text.length && <span className="cursor-blink">_</span>}
     </span>
   );
 };

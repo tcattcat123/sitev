@@ -57,7 +57,6 @@ export default function Home() {
   const cvData = {
     name: 'Vitaliy Petrov',
     email: 'terakot2022@gmail.com',
-    time: chinaTime,
     telegram: 'yofox',
     objective: 'Мой опыт сосредоточен на работе с MVP и стартапами. от разработки интерфейса проектов до финального развертывания. Обладаю навыками в решении комплексных задач и быстрой адаптации к новым технологиям. Активно использую инструменты ИИ для автоматизации процессов и ускорения разработки.',
     experience: {
@@ -91,7 +90,7 @@ export default function Home() {
             <div className="font-mono text-xs sm:text-sm w-full md:w-auto md:max-w-xs shrink-0">
                 <div className="bg-background/50 text-foreground p-3 rounded-lg border border-primary/20 w-full shadow-inner backdrop-blur-sm">
                     <div className="flex items-center justify-between mb-2 pb-2 border-b border-border">
-                        {chinaTime !== null ? <span className="text-foreground"><Typewriter text={`My TIME ${cvData.time}`} speed={50} /></span> : <div className="h-4" />}
+                        {chinaTime !== null ? <span className="text-foreground"><Typewriter text={`My TIME ${chinaTime}`} speed={50} /></span> : <div className="h-4" />}
                     </div>
                     
                     <a href={`https://t.me/${cvData.telegram}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline inline-flex items-center gap-2">
@@ -177,8 +176,8 @@ export default function Home() {
 
   return (
     <main className="p-2 sm:p-4 min-h-screen flex flex-col relative">
-      <Toaster />
       <div className="w-full max-w-xl mx-auto flex flex-col flex-grow">
+      <Toaster />
         
         <header className="flex gap-2 mb-2">
           <Card 
@@ -277,7 +276,7 @@ export default function Home() {
               </section>
 
               <section className="flex-grow min-h-0">
-                <Card className="w-full h-full p-1 border-primary flex flex-col">
+                <Card className="w-full h-64 p-1 border-primary flex flex-col">
                   <CardHeader className="p-2 z-10">
                     <CardTitle className="text-xs text-muted-foreground">C:\&gt; LOAD STACK</CardTitle>
                   </CardHeader>
