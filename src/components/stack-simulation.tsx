@@ -2,9 +2,19 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from 'react';
+import { Button } from '@/components/ui/button';
 
 // Declare Matter.js since it's loaded from a script tag
 declare const Matter: any;
+// Extend the Window interface for DeviceOrientationEvent permission method
+declare global {
+    interface Window {
+        DeviceOrientationEvent?: {
+            requestPermission?: () => Promise<'granted' | 'denied'>;
+        };
+    }
+}
+
 
 type StackCategory = 'frontend' | 'backend' | 'tool';
 
@@ -51,8 +61,31 @@ export const StackSimulation = () => {
     const sceneRef = useRef<HTMLDivElement>(null);
     const engineRef = useRef<any>();
     const [bodies, setBodies] = useState<BodyState[]>([]);
+    const [permissionGranted, setPermissionGranted] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
+      setIsMobile(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
+    }, []);
+
+    const requestDeviceOrientationPermission = async () => {
+        if (typeof window !== 'undefined' && window.DeviceOrientationEvent && typeof window.DeviceOrientationEvent.requestPermission === 'function') {
+            try {
+                const permissionState = await window.DeviceOrientationEvent.requestPermission();
+                if (permissionState === 'granted') {
+                    setPermissionGranted(true);
+                }
+            } catch (error) {
+                console.error("DeviceOrientationEvent.requestPermission() failed:", error);
+            }
+        } else {
+            // For non-iOS 13+ devices, permission is not required
+            setPermissionGranted(true);
+        }
+    };
+
+    useEffect(() => {
+        if (isMobile && !permissionGranted) return;
         if (typeof Matter === 'undefined') {
             console.error("Matter.js not loaded");
             return;
@@ -63,7 +96,7 @@ export const StackSimulation = () => {
         const container = sceneRef.current;
         if (!container) return;
         
-        const engine = Engine.create({ gravity: { y: 0.4 } });
+        const engine = Engine.create({ gravity: { y: 0.4, x: 0 } });
         const runner = Runner.create();
         engineRef.current = { engine, runner };
 
@@ -76,11 +109,7 @@ export const StackSimulation = () => {
                 {
                     restitution: 0.5,
                     friction: 0.3,
-                    label: item.name,
-                    render: {
-                        fillStyle: categoryColors[item.category],
-                        strokeStyle: 'transparent',
-                    }
+                    label: item.name
                 }
             )
         );
@@ -90,20 +119,8 @@ export const StackSimulation = () => {
         const wallRight = Bodies.rectangle(container.clientWidth + 5, 144, 10, 288, { isStatic: true, render: { visible: false } });
 
         Composite.add(engine.world, [...matterBodies, ground, wallLeft, wallRight]);
-
-        // Render canvas for physics visualization but no text
-        const render = Matter.Render.create({
-            element: container,
-            engine: engine,
-            options: {
-                width: container.clientWidth,
-                height: 288,
-                wireframes: false,
-                background: 'transparent',
-            }
-        });
         
-        const mouse = Mouse.create(render.canvas);
+        const mouse = Mouse.create(container);
         const mouseConstraint = MouseConstraint.create(engine, {
             mouse: mouse,
             constraint: {
@@ -115,10 +132,8 @@ export const StackSimulation = () => {
         });
         Composite.add(engine.world, mouseConstraint);
 
-        Matter.Render.run(render);
         Runner.run(runner, engine);
 
-        // Update React state with body positions on each physics update
         Events.on(engine, 'afterUpdate', () => {
             const updatedBodies = matterBodies.map(body => {
                 const stackItem = stackItems.find(it => it.name === body.label)!;
@@ -136,34 +151,56 @@ export const StackSimulation = () => {
         });
         
         const handleResize = () => {
-             if (!container || !render || !engineRef.current) return;
-             render.canvas.width = container.clientWidth;
-             Matter.Render.lookAt(render, {
-                min: { x: 0, y: 0 },
-                max: { x: container.clientWidth, y: 288 }
-            });
-            Bodies.setPosition(ground, { x: container.clientWidth / 2, y: 288 });
-            Bodies.setPosition(wallRight, { x: container.clientWidth + 5, y: 144 });
+             if (!container || !engineRef.current) return;
+             
+             Bodies.setPosition(ground, { x: container.clientWidth / 2, y: 288 });
+             Bodies.setVertices(ground, [
+                { x: 0, y: 288 },
+                { x: container.clientWidth, y: 288 },
+                { x: container.clientWidth, y: 298 },
+                { x: 0, y: 298 }
+             ]);
+             Bodies.setPosition(wallRight, { x: container.clientWidth + 5, y: 144 });
         };
         window.addEventListener('resize', handleResize);
+
+        const handleOrientation = (event: DeviceOrientationEvent) => {
+            if (!engine.gravity || !event.gamma || !event.beta) return;
+            const { gamma, beta } = event; // gamma: left-right, beta: front-back
+            
+            // Normalize gamma and beta to a range of [-1, 1]
+            const gravityX = Math.min(Math.max(gamma / 45, -1), 1);
+            const gravityY = Math.min(Math.max(beta / 90 - 0.5, -1), 1);
+
+            engine.gravity.x = gravityX;
+            engine.gravity.y = gravityY;
+        };
+
+        if (permissionGranted) {
+             window.addEventListener('deviceorientation', handleOrientation);
+        }
 
         return () => {
             if (engineRef.current) {
                 Runner.stop(engineRef.current.runner);
-                Matter.Render.stop(render);
                 Engine.clear(engineRef.current.engine);
             }
-            if (render.canvas) {
-                 if (container.contains(render.canvas)) {
-                    container.removeChild(render.canvas);
-                }
-            }
             window.removeEventListener('resize', handleResize);
+            if (permissionGranted) {
+                window.removeEventListener('deviceorientation', handleOrientation);
+            }
         };
-    }, []);
+    }, [permissionGranted, isMobile]);
 
     return (
-        <div ref={sceneRef} className="w-full h-full relative overflow-hidden">
+        <div ref={sceneRef} className="w-full h-full relative overflow-hidden bg-background">
+            {isMobile && !permissionGranted && (
+                <div className="absolute inset-0 flex items-center justify-center z-20">
+                    <Button onClick={requestDeviceOrientationPermission}>
+                        Включить гироскоп
+                    </Button>
+                </div>
+            )}
             {bodies.map(body => (
                 <div
                     key={body.id}
@@ -181,7 +218,8 @@ export const StackSimulation = () => {
                         justifyContent: 'center',
                         fontFamily: "'Share Tech Mono', monospace",
                         fontSize: '12px',
-                        fontWeight: 'bold'
+                        fontWeight: 'bold',
+                        borderRadius: '2px',
                     }}
                 >
                     {body.name}
@@ -190,5 +228,3 @@ export const StackSimulation = () => {
         </div>
     );
 };
-
-    
