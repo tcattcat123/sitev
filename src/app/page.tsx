@@ -69,7 +69,7 @@ export default function Home() {
     email: 'terakot2022@gmail.com',
     time: chinaTime,
     telegram: 'yofox',
-    objective: 'Работаю с проектами от макета до финального развертывания. Мой практический опыт и гибкий подход позволяют быстро адаптироваться к новым задачам.',
+    objective: 'Мой подход это решать задачи. Использую ИИ как шуруповерт, для ускорения, анализа и автоматизации. Могу быстро адаптироваться к новым задачам.',
     experience: {
       title: 'Full-Stack Developer',
       project: 'Разработка широкого спектра IT-решений, включая внутренние бизнес-системы и клиентские веб-приложения. Основное внимание — быстрая реализация MVP.',
@@ -77,10 +77,10 @@ export default function Home() {
       telegramExpertise: 'Боты на Aiogram (асинхронные, FSM, вебхуки), Мини-приложения (Web Apps), Платежи (Telegram).'
     },
     skills: [
-      'Go', 'Node.js', 'Python (Flask, FastAPI, Aiogram)', 'PHP', 'Next.js',
-      'Tailwind CSS', 'PostgreSQL', 'GraphQL', 'MySQL', 'MSSQL', 'Supabase',
-      'Telegram API', 'Instagram API', 'Parsers', 'OpenAI API', 'Redis',
-      'Docker', 'UX/UI'
+      'Backend: Go, Node.js, Python (Flask, FastAPI, Aiogram...), PHP',
+      'Frontend: React, Next.js, Tailwind CSS, Flowbite, MUI',
+      'DB: PostgreSQL, MySQL, MSSQL, Supabase, MongoDB',
+      'CV/Tools: MediaPipe, OpenAI API, Telegram API, парсеры'
     ]
   };
 
