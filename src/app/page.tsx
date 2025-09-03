@@ -19,23 +19,15 @@ export default function Home() {
   const [executingService, setExecutingService] = useState<string | null>(null);
 
   const handleNavClick = (content: 'main' | 'cv') => {
-    setExecuting('C:\\> ' + (content === 'cv' ? 'CV' : '..'));
+    setActiveContent(content);
     setShowCvAvatar(content === 'cv');
-    setTimeout(() => {
-      setActiveContent(content);
-      setExecuting(null);
-    }, 500);
   }
 
   const handleServiceClick = (serviceName: string, description: string) => {
-    setExecutingService(serviceName);
-    setTimeout(() => {
-      setExecutingService(null);
-      toast({
-        title: `C:\\> ${serviceName.toUpperCase()}.EXE`,
-        description: description,
-      })
-    }, 1000);
+    toast({
+      title: `C:\\> ${serviceName.toUpperCase()}.EXE`,
+      description: description,
+    })
   };
 
 
@@ -126,16 +118,8 @@ export default function Home() {
         variant="outline" 
         className="justify-start h-full text-base border-primary hover:bg-accent" 
         onClick={() => label === 'CV' ? handleNavClick(content) : label === '..' ? handleNavClick('main') : toast({ title: 'C:\\> ' + label, description: 'Раздел в разработке.'})}
-        disabled={!!executing}
       >
-        {executing === command ? (
-          <>
-            <Loader2 className="animate-spin mr-2" size={16}/>
-            <span>{command}<span className="cursor-blink">_</span></span>
-          </>
-        ) : (
-          <span>{command}</span>
-        )}
+        <span>{command}</span>
       </Button>
     )
   };
