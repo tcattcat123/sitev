@@ -107,7 +107,7 @@ export const StackSimulation = () => {
             )
         );
 
-        const ground = Bodies.rectangle(container.clientWidth / 2, 192, container.clientWidth + 20, 10, { isStatic: true, render: { visible: false } });
+        const ground = Bodies.rectangle(container.clientWidth / 2, 172, container.clientWidth + 20, 10, { isStatic: true, render: { visible: false } });
         const wallLeft = Bodies.rectangle(-5, 96, 10, 192, { isStatic: true, render: { visible: false } });
         const wallRight = Bodies.rectangle(container.clientWidth + 5, 96, 10, 192, { isStatic: true, render: { visible: false } });
 
@@ -146,12 +146,12 @@ export const StackSimulation = () => {
         const handleResize = () => {
              if (!container || !engineRef.current) return;
              
-             Bodies.setPosition(ground, { x: container.clientWidth / 2, y: 192 });
+             Bodies.setPosition(ground, { x: container.clientWidth / 2, y: 172 });
              Bodies.setVertices(ground, [
-                { x: 0, y: 192 },
-                { x: container.clientWidth, y: 202 },
-                { x: container.clientWidth, y: 202 },
-                { x: 0, y: 192 }
+                { x: 0, y: 172 },
+                { x: container.clientWidth, y: 182 },
+                { x: container.clientWidth, y: 182 },
+                { x: 0, y: 172 }
              ]);
              Bodies.setPosition(wallRight, { x: container.clientWidth + 5, y: 96 });
         };
