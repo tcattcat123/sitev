@@ -18,20 +18,20 @@ declare global {
 type StackCategory = 'frontend' | 'backend' | 'tool';
 
 const stackItems: { name: string; category: StackCategory; width: number, height: number }[] = [
-    { name: 'React', category: 'frontend', width: 75, height: 30 },
-    { name: 'Next.js', category: 'frontend', width: 85, height: 30 },
-    { name: 'Tailwind', category: 'frontend', width: 100, height: 30 },
-    { name: 'Go', category: 'backend', width: 50, height: 30 },
-    { name: 'Node.js', category: 'backend', width: 85, height: 30 },
-    { name: 'Python', category: 'backend', width: 85, height: 30 },
-    { name: 'PHP', category: 'backend', width: 60, height: 30 },
-    { name: 'PostgreSQL', category: 'backend', width: 125, height: 30 },
-    { name: 'MySQL', category: 'backend', width: 75, height: 30 },
-    { name: 'MongoDB', category: 'backend', width: 110, height: 30 },
-    { name: 'Supabase', category: 'tool', width: 100, height: 30 },
-    { name: 'OpenAI', category: 'tool', width: 75, height: 30 },
-    { name: 'Telegram', category: 'tool', width: 100, height: 30 },
-    { name: 'Parsers', category: 'tool', width: 85, height: 30 },
+    { name: 'React', category: 'frontend', width: 50, height: 20 },
+    { name: 'Next.js', category: 'frontend', width: 57, height: 20 },
+    { name: 'Tailwind', category: 'frontend', width: 67, height: 20 },
+    { name: 'Go', category: 'backend', width: 33, height: 20 },
+    { name: 'Node.js', category: 'backend', width: 57, height: 20 },
+    { name: 'Python', category: 'backend', width: 57, height: 20 },
+    { name: 'PHP', category: 'backend', width: 40, height: 20 },
+    { name: 'PostgreSQL', category: 'backend', width: 83, height: 20 },
+    { name: 'MySQL', category: 'backend', width: 50, height: 20 },
+    { name: 'MongoDB', category: 'backend', width: 73, height: 20 },
+    { name: 'Supabase', category: 'tool', width: 67, height: 20 },
+    { name: 'OpenAI', category: 'tool', width: 50, height: 20 },
+    { name: 'Telegram', category: 'tool', width: 67, height: 20 },
+    { name: 'Parsers', category: 'tool', width: 57, height: 20 },
 ];
 
 const categoryColors: Record<StackCategory, string> = {
@@ -207,10 +207,10 @@ export const StackSimulation = () => {
                         alignItems: 'center',
                         justifyContent: 'center',
                         fontFamily: "'Share Tech Mono', monospace",
-                        fontSize: '12px',
+                        fontSize: '10px',
                         fontWeight: 'bold',
                         borderRadius: '4px',
-                        border: '2px solid rgba(0,0,0,0.2)'
+                        border: '1px solid rgba(0,0,0,0.2)'
                     }}
                 >
                     {body.name}
