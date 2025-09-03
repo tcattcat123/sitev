@@ -261,13 +261,6 @@ export default function Home() {
             <section>
               <Card className="w-full p-4 border-primary bg-primary/20 text-foreground">
                 <CardContent className="p-0 font-mono text-sm">
-                  <p>SYSTEM STATUS: OPERATIONAL<br />
-                  &gt; PROFIT_INCREASE.EXE RUNNING...<br />
-                  &gt; IT_SOLUTIONS.DLL LOADED<br />
-                  &gt; BUSINESS_AUTOMATION READY<br />
-                  &gt; REMOTE_ACCESS ENABLED<br />
-                  &gt; GLOBAL_MANAGEMENT ACTIVE</p>
-                  <br />
                   <p className="font-bold">*** STOP: 0x00000000 BUSINESS_SUCCESS ***</p>
                   <p>VITALIY.DEV - SYSTEM HALTED FOR PROFIT OPTIMIZATION</p>
                   <br />
@@ -295,5 +288,3 @@ export default function Home() {
     </main>
   );
 }
-
-    
