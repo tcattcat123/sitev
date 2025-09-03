@@ -6,7 +6,7 @@ import { TextScramble } from '@/components/text-scramble';
 import { StackSimulation } from '@/components/stack-simulation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { HardDrive, Loader2 } from 'lucide-react';
+import { HardDrive, Loader2, Send } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast"
 
 export default function Home() {
@@ -58,11 +58,16 @@ export default function Home() {
   const cvContent = (
     <div className="text-sm font-mono text-gray-800 bg-gray-100 p-4 sm:p-6 rounded-lg relative z-[2001]">
       <header className="grid grid-cols-1 md:grid-cols-3 gap-4 border-b border-gray-300 pb-4 mb-4">
-        <h1 className="text-4xl font-bold col-span-1 md:col-span-2 text-black">Vitaliy Petrov</h1>
-        <div className="text-left text-black text-xs sm:text-sm">
-            <p>My time: {chinaTime}</p>
-            <a href="https://t.me/yofox" target="_blank" rel="noopener noreferrer" className="text-blue-600 block hover:underline">telegram: @yofox</a>
+        <div className="col-span-1 md:col-span-2">
+            <h1 className="text-4xl font-bold text-black">Vitaliy Petrov</h1>
             <p className="text-blue-600">terakot2022@gmail.com</p>
+        </div>
+        <div className="text-left text-black text-xs sm:text-sm md:text-right">
+            <p>My time: {chinaTime}</p>
+            <a href="https://t.me/yofox" target="_blank" rel="noopener noreferrer" className="text-blue-600 flex items-center md:justify-end gap-2 hover:underline">
+                <Send size={14} />
+                <span>telegram: @yofox</span>
+            </a>
         </div>
       </header>
   
