@@ -16,6 +16,7 @@ export default function Home() {
   const [showGif, setShowGif] = useState(false);
   const [showCvAvatar, setShowCvAvatar] = useState(false);
   const [chinaTime, setChinaTime] = useState('');
+  const [availabilityMessage, setAvailabilityMessage] = useState('');
 
   const handleNavClick = (content: 'main' | 'cv') => {
     setActiveContent(content);
@@ -27,6 +28,15 @@ export default function Home() {
       title: `C:\\> ${serviceName.toUpperCase()}.EXE`,
       description: description,
     })
+  };
+  
+  const checkAvailability = () => {
+    const hour = parseInt(chinaTime.split(':')[0], 10);
+    if (hour >= 9 && hour < 22) {
+      setAvailabilityMessage('> STATUS: ONLINE. Писать можно.');
+    } else {
+      setAvailabilityMessage('> STATUS: OFFLINE. Лучше завтра.');
+    }
   };
 
 
@@ -83,16 +93,16 @@ export default function Home() {
             </div>
             <div className="font-mono text-xs sm:text-sm">
               <div className="bg-background/50 text-foreground p-3 rounded-lg border border-primary/20 w-full shadow-inner backdrop-blur-sm">
-                  <div className="flex items-center mb-2 pb-2 border-b border-border">
-                      <Check size={16} className="text-green-500" />
-                      <span className="ml-2 text-xs text-green-500">ACCESS GRANTED</span>
+                  <div className="flex items-baseline justify-between mb-2 pb-2 border-b border-border">
+                      <Button variant="ghost" size="sm" onClick={checkAvailability} className="text-xs h-auto p-1 text-green-500">CHECK</Button>
+                      <span className="text-primary"><Typewriter text={`TIME: ${cvData.time}`} speed={50} /></span>
                   </div>
-                  <div className="text-primary"><Typewriter text={`> TIME: ${cvData.time}`} speed={50} /></div>
                   
-                  <a href={`https://t.me/${cvData.telegram}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline inline-flex items-center gap-2 mt-1">
+                  <a href={`https://t.me/${cvData.telegram}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline inline-flex items-center gap-2">
                       <Send size={12} className="inline-block" />
                       <Typewriter text={`@${cvData.telegram}`} speed={50} delay={800} />
                   </a>
+                  {availabilityMessage && <div className="text-green-500 mt-2"><Typewriter text={availabilityMessage} /></div>}
               </div>
             </div>
         </header>
@@ -267,5 +277,7 @@ export default function Home() {
     </main>
   );
 }
+
+    
 
     
