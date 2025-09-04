@@ -26,10 +26,14 @@ export default function Home() {
   }
 
   const handleServiceClick = (serviceName: string, description: string, fileType: string) => {
-    toast({
-      title: `C:\\> ${serviceName.toUpperCase()}${fileType}`,
-      description: description,
-    })
+    if (serviceName === 'CV') {
+      setShowCvModal(true);
+    } else {
+      toast({
+        title: `C:\\> ${serviceName.toUpperCase()}${fileType}`,
+        description: description,
+      })
+    }
   };
   
   useEffect(() => {
