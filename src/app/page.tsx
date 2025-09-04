@@ -81,7 +81,7 @@ const uiUxHtmlContent = `<!DOCTYPE html>
         <!-- === Экран профиля пользователя === -->
         <div id="user-profile-screen" class="fixed top-0 right-0 w-full max-w-md h-full bg-white z-50 transform translate-x-full transition-transform duration-300 ease-in-out p-4 flex flex-col">
             <div class="flex justify-between items-center mb-6"><h2 class="text-2xl font-bold">Ваш профиль</h2><button id="close-user-profile-btn" class="p-2 hover:bg-gray-100 rounded-full"><svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg></button></div>
-            <div class="space-y-4 flex-grow"><div><label for="user-name" class="block text-sm font-medium text-gray-700 mb-1">Ваше имя</label><input type="text" id="user-name" value="Иван Петров" class="w-full p-2 bg-gray-100 rounded-lg"></div><div><label class="block text-sm font-medium text-gray-700 mb-2">Ваша локация</label><div class="grid grid-cols-2 gap-2"><div><input type="radio" name="location" id="bali" value="bali" class="hidden peer" checked><label for="bali" class="block text-center p-3 bg-gray-100 rounded-lg cursor-pointer peer-checked:bg-gray-900 peer-checked:text-white">Бали</label></div><div><input type="radio" name="location" id="lanka" value="lanka" class="hidden peer"><label for="lanka" class="block text-center p-3 bg-gray-100 rounded-lg cursor-pointer peer-checked:bg-gray-900 peer-checked:text-white">Шри-Ланка</label></div></div></div></div>
+            <div class="space-y-4 flex-grow"><div><label for="user-name" class="block text-sm font-medium text-gray-700 mb-1">Ваше имя</label><input type="text" id="user-name" value="Иван Петров" class="w-full p-2 bg-gray-100 rounded-lg"></div><div><label class="block text-sm font-medium text-gray-700 mb-2">Ваша локация</label><div class="grid grid-cols-2 gap-2"><div><input type="radio" name="location" id="bali" value="bali" class="hidden peer" checked><label for="bali" class="block text-center p-3 bg-gray-100 rounded-lg cursor-pointer peer-checked:bg-gray-900 peer-checked:text-white">Бали</label></div><div><input type="radio" name="location" id="lanka" value="lanka" class="hidden peer"><label for="lanka" class="block text-center p-3 bg-gray-100 rounded-lg cursor-pointer peer-checked:bg-gray-900 peer-checked:text-white">Шри-Ланка</label></div></div></div>
             <button class="w-full bg-gray-900 text-white font-bold py-3 px-4 rounded-xl">Сохранить изменения</button>
         </div>
         
@@ -298,8 +298,8 @@ export default function Home() {
             </div>
         </header>
 
-        <div className="flex flex-col sm:flex-row gap-6">
-            <div className="w-full sm:w-2/3">
+        <div className="flex flex-row gap-6">
+            <div className="w-2/3">
                 <section className="mb-6">
                     <div className="flex items-center gap-2 mb-2">
                         <h2 className="text-lg sm:text-xl font-bold text-primary">Objective</h2>
@@ -320,7 +320,7 @@ export default function Home() {
                     </div>
                 </section>
             </div>
-            <div className="w-full sm:w-1/3">
+            <div className="w-1/3">
                  <h2 className="text-lg sm:text-xl font-bold text-primary mb-2">Skills</h2>
                 <ul className="list-none space-y-1 text-foreground text-xs sm:text-sm">
                     {cvData.skills.map((skill, index) => (
