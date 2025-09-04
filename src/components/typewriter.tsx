@@ -1,45 +1,71 @@
 
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 export const Typewriter: React.FC<{ text: string; speed?: number; delay?: number; className?: string; stopBlinkingOnEnd?: boolean }> = ({ text, speed = 20, delay = 0, className, stopBlinkingOnEnd = false }) => {
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
   const [isClient, setIsClient] = useState(false);
 
+  const requestRef = useRef<number>();
+  const previousTimeRef = useRef<number>();
+  const progressRef = useRef(0);
+  const delayTimeoutRef = useRef<NodeJS.Timeout>();
+
   useEffect(() => {
     setIsClient(true);
   }, []);
 
+  const animate = (time: number) => {
+    if (previousTimeRef.current !== undefined) {
+      const deltaTime = time - previousTimeRef.current;
+      progressRef.current += deltaTime;
+
+      if (progressRef.current > speed) {
+        progressRef.current = 0;
+        setDisplayedText(prev => {
+          const nextChar = text[prev.length];
+          if (nextChar) {
+            return prev + nextChar;
+          } else {
+            // End of text
+            if (requestRef.current) cancelAnimationFrame(requestRef.current);
+            if (stopBlinkingOnEnd) setIsTyping(false);
+            return prev;
+          }
+        });
+      }
+    }
+    previousTimeRef.current = time;
+    requestRef.current = requestAnimationFrame(animate);
+  };
+  
   useEffect(() => {
     if (!isClient || !text) return;
-    
-    setDisplayedText(''); 
+
+    // Reset state for new text
+    setDisplayedText('');
     setIsTyping(true);
+    progressRef.current = 0;
+    previousTimeRef.current = undefined;
 
-    const startTypingTimer = setTimeout(() => {
-      let i = 0;
-      const typingInterval = setInterval(() => {
-        if (i < text.length) {
-          setDisplayedText(prev => prev + text.charAt(i));
-          i++;
-        } else {
-          clearInterval(typingInterval);
-          if (stopBlinkingOnEnd) {
-            setIsTyping(false);
-          }
-        }
-      }, speed);
+    // Clear any existing animations/timeouts
+    if (requestRef.current) cancelAnimationFrame(requestRef.current);
+    if (delayTimeoutRef.current) clearTimeout(delayTimeoutRef.current);
 
-      return () => clearInterval(typingInterval);
+    delayTimeoutRef.current = setTimeout(() => {
+      requestRef.current = requestAnimationFrame(animate);
     }, delay);
 
-    return () => clearTimeout(startTypingTimer);
+    return () => {
+      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+      if (delayTimeoutRef.current) clearTimeout(delayTimeoutRef.current);
+    };
   }, [text, speed, delay, isClient, stopBlinkingOnEnd]);
 
+
   if (!isClient) {
-    // Render nothing on the server to avoid hydration issues, but keep space
     return <span className={className}>&nbsp;</span>;
   }
 
@@ -47,7 +73,7 @@ export const Typewriter: React.FC<{ text: string; speed?: number; delay?: number
 
   return (
     <span className={className}>
-      <span style={{ transform: 'translateZ(0)' }}>{displayedText}</span>
+      <span>{displayedText}</span>
       {showCursor && <span className="cursor-blink">_</span>}
     </span>
   );
