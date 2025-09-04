@@ -7,7 +7,7 @@ import { StackSimulation } from '@/components/stack-simulation';
 import { Typewriter } from '@/components/typewriter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { HardDrive, Eye } from 'lucide-react';
+import { HardDrive, Eye, ArrowLeft } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
 import { EyeTrackingModal } from '@/components/eye-tracking-modal';
@@ -192,6 +192,7 @@ export default function Home() {
   const [showCvAvatar, setShowCvAvatar] = useState(false);
   const [chinaTime, setChinaTime] = useState<string | null>(null);
   const [showCvModal, setShowCvModal] = useState(false);
+  const [showUiUxFullScreen, setShowUiUxFullScreen] = useState(false);
 
   const handleNavClick = (content: 'main' | 'cv' | 'projects') => {
     setActiveContent(content);
@@ -202,7 +203,7 @@ export default function Home() {
     if (serviceName === 'CV') {
       setShowCvModal(true);
     } else if (serviceName === 'UI/UX') {
-      setActiveContent('projects');
+      setShowUiUxFullScreen(true);
     } else {
       toast({
         title: `C:\\> ${serviceName.toUpperCase()}${fileType}`,
@@ -353,6 +354,31 @@ export default function Home() {
     )
   };
 
+
+  if (showUiUxFullScreen) {
+    return (
+      <main className="fixed inset-0 z-50 bg-background flex flex-col">
+        <div className="flex-grow">
+          <iframe
+            srcDoc={uiUxHtmlContent}
+            className="w-full h-full border-0"
+            sandbox="allow-scripts allow-same-origin"
+            title="UI/UX Prototype"
+          />
+        </div>
+        <div className="p-4 bg-background border-t border-primary">
+          <Button 
+            variant="outline"
+            className="w-full border-primary"
+            onClick={() => setShowUiUxFullScreen(false)}
+          >
+            <ArrowLeft size={16} className="mr-2"/>
+            Вернуться на сайт
+          </Button>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="p-2 sm:p-4 min-h-screen flex flex-col relative">
