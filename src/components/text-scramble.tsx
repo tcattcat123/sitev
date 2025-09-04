@@ -3,8 +3,9 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 
-export const TextScramble: React.FC<{ text: string; className?: string }> = ({ text, className }) => {
+export const TextScramble: React.FC<{ text: string; className?: string; stopBlinkingOnEnd?: boolean }> = ({ text, className, stopBlinkingOnEnd = false }) => {
   const [currentText, setCurrentText] = useState('');
+  const [isScrambling, setIsScrambling] = useState(true);
   const textRef = useRef(text);
   const intervalRef = useRef<NodeJS.Timeout>();
   const [isClient, setIsClient] = useState(false);
@@ -18,6 +19,7 @@ export const TextScramble: React.FC<{ text: string; className?: string }> = ({ t
     const letters = "█▓▒░";
 
     clearInterval(intervalRef.current!);
+    setIsScrambling(true);
 
     intervalRef.current = setInterval(() => {
         const newText = textRef.current
@@ -35,11 +37,14 @@ export const TextScramble: React.FC<{ text: string; className?: string }> = ({ t
         if (iteration >= textRef.current.length) {
           clearInterval(intervalRef.current!);
           setCurrentText(textRef.current);
+          if (stopBlinkingOnEnd) {
+            setIsScrambling(false);
+          }
         }
         
         iteration += 1 / 2;
       }, 60);
-  }, []);
+  }, [stopBlinkingOnEnd]);
 
   useEffect(() => {
     textRef.current = text;
@@ -61,10 +66,13 @@ export const TextScramble: React.FC<{ text: string; className?: string }> = ({ t
   if (!isClient) {
     return <span className={className}>{text}</span>;
   }
+  
+  const showCursor = isScrambling || !stopBlinkingOnEnd;
 
   return (
     <>
       <span className={className}>{currentText}</span>
+       {showCursor && <span className="cursor-blink">_</span>}
     </>
   );
 };

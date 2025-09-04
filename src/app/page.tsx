@@ -7,9 +7,10 @@ import { StackSimulation } from '@/components/stack-simulation';
 import { Typewriter } from '@/components/typewriter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { HardDrive } from 'lucide-react';
+import { HardDrive, Eye } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
+import { EyeTrackingModal } from '@/components/eye-tracking-modal';
 
 export default function Home() {
   const { toast } = useToast()
@@ -17,6 +18,7 @@ export default function Home() {
   const [showGif, setShowGif] = useState(false);
   const [showCvAvatar, setShowCvAvatar] = useState(false);
   const [chinaTime, setChinaTime] = useState<string | null>(null);
+  const [showCvModal, setShowCvModal] = useState(false);
 
   const handleNavClick = (content: 'main' | 'cv' | 'projects') => {
     setActiveContent(content);
@@ -113,7 +115,12 @@ export default function Home() {
         <div className="flex flex-row">
             <div className="w-2/3 pr-4">
                 <section className="mb-6">
-                    <h2 className="text-lg sm:text-xl font-bold text-primary mb-2">Objective</h2>
+                    <div className="flex items-center gap-2 mb-2">
+                        <h2 className="text-lg sm:text-xl font-bold text-primary">Objective</h2>
+                        <Button variant="ghost" size="icon" className="h-6 w-6 text-primary hover:bg-primary/20" onClick={() => setShowCvModal(true)}>
+                            <Eye size={16} />
+                        </Button>
+                    </div>
                     <p className="text-foreground text-xs sm:text-sm"><Typewriter text={cvData.objective} stopBlinkingOnEnd /></p>
                 </section>
 
@@ -185,6 +192,7 @@ export default function Home() {
 
   return (
     <main className="p-2 sm:p-4 min-h-screen flex flex-col relative">
+       {showCvModal && <EyeTrackingModal onClose={() => setShowCvModal(false)} />}
       <div className="w-full max-w-xl mx-auto flex flex-col flex-grow">
         <Toaster />
         <header className="flex gap-2 mb-2">
@@ -213,7 +221,7 @@ export default function Home() {
               ) : (
                 <CardHeader className="p-0">
                     <CardTitle className="text-xl leading-tight">
-                    <TextScramble text="RUN" stopBlinkingOnEnd />
+                    <TextScramble text="RUN" />
                     </CardTitle>
                 </CardHeader>
               )}
