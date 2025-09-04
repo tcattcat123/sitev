@@ -2,15 +2,17 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 import { TextScramble } from '@/components/text-scramble';
 import { StackSimulation } from '@/components/stack-simulation';
 import { Typewriter } from '@/components/typewriter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { HardDrive, Eye, ArrowLeft } from 'lucide-react';
+import { HardDrive, Eye, ArrowLeft, Bot, Workflow, Code, Database } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
 import { EyeTrackingModal } from '@/components/eye-tracking-modal';
+import { ProjectCard } from '@/components/project-card';
 
 const uiUxHtmlContent = `
 <!DOCTYPE html>
@@ -128,7 +130,7 @@ const uiUxHtmlContent = `
                     const languagesHTML = inst.languages.map(lang => langAbbr[lang] || '').join(', ');
                     const cardElement = document.createElement('div');
                     cardElement.className = 'instructor-card bg-white p-3 rounded-xl border flex space-x-3 items-center hover:border-gray-800 cursor-pointer';
-                    cardElement.innerHTML = '<img src="' + inst.img_small + '" alt="' + inst.name + '" class="w-16 h-16 rounded-lg object-cover flex-shrink-0"><div class="flex-1 min-w-0"><h3 class="font-semibold text-gray-900 truncate">' + inst.name + '</h3><p class="text-sm text-gray-500">' + inst.specialty + '</p><p class="text-xs text-gray-500 mt-1">Опыт: ' + inst.experience + '</p></div><div class="text-right flex-shrink-0"><div class="flex items-center justify-end space-x-1"><svg class="h-4 w-4 text-yellow-500" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-.181h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><span class="font-semibold text-sm">' + inst.rating + '</span></div><div class="text-xs font-semibold text-blue-600 mt-1">' + languagesHTML + '</div></div>';
+                    cardElement.innerHTML = '<img src="' + inst.img_small + '" alt="' + inst.name + '" class="w-16 h-16 rounded-lg object-cover flex-shrink-0"><div class="flex-1 min-w-0"><h3 class="font-semibold text-gray-900 truncate">' + inst.name + '</h3><p class="text-sm text-gray-500">' + inst.specialty + '</p><p class="text-xs text-gray-500 mt-1">Опыт: ' + inst.experience + '</p></div><div class="text-right flex-shrink-0"><div class="flex items-center justify-end space-x-1"><svg class="h-4 w-4 text-yellow-500" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><span class="font-semibold text-sm">' + inst.rating + '</span></div><div class="text-xs font-semibold text-blue-600 mt-1">' + languagesHTML + '</div></div>';
                     Object.keys(inst).forEach(key => { cardElement.dataset[key] = Array.isArray(inst[key]) ? inst[key].join(',') : inst[key]; });
                     cardElement.addEventListener('click', openProfile);
                     instructorListContainer.appendChild(cardElement);
@@ -174,7 +176,8 @@ const uiUxHtmlContent = `
             categoryTabs.forEach(tab => {
                 tab.addEventListener('click', function() {
                     categoryTabs.forEach(t => { t.classList.remove('tab-active'); t.classList.add('bg-gray-100', 'text-gray-700'); });
-                    this.classList.add('tab-active'); this.classList.remove('bg-gray-100', 'text-gray-700');
+                    this.classList.add('tab-active');
+                    this.classList.remove('bg-gray-100', 'text-gray-700');
                 });
             });
 
@@ -320,14 +323,36 @@ export default function Home() {
   );
 
   const projectsContent = (
-    <Card className="w-full h-full p-1 border-primary flex flex-col">
-      <CardHeader className="p-2 z-10">
-        <CardTitle className="text-xs text-muted-foreground">C:\&gt; LOAD STACK</CardTitle>
-      </CardHeader>
-      <CardContent className="p-0 h-full w-full overflow-hidden flex-grow relative">
-        <StackSimulation />
-      </CardContent>
-    </Card>
+    <div className="grid grid-cols-2 gap-2">
+      <ProjectCard>
+        <div className="flex flex-col items-center gap-2 text-center">
+            <Bot size={32}/>
+            <h3 className="font-bold">Telegram Bots</h3>
+            <p className="text-xs text-muted-foreground">Aiogram, FSM, Web Apps</p>
+        </div>
+      </ProjectCard>
+      <ProjectCard>
+        <div className="flex flex-col items-center gap-2 text-center">
+            <Workflow size={32}/>
+            <h3 className="font-bold">Automation</h3>
+            <p className="text-xs text-muted-foreground">Business-processes, Parsers</p>
+        </div>
+      </ProjectCard>
+      <ProjectCard>
+        <div className="flex flex-col items-center gap-2 text-center">
+            <Code size={32}/>
+            <h3 className="font-bold">Web Apps</h3>
+            <p className="text-xs text-muted-foreground">Next.js, Go, Python</p>
+        </div>
+      </ProjectCard>
+      <ProjectCard>
+        <div className="flex flex-col items-center gap-2 text-center">
+            <Database size={32}/>
+            <h3 className="font-bold">Databases</h3>
+            <p className="text-xs text-muted-foreground">PostgreSQL, MSSQL, Mongo</p>
+        </div>
+      </ProjectCard>
+    </div>
   );
 
   const navButton = (label: string, content: 'main' | 'cv' | 'projects') => {
@@ -395,7 +420,7 @@ export default function Home() {
                  />
               ) : showCvAvatar ? (
                 <Image 
-                    src="https://i.pinimg.com/736x/21/f4/12/21f412812347a9c8134a464786ae287d.jpg"
+                    src="https://i.pinimg.com/736x/21/f4/12/21f41282347a9c8134a464786ae287d.jpg"
                     alt="pixelated person"
                     fill
                     objectFit="cover"
