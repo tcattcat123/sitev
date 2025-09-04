@@ -11,7 +11,6 @@ import { HardDrive, Eye } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
 import { EyeTrackingModal } from '@/components/eye-tracking-modal';
-import { UiUxModal } from '@/components/ui-ux-modal';
 
 const uiUxHtmlContent = `
 <!DOCTYPE html>
@@ -193,7 +192,6 @@ export default function Home() {
   const [showCvAvatar, setShowCvAvatar] = useState(false);
   const [chinaTime, setChinaTime] = useState<string | null>(null);
   const [showCvModal, setShowCvModal] = useState(false);
-  const [showUiUxModal, setShowUiUxModal] = useState(false);
 
   const handleNavClick = (content: 'main' | 'cv' | 'projects') => {
     setActiveContent(content);
@@ -203,8 +201,6 @@ export default function Home() {
   const handleServiceClick = (serviceName: string, description: string, fileType: string) => {
     if (serviceName === 'CV') {
       setShowCvModal(true);
-    } else if (serviceName === 'UI/UX') {
-      setShowUiUxModal(true);
     } else {
       toast({
         title: `C:\\> ${serviceName.toUpperCase()}${fileType}`,
@@ -264,13 +260,6 @@ export default function Home() {
     ]
   };
   
-  const projectsData = [
-    { name: '</cv mediapipe bot>', image: 'https://i.imgur.com/o96pWfT.jpeg' },
-    { name: '</site>', image: 'https://i.imgur.com/g833t9y.jpeg' },
-    { name: '</name>' },
-    { name: '</name>' },
-  ];
-
   const cvContent = (
     <div className="text-sm font-mono text-foreground bg-card p-4 sm:p-6 rounded-lg relative overflow-hidden border border-border group">
         <div className="absolute inset-0 bg-black/10 glitch-overlay opacity-5 group-hover:opacity-20 transition-opacity duration-300"></div>
@@ -328,28 +317,20 @@ export default function Home() {
   );
   
   const projectsContent = (
-    <div className="grid grid-cols-2 gap-2">
-      {projectsData.map((project, i) => (
-        <div 
-          key={i}
-          className="aspect-square bg-card border border-primary flex items-center justify-center text-foreground font-mono transition-all duration-300 ease-in-out hover:rounded-full hover:bg-primary/20 cursor-pointer relative group overflow-hidden"
-        >
-          {project.image ? (
-            <>
-              <Image
-                src={project.image}
-                alt="Project image"
-                fill
-                objectFit="cover"
-                className="grayscale opacity-50 group-hover:opacity-75 transition-opacity transform group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-black/50 group-hover:bg-black/30 transition-colors" />
-              <div className="glitch-overlay absolute inset-0 opacity-20 group-hover:opacity-10" />
-            </>
-          ) : null}
-          <span className="relative z-10 whitespace-nowrap text-sm">{project.name}</span>
+    <div className="w-full h-full flex items-center justify-center p-4">
+      <div className="w-full max-w-sm h-[70vh] bg-card border-4 border-foreground rounded-[2rem] shadow-2xl flex flex-col overflow-hidden">
+        <div className="w-full h-6 bg-foreground flex items-center justify-center">
+            <div className="w-1/3 h-2 bg-card rounded-b-lg"></div>
         </div>
-      ))}
+        <div className="flex-grow w-full h-full">
+            <iframe
+                srcDoc={uiUxHtmlContent}
+                className="w-full h-full border-0"
+                sandbox="allow-scripts allow-same-origin"
+                title="UI/UX Prototype"
+            />
+        </div>
+      </div>
     </div>
   );
 
@@ -374,7 +355,6 @@ export default function Home() {
   return (
     <main className="p-2 sm:p-4 min-h-screen flex flex-col relative">
        {showCvModal && <EyeTrackingModal onClose={() => setShowCvModal(false)} />}
-       {showUiUxModal && <UiUxModal onClose={() => setShowUiUxModal(false)} htmlContent={uiUxHtmlContent} />}
       <div className="w-full max-w-xl mx-auto flex flex-col flex-grow">
         <Toaster />
         <header className="flex gap-2 mb-2">
