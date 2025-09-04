@@ -253,7 +253,7 @@ export default function Home() {
     name: 'Vitaliy Petrov',
     email: 'terakot2022@gmail.com',
     telegram: 'yofox',
-    objective: 'Мой опыт сосредоточен на работе с MVP и стартапами: от разработки интерфейса до финального развертывания. Обладаю навыками в решении комплексных задач и быстрой адаптации к новым технологиям. Активно использую инструменты ИИ для автоматизации процессов и ускорения разработки.',
+    objective: 'Мой опыт сосредоточен на работе с MVP и стартапами: от разработки интерфейса до финального развертывания. Обладаю навыками в решении комплексных задач и быстрой адаптации к новым технологиям. Активно использую инструменты ИИ для автоматизации.',
     experience: {
       title: 'Full-Stack Developer',
       project: 'Разработка широкого спектра IT-решений, включая внутренние бизнес-системы и клиентские веб-приложения. Основное внимание — быстрая реализация MVP.',
@@ -261,10 +261,10 @@ export default function Home() {
       telegramExpertise: 'Боты на Aiogram (асинхронные, FSM, веб-хуки), мини-приложения (Web Apps), платежные системы (Telegram).'
     },
     skills: [
-      'Backend: Go, Node.js, Python (Flask, FastAPI, Aiogram), PHP',
-      'Frontend: React, Next.js, Tailwind CSS, Flowbite, MUI',
-      'DB: PostgreSQL, MySQL, MSSQL, Supabase, MongoDB',
-      'CV/Tools: MediaPipe, OpenAI API, Telegram API, парсеры'
+      "Go", "Node.js", "Python", "PHP",
+      "React", "Next.js", "Tailwind",
+      "PostgreSQL", "MySQL", "MongoDB",
+      "Supabase", "OpenAI", "MediaPipe"
     ]
   };
   
@@ -335,7 +335,7 @@ export default function Home() {
       </ProjectCard>
       <ProjectCard>
         <div className="flex flex-col items-center gap-2 text-center">
-            <Bot size={32}/>
+            <Image src="https://i.imgur.com/3j3OQ3b.png" alt="Telegram Bots" width={48} height={48} className="grayscale" />
             <h3 className="font-bold">Telegram Bots</h3>
             <p className="text-xs text-muted-foreground">Aiogram, Web Apps</p>
         </div>
@@ -520,6 +520,7 @@ export default function Home() {
 }
 
     
+
 
 
 
