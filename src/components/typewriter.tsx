@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 
-export const Typewriter: React.FC<{ text: string; speed?: number; delay?: number; className?: string }> = ({ text, speed = 20, delay = 0, className }) => {
+export const Typewriter: React.FC<{ text: string; speed?: number; delay?: number; className?: string; stopBlinkingOnEnd?: boolean }> = ({ text, speed = 20, delay = 0, className, stopBlinkingOnEnd = false }) => {
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
   const [isClient, setIsClient] = useState(false);
@@ -15,7 +15,7 @@ export const Typewriter: React.FC<{ text: string; speed?: number; delay?: number
   useEffect(() => {
     if (!isClient || !text) return;
     
-    setDisplayedText(''); // Reset on text change
+    setDisplayedText(''); 
     setIsTyping(true);
 
     const startTypingTimer = setTimeout(() => {
@@ -37,14 +37,13 @@ export const Typewriter: React.FC<{ text: string; speed?: number; delay?: number
   }, [text, speed, delay, isClient]);
 
   if (!isClient) {
-    // Render nothing on the server to avoid mismatch
-    return <span className={className}></span>;
+    return <span className={className}>&nbsp;</span>;
   }
 
   return (
     <span className={className}>
       <span>{displayedText}</span>
-      {isClient && isTyping && <span className="cursor-blink">_</span>}
+      {isClient && isTyping && !stopBlinkingOnEnd && <span className="cursor-blink">_</span>}
     </span>
   );
 };
