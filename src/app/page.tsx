@@ -201,6 +201,8 @@ export default function Home() {
   const handleServiceClick = (serviceName: string, description: string, fileType: string) => {
     if (serviceName === 'CV') {
       setShowCvModal(true);
+    } else if (serviceName === 'UI/UX') {
+      setActiveContent('projects');
     } else {
       toast({
         title: `C:\\> ${serviceName.toUpperCase()}${fileType}`,
@@ -470,3 +472,5 @@ export default function Home() {
     </main>
   );
 }
+
+    
