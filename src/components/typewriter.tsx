@@ -37,13 +37,16 @@ export const Typewriter: React.FC<{ text: string; speed?: number; delay?: number
   }, [text, speed, delay, isClient]);
 
   if (!isClient) {
+    // Render nothing on the server to avoid hydration issues
     return <span className={className}>&nbsp;</span>;
   }
 
+  const showCursor = isTyping || !stopBlinkingOnEnd;
+
   return (
     <span className={className}>
-      <span>{displayedText}</span>
-      {isClient && isTyping && !stopBlinkingOnEnd && <span className="cursor-blink">_</span>}
+      {displayedText}
+      {showCursor && <span className="cursor-blink">_</span>}
     </span>
   );
 };
