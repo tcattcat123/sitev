@@ -21,7 +21,7 @@ const uiUxHtmlContent = `<!DOCTYPE html>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Skilty - Найди своего инструктора</title>
-    <script src="https://cdn.tailwindcss.com/script"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -156,7 +156,11 @@ const uiUxHtmlContent = `<!DOCTYPE html>
             const closeProfile = () => profileScreen.classList.add('translate-y-full');
 
             const openPopup = (popup) => {
-                popup.classList.remove('-translate-x-full', 'translate-x-full', 'hidden');
+                if (popup.id === 'filter-modal') {
+                  popup.classList.remove('hidden');
+                } else {
+                  popup.classList.remove('-translate-x-full', 'translate-x-full');
+                }
                 overlay.classList.remove('hidden');
             };
             const closeAllPopups = () => {
@@ -168,10 +172,7 @@ const uiUxHtmlContent = `<!DOCTYPE html>
 
             burgerBtn.addEventListener('click', () => openPopup(burgerMenu));
             userProfileBtn.addEventListener('click', () => openPopup(userProfileScreen));
-            filterBtn.addEventListener('click', () => {
-                filterModal.classList.remove('hidden');
-                overlay.classList.remove('hidden');
-            });
+            filterBtn.addEventListener('click', () => openPopup(filterModal));
             closeUserProfileBtn.addEventListener('click', closeAllPopups);
             applyFilterBtn.addEventListener('click', closeAllPopups);
             overlay.addEventListener('click', closeAllPopups);
@@ -179,8 +180,7 @@ const uiUxHtmlContent = `<!DOCTYPE html>
             categoryTabs.forEach(tab => {
                 tab.addEventListener('click', function() {
                     categoryTabs.forEach(t => { t.classList.remove('tab-active'); t.classList.add('bg-gray-100', 'text-gray-700'); });
-                    this.classList.add('tab-active');
-                    this.classList.remove('bg-gray-100', 'text-gray-700');
+                    this.classList.add('tab-active'); this.classList.remove('bg-gray-100', 'text-gray-700');
                 });
             });
 
@@ -188,8 +188,7 @@ const uiUxHtmlContent = `<!DOCTYPE html>
         });
     </script>
 </body>
-</html>
-`;
+</html>`;
 
 export default function Home() {
   const { toast } = useToast()
@@ -521,4 +520,5 @@ export default function Home() {
 }
 
     
+
 
