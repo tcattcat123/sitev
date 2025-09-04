@@ -81,7 +81,7 @@ const uiUxHtmlContent = `<!DOCTYPE html>
         <!-- === Экран профиля пользователя === -->
         <div id="user-profile-screen" class="fixed top-0 right-0 w-full max-w-md h-full bg-white z-50 transform translate-x-full transition-transform duration-300 ease-in-out p-4 flex flex-col">
             <div class="flex justify-between items-center mb-6"><h2 class="text-2xl font-bold">Ваш профиль</h2><button id="close-user-profile-btn" class="p-2 hover:bg-gray-100 rounded-full"><svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg></button></div>
-            <div class="space-y-4 flex-grow"><div><label for="user-name" class="block text-sm font-medium text-gray-700 mb-1">Ваше имя</label><input type="text" id="user-name" value="Иван Петров" class="w-full p-2 bg-gray-100 rounded-lg"></div><div><label class="block text-sm font-medium text-gray-700 mb-2">Ваша локация</label><div class="grid grid-cols-2 gap-2"><div><input type="radio" name="location" id="bali" value="bali" class="hidden peer" checked><label for="bali" class="block text-center p-3 bg-gray-100 rounded-lg cursor-pointer peer-checked:bg-gray-900 peer-checked:text-white">Бали</label></div><div><input type="radio" name="location" id="lanka" value="lanka" class="hidden peer"><label for="lanka" class="block text-center p-3 bg-gray-100 rounded-lg cursor-pointer peer-checked:bg-gray-900 peer-checked:text-white">Шри-Ланка</label></div></div></div>
+            <div class="space-y-4 flex-grow"><div><label for="user-name" class="block text-sm font-medium text-gray-700 mb-1">Ваше имя</label><input type="text" id="user-name" value="Иван Петров" class="w-full p-2 bg-gray-100 rounded-lg"></div><div><label class="block text-sm font-medium text-gray-700 mb-2">Ваша локация</label><div class="grid grid-cols-2 gap-2"><div><input type="radio" name="location" id="bali" value="bali" class="hidden peer" checked><label for="bali" class="block text-center p-3 bg-gray-100 rounded-lg cursor-pointer peer-checked:bg-gray-900 peer-checked:text-white">Бали</label></div><div><input type="radio" name="location" id="lanka" value="lanka" class="hidden peer"><label for="lanka" class="block text-center p-3 bg-gray-100 rounded-lg cursor-pointer peer-checked:bg-gray-900 peer-checked:text-white">Шри-Ланка</label></div></div></div></div>
             <button class="w-full bg-gray-900 text-white font-bold py-3 px-4 rounded-xl">Сохранить изменения</button>
         </div>
         
@@ -148,7 +148,8 @@ const uiUxHtmlContent = `<!DOCTYPE html>
             const openProfile = (event) => {
                 const data = event.currentTarget.dataset;
                 const languagesText = data.languages.split(',').map(lang => lang === 'ru' ? 'Русский' : 'Английский').join(', ');
-                profileScreen.innerHTML = '<div class="h-full overflow-y-auto pb-40"><div class="h-52 bg-cover bg-center" style="background-image: url(\'' + data.img_big + '\')"></div><div class="bg-white rounded-t-2xl -mt-4 relative"><div class="p-4"><div class="flex justify-between items-start"><h1 class="text-2xl font-bold text-gray-900">' + data.school + '</h1><div class="text-right flex-shrink-0 ml-4"><div class="flex items-center justify-end space-x-1"><svg class="h-5 w-5 text-yellow-500" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><span class="font-bold text-gray-800 text-lg">' + data.rating + '</span></div><a href="#" class="text-xs text-gray-500 underline whitespace-nowrap">(' + data.reviews + ' отзыва)</a></div></div><p class="mt-4 text-sm text-gray-700 leading-relaxed">' + data.description + '</p><div class="mt-4 space-y-3 text-sm border-t pt-4"><div class="flex items-center text-gray-700">Опыт: ' + data.experience + '</div><div class="flex items-center text-gray-700">Языки: ' + languagesText + '</div><a href="#" class="flex items-center text-blue-600 hover:underline">' + data.instagram + '</a></div></div><div class="p-4 border-t"><h2 class="text-lg font-bold text-gray-900 mb-3">Услуги и цены</h2><ul class="text-sm space-y-2"><li class="flex justify-between text-gray-800"><span>Групповой урок (3 часа)</span><span class="font-semibold">$60</span></li><li class="flex justify-between text-gray-800"><span>Индивидуальный урок (3 часа)</span><span class="font-semibold">$150</span></li></ul></div><div class="p-4 border-t"><h2 class="text-lg font-bold text-gray-900 mb-3">Оставить отзыв</h2><div class="flex items-center space-x-1 mb-4" id="rating-stars">' + generateStarsHTML() + '</div><div class="relative"><textarea class="w-full p-2 pr-10 bg-gray-100 rounded-lg text-sm border border-transparent focus:ring-2 focus:ring-gray-300 focus:outline-none transition" rows="3" placeholder="Поделитесь вашими впечатлениями..."></textarea><button class="absolute bottom-2 right-2 p-1 text-gray-400 hover:text-gray-800"><svg class="w-6 h-6 -rotate-45" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg></button></div></div></div></div><div class="absolute bottom-0 left-0 right-0 w-full p-3 bg-white/80 backdrop-blur-sm border-t"><button class="w-full max-w-md mx-auto bg-gray-900 text-white font-bold py-3 px-4 rounded-xl">Связаться</button></div><button id="fab-back-btn" class="fixed bottom-24 right-4 w-14 h-14 bg-gray-900 text-white rounded-full shadow-lg flex items-center justify-center z-30"><svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg></button>';
+                const profileHTML = '<div class="h-full overflow-y-auto pb-40"><div class="h-52 bg-cover bg-center" style="background-image: url(\'' + data.img_big + '\')"></div><div class="bg-white rounded-t-2xl -mt-4 relative"><div class="p-4"><div class="flex justify-between items-start"><h1 class="text-2xl font-bold text-gray-900">' + data.school + '</h1><div class="text-right flex-shrink-0 ml-4"><div class="flex items-center justify-end space-x-1"><svg class="h-5 w-5 text-yellow-500" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><span class="font-bold text-gray-800 text-lg">' + data.rating + '</span></div><a href="#" class="text-xs text-gray-500 underline whitespace-nowrap">(' + data.reviews + ' отзыва)</a></div></div><p class="mt-4 text-sm text-gray-700 leading-relaxed">' + data.description + '</p><div class="mt-4 space-y-3 text-sm border-t pt-4"><div class="flex items-center text-gray-700">Опыт: ' + data.experience + '</div><div class="flex items-center text-gray-700">Языки: ' + languagesText + '</div><a href="#" class="flex items-center text-blue-600 hover:underline">' + data.instagram + '</a></div></div><div class="p-4 border-t"><h2 class="text-lg font-bold text-gray-900 mb-3">Услуги и цены</h2><ul class="text-sm space-y-2"><li class="flex justify-between text-gray-800"><span>Групповой урок (3 часа)</span><span class="font-semibold">$60</span></li><li class="flex justify-between text-gray-800"><span>Индивидуальный урок (3 часа)</span><span class="font-semibold">$150</span></li></ul></div><div class="p-4 border-t"><h2 class="text-lg font-bold text-gray-900 mb-3">Оставить отзыв</h2><div class="flex items-center space-x-1 mb-4" id="rating-stars">' + generateStarsHTML() + '</div><div class="relative"><textarea class="w-full p-2 pr-10 bg-gray-100 rounded-lg text-sm border border-transparent focus:ring-2 focus:ring-gray-300 focus:outline-none transition" rows="3" placeholder="Поделитесь вашими впечатлениями..."></textarea><button class="absolute bottom-2 right-2 p-1 text-gray-400 hover:text-gray-800"><svg class="w-6 h-6 -rotate-45" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg></button></div></div></div></div><div class="absolute bottom-0 left-0 right-0 w-full p-3 bg-white/80 backdrop-blur-sm border-t"><button class="w-full max-w-md mx-auto bg-gray-900 text-white font-bold py-3 px-4 rounded-xl">Связаться</button></div><button id="fab-back-btn" class="fixed bottom-24 right-4 w-14 h-14 bg-gray-900 text-white rounded-full shadow-lg flex items-center justify-center z-30"><svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg></button>';
+                profileScreen.innerHTML = profileHTML;
                 profileScreen.querySelector('#fab-back-btn').addEventListener('click', closeProfile);
                 
                 const stars = profileScreen.querySelectorAll('#rating-stars svg');
@@ -269,12 +270,27 @@ export default function Home() {
       telegramExpertise: 'Боты на Aiogram (асинхронные, FSM, веб-хуки), мини-приложения (Web Apps), платежные системы (Telegram).'
     },
     skills: [
-      "Go", "Node.js", "Python", "PHP",
-      "React", "Next.js", "Tailwind",
-      "PostgreSQL", "MySQL", "MongoDB",
-      "Supabase", "OpenAI", "MediaPipe"
+        { category: 'Backend', items: ['Go', 'Node.js', 'Python (Flask, FastAPI, Aiogram...)', 'PHP'] },
+        { category: 'Frontend', items: ['React', 'Next.js', 'Tailwind CSS', 'Flowbite', 'MUI'] },
+        { category: 'DB', items: ['PostgreSQL', 'MySQL', 'MSSQL', 'Supabase', 'MongoDB'] },
+        { category: 'CV/Tools', items: ['MediaPipe', 'OpenAI API', 'Telegram API', 'парсеры'] }
     ]
   };
+
+  const getSkillCategoryColor = (category: string) => {
+    switch (category) {
+        case 'Backend':
+            return 'text-primary';
+        case 'Frontend':
+            return 'text-green-400';
+        case 'DB':
+            return 'text-foreground';
+        case 'CV/Tools':
+            return 'text-foreground';
+        default:
+            return 'text-foreground';
+    }
+  }
   
   const cvContent = (
     <div className="text-sm font-mono text-foreground bg-card p-4 sm:p-6 rounded-lg relative overflow-hidden border border-border group">
@@ -321,12 +337,16 @@ export default function Home() {
                 </section>
             </div>
             <div className="w-1/3">
-                 <h2 className="text-lg sm:text-xl font-bold text-primary mb-2">Skills</h2>
-                <ul className="list-none space-y-1 text-foreground text-xs sm:text-sm">
-                    {cvData.skills.map((skill, index) => (
-                        <li key={index}><Typewriter text={skill} delay={index * 50} stopBlinkingOnEnd /></li>
-                    ))}
-                </ul>
+                {cvData.skills.map((skillGroup, groupIndex) => (
+                    <div key={groupIndex} className="mb-4">
+                        <h2 className={`text-lg sm:text-xl font-bold mb-2 ${getSkillCategoryColor(skillGroup.category)}`}>{skillGroup.category}</h2>
+                        <ul className="list-none space-y-1 text-foreground text-xs sm:text-sm">
+                            {skillGroup.items.map((skill, itemIndex) => (
+                                <li key={itemIndex}><Typewriter text={skill} stopBlinkingOnEnd /></li>
+                            ))}
+                        </ul>
+                    </div>
+                ))}
             </div>
         </div>
     </div>
