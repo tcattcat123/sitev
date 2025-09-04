@@ -41,11 +41,17 @@ export default function Home() {
       return chinaDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
     };
 
+    const timer = setInterval(() => {
+        const newTime = getChinaTime();
+        if (newTime !== chinaTime) {
+            setChinaTime(newTime);
+        }
+    }, 60000);
+    
     setChinaTime(getChinaTime());
-    const timer = setInterval(() => setChinaTime(getChinaTime()), 60000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [chinaTime]);
 
   const services = [
     { name: 'Боты', fileType: '.EXE', description: 'Разработка Telegram-ботов.' },
@@ -83,22 +89,22 @@ export default function Home() {
   ];
 
   const cvContent = (
-    <div className="text-sm font-mono text-foreground bg-card p-4 sm:p-6 rounded-lg relative overflow-hidden border border-border group">
+    <div className="text-sm font-mono text-foreground bg-card p-4 sm:p-6 rounded-lg relative overflow-hidden border border-border group" style={{ letterSpacing: '0.05em' }}>
         <div className="absolute inset-0 bg-black/10 glitch-overlay opacity-5 group-hover:opacity-20 transition-opacity duration-300"></div>
         <header className="flex flex-col md:flex-row justify-between md:items-start gap-4 md:gap-6 border-b border-border pb-4 mb-4">
             <div className="flex-grow">
                 <h1 className="text-3xl sm:text-4xl font-bold text-foreground">{cvData.name}</h1>
-                <p className="text-primary mt-1 text-sm sm:text-base"><Typewriter text={cvData.email} /></p>
+                <p className="text-primary mt-1 text-sm sm:text-base"><Typewriter text={cvData.email} stopBlinkingOnEnd /></p>
             </div>
             <div className="font-mono text-xs sm:text-sm w-full md:w-auto md:max-w-xs shrink-0">
                 <div className="bg-background/50 text-foreground p-3 rounded-lg border border-primary/20 w-full shadow-inner backdrop-blur-sm">
                     <div className="flex items-center justify-between mb-2 pb-2 border-b border-border">
-                        {chinaTime !== null ? <span className="text-foreground"><Typewriter text={`My TIME ${chinaTime}`} speed={50} /></span> : <div className="h-4" />}
+                        {chinaTime !== null ? <span className="text-foreground"><Typewriter text={`My TIME ${chinaTime}`} speed={50} stopBlinkingOnEnd /></span> : <div className="h-4" />}
                     </div>
                     
                     <a href={`https://t.me/${cvData.telegram}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline inline-flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                        <Typewriter text={`@${cvData.telegram}`} speed={50} delay={800} />
+                        <Typewriter text={`@${cvData.telegram}`} speed={50} delay={800} stopBlinkingOnEnd />
                     </a>
                 </div>
             </div>
@@ -108,16 +114,16 @@ export default function Home() {
             <div className="w-2/3 pr-4">
                 <section className="mb-6">
                     <h2 className="text-lg sm:text-xl font-bold text-primary mb-2">Objective</h2>
-                    <p className="text-foreground text-xs sm:text-sm"><Typewriter text={cvData.objective} /></p>
+                    <p className="text-foreground text-xs sm:text-sm"><Typewriter text={cvData.objective} stopBlinkingOnEnd /></p>
                 </section>
 
                 <section>
                     <h2 className="text-lg sm:text-xl font-bold text-primary mb-2">Experience</h2>
                     <div className="mb-4 space-y-2 text-foreground text-xs sm:text-sm">
                         <h3 className="text-base sm:text-lg font-bold">{cvData.experience.title}</h3>
-                        <p><span className="font-bold">Project description:</span> <Typewriter text={cvData.experience.project} /></p>
-                        <p><span className="font-bold">Responsibilities:</span> <Typewriter text={cvData.experience.responsibilities} /></p>
-                        <p><span className="font-bold">Expertise in Telegram:</span> <Typewriter text={cvData.experience.telegramExpertise} /></p>
+                        <p><span className="font-bold">Project description:</span> <Typewriter text={cvData.experience.project} stopBlinkingOnEnd /></p>
+                        <p><span className="font-bold">Responsibilities:</span> <Typewriter text={cvData.experience.responsibilities} stopBlinkingOnEnd /></p>
+                        <p><span className="font-bold">Expertise in Telegram:</span> <Typewriter text={cvData.experience.telegramExpertise} stopBlinkingOnEnd /></p>
                     </div>
                 </section>
             </div>
@@ -125,7 +131,7 @@ export default function Home() {
                  <h2 className="text-lg sm:text-xl font-bold text-primary mb-2">Skills</h2>
                 <ul className="list-none space-y-1 text-foreground text-xs sm:text-sm">
                     {cvData.skills.map((skill, index) => (
-                        <li key={index}><Typewriter text={skill} delay={index * 50} /></li>
+                        <li key={index}><Typewriter text={skill} delay={index * 50} stopBlinkingOnEnd /></li>
                     ))}
                 </ul>
             </div>
@@ -207,7 +213,7 @@ export default function Home() {
               ) : (
                 <CardHeader className="p-0">
                     <CardTitle className="text-xl leading-tight">
-                    <TextScramble text="RUN" />
+                    <TextScramble text="RUN" stopBlinkingOnEnd />
                     </CardTitle>
                 </CardHeader>
               )}
