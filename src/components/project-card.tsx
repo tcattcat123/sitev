@@ -15,8 +15,10 @@ export const ProjectCard = ({ className, children }: { className?: string; child
     >
       {/* Content visible by default */}
       <motion.div 
-        className="relative z-10 h-full flex items-center justify-center text-center transition-opacity duration-300"
+        className="relative z-10 h-full flex items-center justify-center text-center"
+        initial={{ opacity: 1, scale: 1 }}
         whileHover={{ opacity: 0, scale: 0.9 }}
+        transition={{ duration: 0.3 }}
       >
         {children}
       </motion.div>
