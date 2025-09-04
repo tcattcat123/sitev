@@ -26,7 +26,9 @@ export const Typewriter: React.FC<{ text: string; speed?: number; delay?: number
           i++;
         } else {
           clearInterval(typingInterval);
-          setIsTyping(false);
+          if (stopBlinkingOnEnd) {
+            setIsTyping(false);
+          }
         }
       }, speed);
 
@@ -34,10 +36,10 @@ export const Typewriter: React.FC<{ text: string; speed?: number; delay?: number
     }, delay);
 
     return () => clearTimeout(startTypingTimer);
-  }, [text, speed, delay, isClient]);
+  }, [text, speed, delay, isClient, stopBlinkingOnEnd]);
 
   if (!isClient) {
-    // Render nothing on the server to avoid hydration issues
+    // Render nothing on the server to avoid hydration issues, but keep space
     return <span className={className}>&nbsp;</span>;
   }
 
@@ -45,7 +47,7 @@ export const Typewriter: React.FC<{ text: string; speed?: number; delay?: number
 
   return (
     <span className={className}>
-      {displayedText}
+      <span style={{ transform: 'translateZ(0)' }}>{displayedText}</span>
       {showCursor && <span className="cursor-blink">_</span>}
     </span>
   );
