@@ -31,6 +31,8 @@ export default function Home() {
   };
   
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     const getChinaTime = () => {
       const now = new Date();
       const utcOffset = now.getTimezoneOffset() * 60000;
@@ -63,7 +65,7 @@ export default function Home() {
       title: 'Full-Stack Developer',
       project: 'Разработка широкого спектра IT-решений, включая внутренние бизнес-системы и клиентские веб-приложения. Основное внимание — быстрая реализация MVP.',
       responsibilities: 'Полный цикл разработки: от сбора требований и проектирования архитектуры до реализации, тестирования, развертывания и последующей поддержки. Интеграция со сторонними сервисами и API.',
-      telegramExpertise: 'Боты на Aiogram (асинхронные, FSM, вебхуки), мини-приложения (Web Apps), платежи (Telegram).'
+      telegramExpertise: 'Боты на Aiogram (асинхронные, FSM, веб-хуки), мини-приложения (Web Apps), платежные системы (Telegram).'
     },
     skills: [
       'Backend: Go, Node.js, Python (Flask, FastAPI, Aiogram), PHP',
@@ -81,7 +83,8 @@ export default function Home() {
   ];
 
   const cvContent = (
-    <div className="text-sm font-mono text-foreground bg-card p-4 sm:p-6 rounded-lg relative overflow-hidden border border-border">
+    <div className="text-sm font-mono text-foreground bg-card p-4 sm:p-6 rounded-lg relative overflow-hidden border border-border group">
+        <div className="absolute inset-0 bg-black/10 glitch-overlay opacity-5 group-hover:opacity-20 transition-opacity duration-300"></div>
         <header className="flex flex-col md:flex-row justify-between md:items-start gap-4 md:gap-6 border-b border-border pb-4 mb-4">
             <div className="flex-grow">
                 <h1 className="text-3xl sm:text-4xl font-bold text-foreground">{cvData.name}</h1>
@@ -267,7 +270,7 @@ export default function Home() {
                     <p>SITE BUILT WITH: Next.js, React, Tailwind CSS, ShadCN, Genkit AI, Matter.js, Framer Motion</p>
                     <br />
                     <div className="relative">
-                       <p>PRESS ANY KEY TO CONTINUE...<span className="cursor-blink">_</span></p>
+                       <p>PRESS ANY KEY TO CONTINUE...</p>
                     </div>
                     <p>OR CONTACT FOR SERVICES</p>
                   </CardContent>
