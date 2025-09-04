@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 
 export const Typewriter: React.FC<{ text: string; speed?: number; delay?: number; className?: string }> = ({ text, speed = 20, delay = 0, className }) => {
   const [displayedText, setDisplayedText] = useState('');
+  const [isTyping, setIsTyping] = useState(true);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -15,6 +16,7 @@ export const Typewriter: React.FC<{ text: string; speed?: number; delay?: number
     if (!isClient || !text) return;
     
     setDisplayedText(''); // Reset on text change
+    setIsTyping(true);
 
     const startTypingTimer = setTimeout(() => {
       let i = 0;
@@ -24,6 +26,7 @@ export const Typewriter: React.FC<{ text: string; speed?: number; delay?: number
           i++;
         } else {
           clearInterval(typingInterval);
+          setIsTyping(false);
         }
       }, speed);
 
@@ -41,8 +44,7 @@ export const Typewriter: React.FC<{ text: string; speed?: number; delay?: number
   return (
     <span className={className}>
       <span>{displayedText}</span>
-      {/* Only show cursor if typing is in progress */}
-      {isClient && displayedText.length < text.length && <span className="cursor-blink">_</span>}
+      {isClient && isTyping && <span className="cursor-blink">_</span>}
     </span>
   );
 };

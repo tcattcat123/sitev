@@ -7,7 +7,6 @@ export const TextScramble: React.FC<{ text: string; className?: string }> = ({ t
   const [currentText, setCurrentText] = useState('');
   const textRef = useRef(text);
   const intervalRef = useRef<NodeJS.Timeout>();
-  const [isRevealed, setIsRevealed] = useState(false);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -15,7 +14,6 @@ export const TextScramble: React.FC<{ text: string; className?: string }> = ({ t
   }, []);
 
   const scramble = useCallback(() => {
-    setIsRevealed(false);
     let iteration = 0;
     const letters = "█▓▒░";
 
@@ -36,7 +34,7 @@ export const TextScramble: React.FC<{ text: string; className?: string }> = ({ t
         
         if (iteration >= textRef.current.length) {
           clearInterval(intervalRef.current!);
-          setIsRevealed(true);
+          setCurrentText(textRef.current);
         }
         
         iteration += 1 / 2;
@@ -67,7 +65,6 @@ export const TextScramble: React.FC<{ text: string; className?: string }> = ({ t
   return (
     <>
       <span className={className}>{currentText}</span>
-      {isRevealed && <span className="cursor-blink">_</span>}
     </>
   );
 };

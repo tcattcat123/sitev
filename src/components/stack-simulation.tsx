@@ -32,6 +32,7 @@ const stackItems: { name: string; category: StackCategory; width: number, height
     { name: 'OpenAI', category: 'tool', width: 66, height: 26 },
     { name: 'Telegram', category: 'tool', width: 90, height: 26 },
     { name: 'Parsers', category: 'tool', width: 76, height: 26 },
+    { name: 'QR', category: 'tool', width: 60, height: 60 },
 ];
 
 const categoryColors: Record<StackCategory, string> = {
@@ -212,6 +213,17 @@ export const StackSimulation = () => {
         return null;
     }
 
+    const QRIcon = () => (
+      <div className="flex flex-col items-center justify-center w-full h-full font-mono text-xs leading-none" style={{ color: 'black' }}>
+          <span>███████████</span>
+          <span>████▀▀▀████</span>
+          <span>██▀══▀▀═▀██</span>
+          <span>██═█═══█═██</span>
+          <span>████═█═████</span>
+          <span>███▄▄█▄▄███</span>
+      </div>
+    );
+
     return (
         <div ref={sceneRef} className="w-full h-full absolute inset-0 bg-background">
             {bodies.map(body => (
@@ -236,7 +248,7 @@ export const StackSimulation = () => {
                         border: '2px solid rgba(0,0,0,0.3)'
                     }}
                 >
-                    {body.name}
+                    {body.name === 'QR' ? <QRIcon /> : body.name}
                 </div>
             ))}
         </div>

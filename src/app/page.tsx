@@ -58,15 +58,15 @@ export default function Home() {
     name: 'Vitaliy Petrov',
     email: 'terakot2022@gmail.com',
     telegram: 'yofox',
-    objective: 'Мой опыт сосредоточен на работе с MVP и стартапами. от разработки интерфейса проектов до финального развертывания. Обладаю навыками в решении комплексных задач и быстрой адаптации к новым технологиям. Активно использую инструменты ИИ для автоматизации процессов и ускорения разработки.',
+    objective: 'Мой опыт сосредоточен на работе с MVP и стартапами: от разработки интерфейса до финального развертывания. Обладаю навыками в решении комплексных задач и быстрой адаптации к новым технологиям. Активно использую инструменты ИИ для автоматизации процессов и ускорения разработки.',
     experience: {
       title: 'Full-Stack Developer',
       project: 'Разработка широкого спектра IT-решений, включая внутренние бизнес-системы и клиентские веб-приложения. Основное внимание — быстрая реализация MVP.',
       responsibilities: 'Полный цикл разработки: от сбора требований и проектирования архитектуры до реализации, тестирования, развертывания и последующей поддержки. Интеграция со сторонними сервисами и API.',
-      telegramExpertise: 'Боты на Aiogram (асинхронные, FSM, вебхуки), Мини-приложения (Web Apps), Платежи (Telegram).'
+      telegramExpertise: 'Боты на Aiogram (асинхронные, FSM, вебхуки), мини-приложения (Web Apps), платежи (Telegram).'
     },
     skills: [
-      'Backend: Go, Node.js, Python (Flask, FastAPI, Aiogram...), PHP',
+      'Backend: Go, Node.js, Python (Flask, FastAPI, Aiogram), PHP',
       'Frontend: React, Next.js, Tailwind CSS, Flowbite, MUI',
       'DB: PostgreSQL, MySQL, MSSQL, Supabase, MongoDB',
       'CV/Tools: MediaPipe, OpenAI API, Telegram API, парсеры'
@@ -176,9 +176,8 @@ export default function Home() {
 
   return (
     <main className="p-2 sm:p-4 min-h-screen flex flex-col relative">
-      <Toaster />
       <div className="w-full max-w-xl mx-auto flex flex-col flex-grow">
-        
+        <Toaster />
         <header className="flex gap-2 mb-2">
           <Card 
             className="w-1/3 aspect-square flex items-center justify-center text-center p-2 border-primary cursor-pointer relative overflow-hidden"
@@ -205,7 +204,7 @@ export default function Home() {
               ) : (
                 <CardHeader className="p-0">
                     <CardTitle className="text-xl leading-tight">
-                    <TextScramble text="VITALIY" />
+                    <TextScramble text="RUN" />
                     </CardTitle>
                 </CardHeader>
               )}
