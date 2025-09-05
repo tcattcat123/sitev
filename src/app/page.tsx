@@ -321,6 +321,8 @@ const MatrixRain = () => (
     </div>
 );
 
+const initialDynamicText = "SITE BUILT WITH: Next.js, React, Tailwind CSS, ShadCN, Genkit AI, Matter.js, Framer Motion";
+
 export default function Home() {
   const { toast } = useToast()
   const [activeContent, setActiveContent] = useState<'main' | 'cv' | 'projects'>('main');
@@ -331,7 +333,8 @@ export default function Home() {
   const [showUiUxFullScreen, setShowUiUxFullScreen] = useState(false);
   const [showSecretCamera, setShowSecretCamera] = useState(false);
   const [capturedImages, setCapturedImages] = useState<string[]>([]);
-  const [warningButtonState, setWarningButtonState] = useState<'initial' | 'warned'>('initial');
+  const [warningState, setWarningState] = useState<'initial' | 'firstWarning' | 'secondWarning'>('initial');
+  const [dynamicInfoText, setDynamicInfoText] = useState(initialDynamicText);
 
 
   const handleNavClick = (content: 'main' | 'cv' | 'projects') => {
@@ -340,9 +343,13 @@ export default function Home() {
   }
   
   const handleWarningButtonClick = () => {
-    if (warningButtonState === 'initial') {
-        setWarningButtonState('warned');
-    } else {
+    if (warningState === 'initial') {
+        setWarningState('firstWarning');
+        setDynamicInfoText("Вы добровольно суете пальцы в розетку");
+    } else if (warningState === 'firstWarning') {
+        setWarningState('secondWarning');
+        setDynamicInfoText("Последующие действия скорее всего нанесут вам травму");
+    } else if (warningState === 'secondWarning') {
         setShowSecretCamera(true);
     }
   }
@@ -670,11 +677,14 @@ export default function Home() {
                       </CardContent>
                   </Card>
               </section>
-              <section className="mt-2">
+               <section className="mt-2">
                 <Card className="w-full p-4 border-primary bg-primary/20 text-foreground">
                   <CardContent className="p-0 font-mono text-xs sm:text-sm">
                     <p className="font-bold">*** STOP: 0x00000000 BUSINESS_SUCCESS ***</p>
                     <p>VITALIY.DEV - SYSTEM HALTED FOR PROFIT OPTIMIZATION</p>
+                     <p><Typewriter key={dynamicInfoText} text={dynamicInfoText} stopBlinkingOnEnd /></p>
+                    <p>PRESS ANY KEY TO CONTINUE...</p>
+                    <p>OR CONTACT FOR SERVICES</p>
                   </CardContent>
                 </Card>
               </section>
@@ -694,7 +704,7 @@ export default function Home() {
                     className="w-full bg-yellow-400 text-red-600 font-bold text-lg hover:bg-yellow-500 animate-pulse"
                     onClick={handleWarningButtonClick}
                 >
-                   {warningButtonState === 'initial' ? 'НЕ НАЖИМАТЬ' : 'Вы добровольно суете пальцы в розетку'}
+                   НЕ НАЖИМАТЬ
                 </Button>
               </section>
 
@@ -720,5 +730,3 @@ export default function Home() {
     </main>
   );
 }
-
-    
