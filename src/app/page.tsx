@@ -414,13 +414,13 @@ export default function Home() {
       const chinaDate = new Date(now.getTime() + utcOffset + chinaOffset);
       return chinaDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
     };
-
-    // Set initial time without waiting for interval
-    setChinaTime(getChinaTime());
-
+    
     const timer = setInterval(() => {
         setChinaTime(getChinaTime());
     }, 60000);
+    
+    // Set initial time after mount to avoid hydration mismatch
+    setChinaTime(getChinaTime());
     
     return () => clearInterval(timer);
   }, []);
@@ -478,7 +478,7 @@ export default function Home() {
             <div className="font-mono text-xs sm:text-sm w-full md:w-auto md:max-w-xs shrink-0">
                 <div className="bg-background/50 text-foreground p-3 rounded-lg border border-primary/20 w-full shadow-inner backdrop-blur-sm">
                     <div className="flex items-center justify-between mb-2 pb-2 border-b border-border">
-                        {chinaTime !== null ? <span className="text-foreground"><Typewriter text={`My TIME ${chinaTime}`} speed={50} stopBlinkingOnEnd /></span> : <div className="h-4" />}
+                        {chinaTime !== null ? <span className="text-foreground"><Typewriter text={`My TIME ${chinaTime}`} speed={50} stopBlinkingOnEnd /></span> : <div className="h-4 w-4/5 rounded-sm bg-muted animate-pulse" />}
                     </div>
                     
                     <a href={`https://t.me/${cvData.telegram}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline inline-flex items-center gap-2">
@@ -648,7 +648,7 @@ export default function Home() {
                       objectFit="cover"
                       className="grayscale"
                   />
-                  <div className="glitch-overlay opacity-80" />
+                  
                 </>
               ) : (
                 <CardHeader className="p-0">
@@ -792,3 +792,5 @@ export default function Home() {
     </main>
   );
 }
+
+    
