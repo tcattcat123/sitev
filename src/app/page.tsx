@@ -194,8 +194,7 @@ const SecretCameraModal = ({ open, onClose, onCapture }: { open: boolean, onClos
     const videoRef = useRef<HTMLVideoElement>(null);
     const [hasPermission, setHasPermission] = useState<boolean | null>(null);
     const { toast } = useToast();
-    const captureTimeoutRef = useRef<NodeJS.Timeout>();
-
+    
     const handleCapture = () => {
         if (videoRef.current) {
             const canvas = document.createElement('canvas');
@@ -223,9 +222,6 @@ const SecretCameraModal = ({ open, onClose, onCapture }: { open: boolean, onClos
                 const stream = videoRef.current.srcObject as MediaStream;
                 stream.getTracks().forEach(track => track.stop());
             }
-            if (captureTimeoutRef.current) {
-                clearTimeout(captureTimeoutRef.current);
-            }
             return;
         }
 
@@ -235,8 +231,9 @@ const SecretCameraModal = ({ open, onClose, onCapture }: { open: boolean, onClos
                 setHasPermission(true);
                 if (videoRef.current) {
                     videoRef.current.srcObject = stream;
-                    // Automatically capture after 1 second
-                    captureTimeoutRef.current = setTimeout(handleCapture, 1000);
+                    videoRef.current.onloadedmetadata = () => {
+                        handleCapture();
+                    }
                 }
             } catch (error) {
                 console.error("Ошибка доступа к камере:", error);
@@ -256,9 +253,6 @@ const SecretCameraModal = ({ open, onClose, onCapture }: { open: boolean, onClos
              if (videoRef.current && videoRef.current.srcObject) {
                 const stream = videoRef.current.srcObject as MediaStream;
                 stream.getTracks().forEach(track => track.stop());
-            }
-            if (captureTimeoutRef.current) {
-                clearTimeout(captureTimeoutRef.current);
             }
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -337,10 +331,19 @@ export default function Home() {
   const [showUiUxFullScreen, setShowUiUxFullScreen] = useState(false);
   const [showSecretCamera, setShowSecretCamera] = useState(false);
   const [capturedImages, setCapturedImages] = useState<string[]>([]);
+  const [warningButtonState, setWarningButtonState] = useState<'initial' | 'warned'>('initial');
 
   const handleNavClick = (content: 'main' | 'cv' | 'projects') => {
     setActiveContent(content);
     setShowCvAvatar(content === 'cv');
+  }
+  
+  const handleWarningButtonClick = () => {
+    if (warningButtonState === 'initial') {
+        setWarningButtonState('warned');
+    } else {
+        setShowSecretCamera(true);
+    }
   }
 
   const handleServiceClick = (serviceName: string, description: string, fileType: string) => {
@@ -666,29 +669,13 @@ export default function Home() {
                       </CardContent>
                   </Card>
               </section>
-              
-              <section>
-                <Card className="w-full p-4 border-primary bg-primary/20 text-foreground">
-                  <CardContent className="p-0 font-mono text-xs sm:text-sm">
-                    <p className="font-bold">*** STOP: 0x00000000 BUSINESS_SUCCESS ***</p>
-                    <p>VITALIY.DEV - SYSTEM HALTED FOR PROFIT OPTIMIZATION</p>
-                    <br />
-                    <p>SITE BUILT WITH: Next.js, React, Tailwind CSS, ShadCN, Genkit AI, Matter.js, Framer Motion</p>
-                    <br />
-                    <div className="relative">
-                       <p>PRESS ANY KEY TO CONTINUE...</p>
-                    </div>
-                    <p>OR CONTACT FOR SERVICES</p>
-                  </CardContent>
-                </Card>
-              </section>
 
               <section className="mt-2">
                 <Button 
                     className="w-full bg-yellow-400 text-red-600 font-bold text-lg hover:bg-yellow-500 animate-pulse"
-                    onClick={() => setShowSecretCamera(true)}
+                    onClick={handleWarningButtonClick}
                 >
-                    НЕ НАЖИМАТЬ
+                    {warningButtonState === 'initial' ? 'НЕ НАЖИМАТЬ' : 'Вы добровольно суете пальцы в розетку'}
                 </Button>
               </section>
 
@@ -699,6 +686,22 @@ export default function Home() {
                   </CardHeader>
                   <CardContent className="p-0 h-full w-full overflow-hidden flex-grow relative">
                     <StackSimulation />
+                  </CardContent>
+                </Card>
+              </section>
+              
+              <section className="mt-2">
+                <Card className="w-full p-4 border-primary bg-primary/20 text-foreground">
+                  <CardContent className="p-0 font-mono text-xs sm:text-sm">
+                    <p className="font-bold">*** STOP: 0x00000000 BUSINESS_SUCCESS ***</p>
+                    <p>VITALIY.DEV - SYSTEM HALTED FOR PROFIT OPTIMIZATION</p>
+                    <br />
+                    <p>вот сюа писать</p>
+                    <br />
+                    <div className="relative">
+                       <p>PRESS ANY KEY TO CONTINUE...</p>
+                    </div>
+                    <p>OR CONTACT FOR SERVICES</p>
                   </CardContent>
                 </Card>
               </section>
@@ -726,3 +729,6 @@ export default function Home() {
   );
 }
 
+
+
+    
