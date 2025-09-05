@@ -642,19 +642,27 @@ export default function Home() {
                 style={{ objectFit: 'cover' }}
                 className="grayscale contrast-150 brightness-75 group-hover:scale-110 transition-transform duration-300 ease-out"
               />
-              {/* Noise эффект при наведении */}
+              {/* Телевизионные помехи при наведении */}
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <Noise
-                  patternSize={75}
+                  patternSize={25}
                   patternScaleX={1}
                   patternScaleY={1}
-                  patternRefreshInterval={2}
-                  patternAlpha={35}
-                  color="red"
+                  patternRefreshInterval={1}
+                  patternAlpha={60}
+                  color="white"
                 />
               </div>
-              <div className="absolute inset-0 flex items-center justify-center">
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <h3 className="font-bold text-lg text-white drop-shadow-lg">{project.title}</h3>
+                <a 
+                  href="https://t.me/videopix_bot" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-white text-xs mt-2 hover:underline opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                >
+                  @videopix_bot
+                </a>
         </div>
             </>
           ) : (
