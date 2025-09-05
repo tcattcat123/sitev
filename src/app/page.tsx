@@ -596,15 +596,15 @@ export default function Home() {
                     objectFit="cover"
                     unoptimized
                     className="grayscale"
-                    onLoadingComplete={() => setTimeout(() => setShowGif(false), 3000)}
+                    onLoadingComplete={() => setTimeout(() => setShowGif(false), 10000)}
                  />
               ) : showCvAvatar ? (
                 <>
                   <Image 
                       src="https://img001.prntscr.com/file/img001/KJIFVl_VRK2DCYslGxcykA.jpeg"
                       alt="pixelated person"
-                      width={128}
-                      height={128}
+                      layout="fill"
+                      objectFit="cover"
                       className="grayscale"
                   />
                   <div className="glitch-overlay opacity-80" />
@@ -735,5 +735,3 @@ export default function Home() {
     </main>
   );
 }
-
-    
