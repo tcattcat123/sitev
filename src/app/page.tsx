@@ -8,7 +8,7 @@ import { StackSimulation } from '@/components/stack-simulation';
 import { Typewriter } from '@/components/typewriter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { HardDrive, Eye, ArrowLeft, Bot, Workflow, Code, Database, Camera } from 'lucide-react';
+import { HardDrive, Eye, ArrowLeft, Bot, Workflow, Code, Database, Camera, X } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
 import { EyeTrackingModal } from '@/components/eye-tracking-modal';
@@ -132,27 +132,17 @@ const uiUxHtmlContent = `<!DOCTYPE html>
                     const languagesHTML = inst.languages.map(lang => langAbbr[lang] || '').join(', ');
                     const cardElement = document.createElement('div');
                     cardElement.className = 'instructor-card bg-white p-3 rounded-xl border flex space-x-3 items-center hover:border-gray-800 cursor-pointer';
-                    const cardHTML = '<img src="' + inst.img_small + '" alt="' + inst.name + '" class="w-16 h-16 rounded-lg object-cover flex-shrink-0"><div class="flex-1 min-w-0"><h3 class="font-semibold text-gray-900 truncate">' + inst.name + '</h3><p class="text-sm text-gray-500">' + inst.specialty + '</p><p class="text-xs text-gray-500 mt-1">Опыт: ' + inst.experience + '</p></div><div class="text-right flex-shrink-0"><div class="flex items-center justify-end space-x-1"><svg class="h-4 w-4 text-yellow-500" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><span class="font-semibold text-sm">' + inst.rating + '</span></div><div class="text-xs font-semibold text-blue-600 mt-1">' + languagesHTML + '</div></div>';
-                    cardElement.innerHTML = cardHTML;
+                    cardElement.innerHTML = `<img src="${inst.img_small}" alt="${inst.name}" class="w-16 h-16 rounded-lg object-cover flex-shrink-0"><div class="flex-1 min-w-0"><h3 class="font-semibold text-gray-900 truncate">${inst.name}</h3><p class="text-sm text-gray-500">${inst.specialty}</p><p class="text-xs text-gray-500 mt-1">Опыт: ${inst.experience}</p></div><div class="text-right flex-shrink-0"><div class="flex items-center justify-end space-x-1"><svg class="h-4 w-4 text-yellow-500" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><span class="font-semibold text-sm">${inst.rating}</span></div><div class="text-xs font-semibold text-blue-600 mt-1">${languagesHTML}</div></div>`;
                     Object.keys(inst).forEach(key => { cardElement.dataset[key] = Array.isArray(inst[key]) ? inst[key].join(',') : inst[key]; });
                     cardElement.addEventListener('click', openProfile);
                     instructorListContainer.appendChild(cardElement);
                 });
             }
 
-            function generateStarsHTML() {
-                let starsHTML = '';
-                for (let i = 1; i <= 5; i++) {
-                    starsHTML += '<svg data-value="' + i + '" class="w-8 h-8 text-gray-300 cursor-pointer" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>';
-                }
-                return starsHTML;
-            }
-
             const openProfile = (event) => {
                 const data = event.currentTarget.dataset;
                 const languagesText = data.languages.split(',').map(lang => lang === 'ru' ? 'Русский' : 'Английский').join(', ');
-                const profileHTML = '<div class="h-full overflow-y-auto pb-40"><div class="h-52 bg-cover bg-center" style="background-image: url(\'' + data.img_big + '\')"></div><div class="bg-white rounded-t-2xl -mt-4 relative"><div class="p-4"><div class="flex justify-between items-start"><h1 class="text-2xl font-bold text-gray-900">' + data.school + '</h1><div class="text-right flex-shrink-0 ml-4"><div class="flex items-center justify-end space-x-1"><svg class="h-5 w-5 text-yellow-500" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><span class="font-bold text-gray-800 text-lg">' + data.rating + '</span></div><a href="#" class="text-xs text-gray-500 underline whitespace-nowrap">(' + data.reviews + ' отзыва)</a></div></div><p class="mt-4 text-sm text-gray-700 leading-relaxed">' + data.description + '</p><div class="mt-4 space-y-3 text-sm border-t pt-4"><div class="flex items-center text-gray-700">Опыт: ' + data.experience + '</div><div class="flex items-center text-gray-700">Языки: ' + languagesText + '</div><a href="#" class="flex items-center text-blue-600 hover:underline">' + data.instagram + '</a></div></div><div class="p-4 border-t"><h2 class="text-lg font-bold text-gray-900 mb-3">Услуги и цены</h2><ul class="text-sm space-y-2"><li class="flex justify-between text-gray-800"><span>Групповой урок (3 часа)</span><span class="font-semibold">$60</span></li><li class="flex justify-between text-gray-800"><span>Индивидуальный урок (3 часа)</span><span class="font-semibold">$150</span></li></ul></div><div class="p-4 border-t"><h2 class="text-lg font-bold text-gray-900 mb-3">Оставить отзыв</h2><div class="flex items-center space-x-1 mb-4" id="rating-stars">' + generateStarsHTML() + '</div><div class="relative"><textarea class="w-full p-2 pr-10 bg-gray-100 rounded-lg text-sm border border-transparent focus:ring-2 focus:ring-gray-300 focus:outline-none transition" rows="3" placeholder="Поделитесь вашими впечатлениями..."></textarea><button class="absolute bottom-2 right-2 p-1 text-gray-400 hover:text-gray-800"><svg class="w-6 h-6 -rotate-45" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg></button></div></div></div></div><div class="absolute bottom-0 left-0 right-0 w-full p-3 bg-white/80 backdrop-blur-sm border-t"><button class="w-full max-w-md mx-auto bg-gray-900 text-white font-bold py-3 px-4 rounded-xl">Связаться</button></div><button id="fab-back-btn" class="fixed bottom-24 right-4 w-14 h-14 bg-gray-900 text-white rounded-full shadow-lg flex items-center justify-center z-30"><svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg></button>';
-                profileScreen.innerHTML = profileHTML;
+                profileScreen.innerHTML = `<div class="h-full overflow-y-auto pb-40"><div class="h-52 bg-cover bg-center" style="background-image: url('${data.img_big}')"></div><div class="bg-white rounded-t-2xl -mt-4 relative"><div class="p-4"><div class="flex justify-between items-start"><h1 class="text-2xl font-bold text-gray-900">${data.school}</h1><div class="text-right flex-shrink-0 ml-4"><div class="flex items-center justify-end space-x-1"><svg class="h-5 w-5 text-yellow-500" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><span class="font-bold text-gray-800 text-lg">${data.rating}</span></div><a href="#" class="text-xs text-gray-500 underline whitespace-nowrap">(${data.reviews} отзыва)</a></div></div><p class="mt-4 text-sm text-gray-700 leading-relaxed">${data.description}</p><div class="mt-4 space-y-3 text-sm border-t pt-4"><div class="flex items-center text-gray-700">Опыт: ${data.experience}</div><div class="flex items-center text-gray-700">Языки: ${languagesText}</div><a href="#" class="flex items-center text-blue-600 hover:underline">${data.instagram}</a></div></div><div class="p-4 border-t"><h2 class="text-lg font-bold text-gray-900 mb-3">Услуги и цены</h2><ul class="text-sm space-y-2"><li class="flex justify-between text-gray-800"><span>Групповой урок (3 часа)</span><span class="font-semibold">$60</span></li><li class="flex justify-between text-gray-800"><span>Индивидуальный урок (3 часа)</span><span class="font-semibold">$150</span></li></ul></div><div class="p-4 border-t"><h2 class="text-lg font-bold text-gray-900 mb-3">Оставить отзыв</h2><div class="flex items-center space-x-1 mb-4" id="rating-stars">${[1,2,3,4,5].map(v => `<svg data-value="${v}" class="w-8 h-8 text-gray-300 cursor-pointer" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>`).join('')}</div><div class="relative"><textarea class="w-full p-2 pr-10 bg-gray-100 rounded-lg text-sm border border-transparent focus:ring-2 focus:ring-gray-300 focus:outline-none transition" rows="3" placeholder="Поделитесь вашими впечатлениями..."></textarea><button class="absolute bottom-2 right-2 p-1 text-gray-400 hover:text-gray-800"><svg class="w-6 h-6 -rotate-45" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg></button></div></div></div></div><div class="absolute bottom-0 left-0 right-0 w-full p-3 bg-white/80 backdrop-blur-sm border-t"><button class="w-full max-w-md mx-auto bg-gray-900 text-white font-bold py-3 px-4 rounded-xl">Связаться</button></div><button id="fab-back-btn" class="fixed bottom-24 right-4 w-14 h-14 bg-gray-900 text-white rounded-full shadow-lg flex items-center justify-center z-30"><svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg></button>`;
                 profileScreen.querySelector('#fab-back-btn').addEventListener('click', closeProfile);
                 
                 const stars = profileScreen.querySelectorAll('#rating-stars svg');
@@ -168,11 +158,7 @@ const uiUxHtmlContent = `<!DOCTYPE html>
             const closeProfile = () => profileScreen.classList.add('translate-y-full');
 
             const openPopup = (popup) => {
-                if (popup.id === 'filter-modal') {
-                  popup.classList.remove('hidden');
-                } else {
-                  popup.classList.remove('-translate-x-full', 'translate-x-full');
-                }
+                popup.classList.remove('-translate-x-full', 'translate-x-full', 'hidden');
                 overlay.classList.remove('hidden');
             };
             const closeAllPopups = () => {
@@ -192,7 +178,7 @@ const uiUxHtmlContent = `<!DOCTYPE html>
             categoryTabs.forEach(tab => {
                 tab.addEventListener('click', function() {
                     categoryTabs.forEach(t => { t.classList.remove('tab-active'); t.classList.add('bg-gray-100', 'text-gray-700'); });
-                    this.classList.add('tab-active'); this.classList.remove('bg-gray-100', 'text-gray-700');
+                    this.classList.add('tab-active'); this.classList.remove('bg-gamma-ray-100', 'text-gray-700');
                 });
             });
 
@@ -305,6 +291,23 @@ const SecretCameraModal = ({ open, onClose, onCapture }: { open: boolean, onClos
     )
 }
 
+const PhotoFrame = ({ imageSrc, index }: { imageSrc: string, index: number }) => {
+    return (
+        <div className="bg-black p-2 border-2 border-green-500/50 font-mono text-green-500 max-w-max">
+            <div className="bg-green-500 text-black flex justify-between items-center px-2 py-1 text-sm">
+                <span>PHOTO_{index + 1}.JPG</span>
+                <X size={16} className="cursor-pointer" />
+            </div>
+            <div className="p-2">
+                 <Image src={imageSrc} alt={`Captured image ${index + 1}`} width={200} height={200} className="bg-black"/>
+            </div>
+            <div className="text-center text-sm">
+                200x200 PX
+            </div>
+        </div>
+    )
+}
+
 export default function Home() {
   const { toast } = useToast()
   const [activeContent, setActiveContent] = useState<'main' | 'cv' | 'projects'>('main');
@@ -314,7 +317,7 @@ export default function Home() {
   const [showCvModal, setShowCvModal] = useState(false);
   const [showUiUxFullScreen, setShowUiUxFullScreen] = useState(false);
   const [showSecretCamera, setShowSecretCamera] = useState(false);
-  const [capturedImage, setCapturedImage] = useState<string | null>(null);
+  const [capturedImages, setCapturedImages] = useState<string[]>([]);
 
   const handleNavClick = (content: 'main' | 'cv' | 'projects') => {
     setActiveContent(content);
@@ -464,7 +467,7 @@ export default function Home() {
     <div className="grid grid-cols-2 gap-2">
       <ProjectCard>
         <div className="flex flex-col items-center justify-center text-center gap-2">
-            <Image src="https://i.imgur.com/g8fP6b8.jpeg" alt="CV Face" width={48} height={48} className="grayscale rounded-full"/>
+            <Image src="https://img001.prntscr.com/file/img001/KJIFVl_VRK2DCYslGxcykA.jpeg" alt="CV Face" width={48} height={48} className="grayscale rounded-full"/>
             <h3 className="font-bold">CV</h3>
             <p className="text-xs text-muted-foreground">MediaPipe, OpenAI</p>
         </div>
@@ -542,7 +545,7 @@ export default function Home() {
       <SecretCameraModal 
           open={showSecretCamera}
           onClose={() => setShowSecretCamera(false)}
-          onCapture={(image) => setCapturedImage(image)}
+          onCapture={(image) => setCapturedImages(prev => [...prev, image])}
       />
       <div className="w-full max-w-xl mx-auto flex flex-col flex-grow">
         <Toaster />
@@ -656,10 +659,17 @@ export default function Home() {
                 </Card>
               </section>
 
-              <section className="mt-2 space-y-2">
-                {capturedImage && (
-                    <div className="flex justify-center">
-                        <Image src={capturedImage} alt="Captured image" width={200} height={200} className="rounded-lg border-2 border-primary"/>
+              <section className="mt-2 space-y-4">
+                {capturedImages.length > 0 && (
+                    <div className="space-y-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {capturedImages.map((imgSrc, index) => (
+                                <PhotoFrame key={index} imageSrc={imgSrc} index={index} />
+                            ))}
+                        </div>
+                        <Button className="w-full bg-green-500 text-black font-bold">
+                            Нарушители
+                        </Button>
                     </div>
                 )}
                 <Button 
