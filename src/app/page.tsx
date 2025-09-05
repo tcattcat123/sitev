@@ -308,6 +308,24 @@ const PhotoFrame = ({ imageSrc, index }: { imageSrc: string, index: number }) =>
     )
 }
 
+const MatrixRain = () => (
+    <div className="matrix-rain -z-10">
+        {[...Array(25)].map((_, i) => (
+            <div
+                key={i}
+                className="matrix-char"
+                style={{
+                    left: `${Math.random() * 100}%`,
+                    animationDuration: `${Math.random() * 4 + 3}s`,
+                    animationDelay: `${Math.random() * 3}s`,
+                }}
+            >
+                {Math.random() > 0.5 ? '1' : '0'}
+            </div>
+        ))}
+    </div>
+);
+
 export default function Home() {
   const { toast } = useToast()
   const [activeContent, setActiveContent] = useState<'main' | 'cv' | 'projects'>('main');
@@ -541,6 +559,7 @@ export default function Home() {
 
   return (
     <main className="p-2 sm:p-4 min-h-screen flex flex-col relative">
+      <MatrixRain />
       {showCvModal && <EyeTrackingModal onClose={() => setShowCvModal(false)} />}
       <SecretCameraModal 
           open={showSecretCamera}
@@ -687,5 +706,3 @@ export default function Home() {
     </main>
   );
 }
-
-    

@@ -277,3 +277,4 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
       </DialogContent>
     </Dialog>
   );
+};
