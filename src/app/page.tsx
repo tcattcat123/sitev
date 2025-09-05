@@ -348,7 +348,7 @@ const initialDynamicText = "SITE BUILT WITH: Next.js, React, Tailwind CSS, ShadC
 
 export default function Home() {
   const { toast } = useToast()
-  const [activeContent, setActiveContent] = useState<'main' | 'cv' | 'projects'>('main');
+  const [activeContent, setActiveContent] = useState<'main' | 'cv' | 'projects' | 'gallery'>('main');
   const [showGif, setShowGif] = useState(false);
   const [showCvAvatar, setShowCvAvatar] = useState(false);
   const [chinaTime, setChinaTime] = useState<string | null>(null);
@@ -360,7 +360,7 @@ export default function Home() {
   const [dynamicInfoText, setDynamicInfoText] = useState(initialDynamicText);
 
 
-  const handleNavClick = (content: 'main' | 'cv' | 'projects') => {
+  const handleNavClick = (content: 'main' | 'cv' | 'projects' | 'gallery') => {
     setActiveContent(content);
     setShowCvAvatar(content === 'cv');
   }
@@ -548,7 +548,17 @@ export default function Home() {
     </div>
   );
 
-  const navButton = (label: string, content: 'main' | 'cv' | 'projects') => {
+  const galleryContent = (
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        {capturedImages.map((imgSrc, index) => (
+            <div key={index} className="relative aspect-square">
+                <Image src={imgSrc} alt={`Violator ${index + 1}`} layout="fill" objectFit="cover" className="rounded-md" />
+            </div>
+        ))}
+    </div>
+  );
+
+  const navButton = (label: string, content: 'main' | 'cv' | 'projects' | 'gallery') => {
     const command = `C:\\> ${label}`;
     return (
       <Button 
@@ -556,7 +566,7 @@ export default function Home() {
         className="justify-start h-full text-sm sm:text-base border-primary hover:bg-accent" 
         onClick={() => {
           if (label === '..') handleNavClick('main')
-          else if (content === 'projects' || content === 'cv') handleNavClick(content)
+          else if (content) handleNavClick(content)
           else toast({ title: `C:\\> ` + label, description: 'Раздел в разработке.'})
         }}
       >
@@ -637,9 +647,16 @@ export default function Home() {
               )}
           </Card>
           <nav className="w-2/3 flex flex-col gap-2">
-            {activeContent !== 'main' ? navButton('..', 'main') : navButton('CV', 'cv')}
-            {activeContent === 'main' ? navButton('PROJECTS', 'projects') : activeContent === 'projects' ? null : navButton('PROJECTS', 'projects')}
-            {activeContent !== 'projects' && navButton('CONTACT', 'main')}
+            {activeContent === 'main' && (
+              <>
+                {navButton('CV', 'cv')}
+                {navButton('PROJECTS', 'projects')}
+                {navButton('CONTACT', 'main')}
+              </>
+            )}
+             {(activeContent === 'cv' || activeContent === 'projects' || activeContent === 'gallery') && navButton('..', 'main')}
+             {activeContent === 'cv' && navButton('PROJECTS', 'projects')}
+             {activeContent === 'projects' && navButton('CV', 'cv')}
           </nav>
         </header>
         
@@ -653,6 +670,12 @@ export default function Home() {
           {activeContent === 'projects' && (
             <section className="overflow-y-auto flex-grow">
               {projectsContent}
+            </section>
+          )}
+          
+          {activeContent === 'gallery' && (
+             <section className="overflow-y-auto flex-grow">
+              {galleryContent}
             </section>
           )}
 
@@ -740,7 +763,10 @@ export default function Home() {
                                 <PhotoFrame key={index} imageSrc={imgSrc} index={index} />
                             ))}
                         </div>
-                        <Button className="w-full bg-green-500 text-black font-bold">
+                        <Button 
+                            className="w-full bg-green-500 text-black font-bold"
+                            onClick={() => setActiveContent('gallery')}
+                        >
                             Нарушители
                         </Button>
                     </div>
@@ -754,5 +780,3 @@ export default function Home() {
     </main>
   );
 }
-
-    
