@@ -1,0 +1,142 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+    --radius: 0rem;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 340 80% 55%;
+    --chart-4: 40 65% 60%;
+    --chart-5: 280 75% 55%;
+    --terminal-green: 220 70% 50%;
+  }
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 340 80% 55%;
+    --chart-4: 40 65% 60%;
+    --chart-5: 280 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.cursor-blink {
+  animation: blink-caret 1.2s step-end infinite;
+}
+
+@keyframes blink-caret {
+  from,
+  to {
+    color: transparent;
+    background-color: transparent;
+  }
+  50% {
+    color: hsl(var(--foreground));
+    background-color: hsl(var(--background));
+  }
+}
+
+.glitch-overlay {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--glitch-color-1, rgba(0,255,0,0.2)) 50%, rgba(0,0,0,0) 50%),
+    linear-gradient(90deg, var(--glitch-color-2, rgba(0,0,255,0.2)) 50%, transparent 50%);
+  background-size: 100% 3px, 3px 100%;
+  animation: glitch 0.5s infinite alternate;
+  mix-blend-mode: screen;
+  opacity: 0.7;
+}
+
+@keyframes glitch {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(2px, -2px); }
+  50% { transform: translate(-2px, 2px); }
+  75% { transform: translate(2px, 2px); }
+  100% { transform: translate(0, 0); }
+}
+
+.matrix-rain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.matrix-char {
+  position: absolute;
+  color: hsl(var(--terminal-green) / 0.5);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  animation: matrix-fall linear infinite;
+  opacity: 0.8;
+}
+
+@keyframes matrix-fall {
+  0% {
+    transform: translateY(-10vh);
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+    
+    
