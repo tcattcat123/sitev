@@ -265,7 +265,7 @@ const SecretCameraModal = ({ open, onClose, onCapture }: { open: boolean, onClos
         <Dialog open={open} onOpenChange={onClose}>
             <DialogContent className="bg-card/80 backdrop-blur-sm border-primary text-foreground font-mono">
                 <DialogHeader>
-                    <DialogTitle>⚠WARNING⚠</DialogTitle>
+                    <DialogTitle className="text-yellow-400">⚠️ВЫ В СЕКУНДЕ ОТ ПРОБЛЕМЫ⚠️</DialogTitle>
                     <DialogDescription>
                        SYSTEM ACCESS. UNAUTHORIZED ENTRY WILL BE LOGGED.
                     </DialogDescription>
