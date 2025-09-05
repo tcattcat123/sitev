@@ -231,9 +231,12 @@ const SecretCameraModal = ({ open, onClose, onCapture }: { open: boolean, onClos
                 setHasPermission(true);
                 if (videoRef.current) {
                     videoRef.current.srcObject = stream;
-                    videoRef.current.onloadedmetadata = () => {
-                        handleCapture();
-                    }
+                    videoRef.current.oncanplay = () => {
+                        // Use a small timeout to ensure the camera has time to adjust exposure, etc.
+                        setTimeout(() => {
+                            handleCapture();
+                        }, 100);
+                    };
                 }
             } catch (error) {
                 console.error("Ошибка доступа к камере:", error);
@@ -682,7 +685,7 @@ export default function Home() {
                   <CardContent className="p-0 font-mono text-xs sm:text-sm">
                     <p className="font-bold">*** STOP: 0x00000000 BUSINESS_SUCCESS ***</p>
                     <p>VITALIY.DEV - SYSTEM HALTED FOR PROFIT OPTIMIZATION</p>
-                     <p><Typewriter key={dynamicInfoText} text={dynamicInfoText} stopBlinkingOnEnd /></p>
+                    <p><Typewriter key={dynamicInfoText} text={dynamicInfoText} stopBlinkingOnEnd /></p>
                     <p>PRESS ANY KEY TO CONTINUE...</p>
                     <p>OR CONTACT FOR SERVICES</p>
                   </CardContent>
@@ -730,3 +733,5 @@ export default function Home() {
     </main>
   );
 }
+
+    
