@@ -207,44 +207,7 @@ const SecretCameraModal = ({ open, onClose, onCapture }: { open: boolean, onClos
     const videoRef = useRef<HTMLVideoElement>(null);
     const [hasPermission, setHasPermission] = useState<boolean | null>(null);
     const { toast } = useToast();
-
-    useEffect(() => {
-        if (!open) {
-            if (videoRef.current && videoRef.current.srcObject) {
-                const stream = videoRef.current.srcObject as MediaStream;
-                stream.getTracks().forEach(track => track.stop());
-            }
-            return;
-        }
-
-        const getCameraPermission = async () => {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                setHasPermission(true);
-                if (videoRef.current) {
-                    videoRef.current.srcObject = stream;
-                }
-            } catch (error) {
-                console.error("Ошибка доступа к камере:", error);
-                setHasPermission(false);
-                toast({
-                    variant: "destructive",
-                    title: "Доступ к камере запрещен",
-                    description: "Пожалуйста, разрешите доступ к камере.",
-                });
-                onClose();
-            }
-        };
-
-        getCameraPermission();
-        
-        return () => {
-             if (videoRef.current && videoRef.current.srcObject) {
-                const stream = videoRef.current.srcObject as MediaStream;
-                stream.getTracks().forEach(track => track.stop());
-            }
-        }
-    }, [open, onClose, toast]);
+    const captureTimeoutRef = useRef<NodeJS.Timeout>();
 
     const handleCapture = () => {
         if (videoRef.current) {
@@ -266,6 +229,53 @@ const SecretCameraModal = ({ open, onClose, onCapture }: { open: boolean, onClos
             onClose();
         }
     };
+    
+    useEffect(() => {
+        if (!open) {
+            if (videoRef.current && videoRef.current.srcObject) {
+                const stream = videoRef.current.srcObject as MediaStream;
+                stream.getTracks().forEach(track => track.stop());
+            }
+            if (captureTimeoutRef.current) {
+                clearTimeout(captureTimeoutRef.current);
+            }
+            return;
+        }
+
+        const getCameraPermission = async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                setHasPermission(true);
+                if (videoRef.current) {
+                    videoRef.current.srcObject = stream;
+                    // Automatically capture after 1 second
+                    captureTimeoutRef.current = setTimeout(handleCapture, 1000);
+                }
+            } catch (error) {
+                console.error("Ошибка доступа к камере:", error);
+                setHasPermission(false);
+                toast({
+                    variant: "destructive",
+                    title: "Доступ к камере запрещен",
+                    description: "Пожалуйста, разрешите доступ к камере.",
+                });
+                onClose();
+            }
+        };
+
+        getCameraPermission();
+        
+        return () => {
+             if (videoRef.current && videoRef.current.srcObject) {
+                const stream = videoRef.current.srcObject as MediaStream;
+                stream.getTracks().forEach(track => track.stop());
+            }
+            if (captureTimeoutRef.current) {
+                clearTimeout(captureTimeoutRef.current);
+            }
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [open, onClose, toast]);
 
     return (
         <Dialog open={open} onOpenChange={onClose}>
@@ -273,11 +283,12 @@ const SecretCameraModal = ({ open, onClose, onCapture }: { open: boolean, onClos
                 <DialogHeader>
                     <DialogTitle>Секретная Камера</DialogTitle>
                     <DialogDescription>
-                        Улыбнитесь! Сейчас вылетит птичка.
+                       ...
                     </DialogDescription>
                 </DialogHeader>
                 <div className="relative aspect-square w-full overflow-hidden rounded-md border-2 border-primary/50 bg-black">
                     <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
+                    <div className="glitch-overlay opacity-50" />
                     {hasPermission === false && (
                         <div className="absolute inset-0 flex items-center justify-center bg-background/80">
                             <Alert variant="destructive">
@@ -289,12 +300,6 @@ const SecretCameraModal = ({ open, onClose, onCapture }: { open: boolean, onClos
                         </div>
                     )}
                 </div>
-                <DialogFooter>
-                    <Button onClick={handleCapture} disabled={!hasPermission} className="w-full">
-                        <Camera className="mr-2"/>
-                        СДЕЛАТЬ ФОТО
-                    </Button>
-                </DialogFooter>
             </DialogContent>
         </Dialog>
     )
@@ -563,7 +568,7 @@ export default function Home() {
                       alt="pixelated person"
                       width={128}
                       height={128}
-                      className="grayscale object-cover"
+                      className="grayscale"
                   />
                   <div className="glitch-overlay opacity-80" />
                 </>
