@@ -2,17 +2,16 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { FaceLandmarker, FilesetResolver, DrawingUtils, ObjectDetector } from '@mediapipe/tasks-vision';
+import { FaceLandmarker, FilesetResolver } from '@mediapipe/tasks-vision';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { useToast } from "@/hooks/use-toast"
 
 let faceLandmarker: FaceLandmarker | undefined;
-let objectDetector: ObjectDetector | undefined;
 let lastVideoTime = -1;
 let animationFrameId: number;
 
-async function createVisionModels() {
+async function createFaceLandmarker() {
   if (typeof window === 'undefined') return;
   const filesetResolver = await FilesetResolver.forVisionTasks(
     "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm"
@@ -25,15 +24,6 @@ async function createVisionModels() {
     outputFaceBlendshapes: true,
     runningMode: 'VIDEO',
     numFaces: 1,
-  });
-  objectDetector = await ObjectDetector.createFromOptions(filesetResolver, {
-    baseOptions: {
-      modelAssetPath: `https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/int8/1/efficientdet_lite0.task`,
-      delegate: 'GPU',
-    },
-    scoreThreshold: 0.5,
-    runningMode: 'VIDEO',
-    categoryAllowlist: ['cup'],
   });
 }
 
@@ -58,7 +48,6 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
   const [isModelLoaded, setIsModelLoaded] = useState(false);
   const [faceDetected, setFaceDetected] = useState(false);
   const [eyesDetected, setEyesDetected] = useState(false);
-  const [mugDetected, setMugDetected] = useState(false);
   const [detectedEmotion, setDetectedEmotion] = useState<Emotion>('NEUTRAL');
 
   useEffect(() => {
@@ -66,7 +55,7 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
 
     async function setupVision() {
       // Load models
-      await createVisionModels();
+      await createFaceLandmarker();
       if (isCancelled) return;
       setIsModelLoaded(true);
       
@@ -113,7 +102,7 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
   }, [toast]);
 
   const predictWebcam = () => {
-    if (!videoRef.current || !canvasRef.current || !faceLandmarker || !objectDetector) {
+    if (!videoRef.current || !canvasRef.current || !faceLandmarker) {
       animationFrameId = requestAnimationFrame(predictWebcam);
       return;
     }
@@ -142,15 +131,14 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
     if (video.currentTime !== lastVideoTime) {
       lastVideoTime = video.currentTime;
       const faceResults = faceLandmarker.detectForVideo(video, nowInMs);
-      const objectResults = objectDetector.detectForVideo(video, nowInMs);
 
       canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
       
-      // Face detection results
       if (faceResults.faceLandmarks && faceResults.faceLandmarks.length > 0) {
         setFaceDetected(true);
         const landmarks = faceResults.faceLandmarks[0];
 
+        // Draw face bounding box
         const x = Math.min(...landmarks.map(p => p.x)) * videoWidth;
         const y = Math.min(...landmarks.map(p => p.y)) * videoHeight;
         const width = (Math.max(...landmarks.map(p => p.x)) - Math.min(...landmarks.map(p => p.x))) * videoWidth;
@@ -159,12 +147,13 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
         canvasCtx.lineWidth = 2;
         canvasCtx.strokeRect(x, y, width, height);
 
-        const leftEyeIndices = [33, 160, 158, 133, 153, 144];
+        // Indices for a tight box around eyes
+        const leftEyeIndices = [33, 160, 158, 133, 153, 144]; 
         const rightEyeIndices = [362, 385, 387, 263, 373, 380];
         
         const drawEyeBox = (eyeIndices: number[]) => {
             const eyePoints = eyeIndices.map(i => landmarks[i]);
-            if (eyePoints.length > 0) {
+            if (eyePoints.every(p => p)) {
                 const ex = Math.min(...eyePoints.map(p => p.x)) * videoWidth;
                 const ey = Math.min(...eyePoints.map(p => p.y)) * videoHeight;
                 const ew = (Math.max(...eyePoints.map(p => p.x)) - Math.min(...eyePoints.map(p => p.x))) * videoWidth;
@@ -198,26 +187,6 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
         setEyesDetected(false);
         setDetectedEmotion('NEUTRAL');
       }
-
-      // Object detection results
-      let isMugDetected = false;
-      if (objectResults.detections) {
-          for (const detection of objectResults.detections) {
-              if (detection.categories[0].categoryName === 'cup') {
-                  isMugDetected = true;
-                  const bbox = detection.boundingBox;
-                  if (bbox) {
-                      canvasCtx.strokeStyle = '#00FF00';
-                      canvasCtx.lineWidth = 4;
-                      canvasCtx.strokeRect(bbox.originX, bbox.originY, bbox.width, bbox.height);
-                      canvasCtx.fillStyle = '#00FF00';
-                      canvasCtx.font = '14px monospace';
-                      canvasCtx.fillText('MUG', bbox.originX, bbox.originY > 10 ? bbox.originY - 5 : 10);
-                  }
-              }
-          }
-      }
-      setMugDetected(isMugDetected);
     }
     
     animationFrameId = requestAnimationFrame(predictWebcam);
@@ -229,14 +198,14 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
         <DialogHeader>
           <DialogTitle className="text-red-500">VIPE CONSOLE</DialogTitle>
           <DialogDescription className="text-red-500/80">
-            TECHNOLOGY: MediaPipe FaceLandmarker, ObjectDetector. Real-time facial landmark and object detection.
+            TECHNOLOGY: MediaPipe FaceLandmarker. Real-time facial landmark detection.
           </DialogDescription>
         </DialogHeader>
         <div className="relative aspect-video w-full overflow-hidden rounded-md border-2 border-red-500/50 bg-black">
             <video ref={videoRef} className="w-full h-full aspect-video opacity-70" autoPlay muted playsInline />
             <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full" />
             
-            {<div className="glitch-overlay opacity-50" style={{'--glitch-color-1': 'rgba(255,0,0,0.1)', '--glitch-color-2': 'rgba(0,0,155,0.1)'} as React.CSSProperties}/>}
+            <div className="glitch-overlay opacity-50" style={{'--glitch-color-1': 'rgba(255,0,0,0.1)', '--glitch-color-2': 'rgba(0,0,155,0.1)'} as React.CSSProperties}/>
             
             <div className="absolute top-2 left-2 text-sm uppercase">
                 <p>VISUAL: {faceDetected ? 'ONLINE' : 'OFFLINE'}</p>
@@ -254,13 +223,6 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
                 </div>
             )}
             
-            {mugDetected && (
-                <div className="absolute bottom-14 left-2 text-sm text-green-400 uppercase animate-pulse">
-                    {'// MUG DETECTED //'}
-                </div>
-            )}
-
-
             {hasCameraPermission === false && (
                 <div className="absolute inset-0 flex items-center justify-center bg-background/80">
                     <Alert variant="destructive" className="w-auto border-red-500 text-red-500">
