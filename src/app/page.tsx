@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
 import { EyeTrackingModal } from '@/components/eye-tracking-modal';
 import { ProjectCard } from '@/components/project-card';
+import { Noise } from '@/components/ui/shadcn-io/noise';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { saveImage } from '@/app/actions';
@@ -203,14 +204,19 @@ const SecretCameraModal = ({ open, onClose, onCapture }: { open: boolean, onClos
             canvas.height = 200;
             const ctx = canvas.getContext('2d');
             if (ctx) {
-                // To maintain aspect ratio and crop from center
+                // Оптимизированная обработка изображения
                 const videoWidth = videoRef.current.videoWidth;
                 const videoHeight = videoRef.current.videoHeight;
                 const size = Math.min(videoWidth, videoHeight);
                 const x = (videoWidth - size) / 2;
                 const y = (videoHeight - size) / 2;
+                
+                // Используем более быстрый метод отрисовки
+                ctx.imageSmoothingEnabled = false; // Отключаем сглаживание для скорости
                 ctx.drawImage(videoRef.current, x, y, size, size, 0, 0, 200, 200);
-                const dataUrl = canvas.toDataURL('image/jpeg');
+                
+                // Оптимизированное качество JPEG для быстрого сжатия
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
                 
                 try {
                     const { filePath } = await saveImage(dataUrl);
@@ -247,15 +253,28 @@ const SecretCameraModal = ({ open, onClose, onCapture }: { open: boolean, onClos
 
         const getCameraPermission = async () => {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                // Оптимизированные настройки камеры для быстрого запуска
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        width: { ideal: 640 },
+                        height: { ideal: 480 },
+                        frameRate: { ideal: 30, max: 30 }
+                    } 
+                });
                 setHasPermission(true);
                 if (videoRef.current) {
                     videoRef.current.srcObject = stream;
                     videoRef.current.oncanplay = () => {
-                        // Use a small timeout to ensure the camera has time to adjust exposure, etc.
+                        // Уменьшенный таймаут для быстрого запуска
                         setTimeout(() => {
                             handleCapture();
-                        }, 100);
+                        }, 50);
+                    };
+                    // Дополнительная оптимизация - запуск сразу при загрузке метаданных
+                    videoRef.current.onloadedmetadata = () => {
+                        if (videoRef.current) {
+                            videoRef.current.play().catch(console.error);
+                        }
                     };
                 }
             } catch (error) {
@@ -583,35 +602,66 @@ export default function Home() {
     </div>
   );
 
+  const projectsData = [
+    {
+      title: "CV",
+      image: "https://i.imgur.com/o96pWfT.jpeg",
+      hasImage: true
+    },
+    {
+      title: "BOT",
+      image: null,
+      hasImage: false
+    },
+    {
+      title: "SITE", 
+      image: null,
+      hasImage: false
+    },
+    {
+      title: "AI",
+      image: null,
+      hasImage: false
+    }
+  ];
+
   const projectsContent = (
-    <div className="grid grid-cols-3 gap-2">
-      <ProjectCard className="hover:rounded-none">
-        <div className="relative w-full h-full overflow-hidden">
-          <Image 
-            src="https://i.imgur.com/o96pWfT.jpeg" 
-            alt="CV" 
-            fill
-            sizes="(max-width: 768px) 33vw, 25vw"
-            style={{ objectFit: 'cover' }}
-            className="grayscale contrast-150 brightness-75"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-pulse"></div>
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/10 to-transparent animate-pulse" style={{animationDelay: '0.2s'}}></div>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <h3 className="font-bold text-lg text-white">CV</h3>
+    <div className="grid grid-cols-2 gap-2">
+      {projectsData.map((project, i) => (
+        <div 
+          key={i}
+          className="aspect-square bg-card border border-primary flex items-center justify-center text-foreground font-mono transition-all duration-300 ease-in-out hover:rounded-full hover:bg-primary/20 cursor-pointer relative group overflow-hidden"
+        >
+          {project.hasImage ? (
+            <>
+              <Image 
+                src={project.image} 
+                alt={project.title} 
+                fill
+                sizes="(max-width: 768px) 50vw, 25vw"
+                style={{ objectFit: 'cover' }}
+                className="grayscale contrast-150 brightness-75 group-hover:scale-110 transition-transform duration-300 ease-out"
+              />
+              {/* Noise эффект при наведении */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <Noise
+                  patternSize={75}
+                  patternScaleX={1}
+                  patternScaleY={1}
+                  patternRefreshInterval={2}
+                  patternAlpha={35}
+                  color="red"
+                />
+              </div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <h3 className="font-bold text-lg text-white drop-shadow-lg">{project.title}</h3>
         </div>
+            </>
+          ) : (
+            <h3 className="font-bold text-lg text-white">{project.title}</h3>
+          )}
         </div>
-      </ProjectCard>
-      <ProjectCard>
-        <div className="relative w-full h-full flex items-center justify-center">
-          <h3 className="font-bold text-lg text-white">BOT</h3>
-        </div>
-      </ProjectCard>
-      <ProjectCard>
-        <div className="relative w-full h-full flex items-center justify-center">
-          <h3 className="font-bold text-lg text-white">SITE</h3>
-        </div>
-      </ProjectCard>
+      ))}
     </div>
   );
 
@@ -816,8 +866,8 @@ export default function Home() {
                                       <span className="relative">
                                         CV
                                         <div 
-                                          className="glitch-overlay opacity-20" 
-                                          style={{'--glitch-color-1': 'rgba(0, 255, 255, 0.2)', '--glitch-color-2': 'rgba(0, 100, 255, 0.2)'} as React.CSSProperties}
+                                          className="glitch-overlay opacity-30" 
+                                          style={{'--glitch-color-1': 'rgba(255, 0, 0, 0.8)', '--glitch-color-2': 'rgba(255, 50, 50, 0.6)'} as React.CSSProperties}
                                         />
                                       </span>
                                     ) : (
@@ -859,7 +909,8 @@ export default function Home() {
               
                <section className="mt-2">
                 <Button 
-                    className="w-full bg-yellow-400 text-red-600 font-bold text-lg hover:bg-yellow-500 animate-pulse"
+                    variant="outline"
+                    className="w-full border-primary text-foreground font-bold text-lg animate-pulse"
                     onClick={handleWarningButtonClick}
                 >
                    НЕ НАЖИМАТЬ
@@ -875,7 +926,8 @@ export default function Home() {
                             ))}
                         </div>
                         <Button 
-                            className="w-full bg-green-500 text-black font-bold"
+                            variant="outline"
+                            className="w-full border-primary text-foreground font-bold animate-pulse"
                             onClick={() => {
                                 setIsGreenButtonPressed(true);
                                 setActiveContent('gallery');
