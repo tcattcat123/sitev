@@ -38,7 +38,7 @@ const Emotions = {
     'browDownRight': 'ANGRY',
 };
 type Emotion = 'HAPPY' | 'SAD' | 'ANGRY' | 'NEUTRAL';
-
+type HairColor = 'LIGHT' | 'DARK' | 'UNKNOWN';
 
 export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
   const { toast } = useToast();
@@ -49,6 +49,7 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
   const [faceDetected, setFaceDetected] = useState(false);
   const [eyesDetected, setEyesDetected] = useState(false);
   const [detectedEmotion, setDetectedEmotion] = useState<Emotion>('NEUTRAL');
+  const [hairColor, setHairColor] = useState<HairColor>('UNKNOWN');
 
   useEffect(() => {
     let isCancelled = false;
@@ -101,6 +102,23 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
     }
   }, [toast]);
 
+  const getAverageColor = (ctx: CanvasRenderingContext2D, points: {x: number, y: number}[]) => {
+    let r = 0, g = 0, b = 0;
+    let count = 0;
+    points.forEach(point => {
+        const pixelData = ctx.getImageData(point.x, point.y, 1, 1).data;
+        if (pixelData[3] > 0) { // Check alpha
+            r += pixelData[0];
+            g += pixelData[1];
+            b += pixelData[2];
+            count++;
+        }
+    });
+    if (count === 0) return null;
+    return (r / count + g / count + b / count) / 3;
+  };
+
+
   const predictWebcam = () => {
     if (!videoRef.current || !canvasRef.current || !faceLandmarker) {
       animationFrameId = requestAnimationFrame(predictWebcam);
@@ -114,7 +132,8 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
     }
 
     const canvas = canvasRef.current;
-    const canvasCtx = canvas.getContext("2d");
+    const canvasCtx = canvas.getContext("2d", { willReadFrequently: true });
+
 
     if (!canvasCtx) {
       animationFrameId = requestAnimationFrame(predictWebcam);
@@ -127,12 +146,16 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
     if (canvas.width !== videoWidth) canvas.width = videoWidth;
     if (canvas.height !== videoHeight) canvas.height = videoHeight;
     
+    // Draw video frame to canvas to read pixel data
+    canvasCtx.drawImage(video, 0, 0, videoWidth, videoHeight);
+
     let nowInMs = Date.now();
     if (video.currentTime !== lastVideoTime) {
       lastVideoTime = video.currentTime;
       const faceResults = faceLandmarker.detectForVideo(video, nowInMs);
 
-      canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+      // Clear canvas for drawing overlays
+      // canvasCtx.clearRect(0, 0, canvas.width, canvas.height); - we don't clear because video is drawn
       
       if (faceResults.faceLandmarks && faceResults.faceLandmarks.length > 0) {
         setFaceDetected(true);
@@ -147,27 +170,39 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
         canvasCtx.lineWidth = 2;
         canvasCtx.strokeRect(x, y, width, height);
 
-        // Indices for a tight box around eyes
-        const leftEyeIndices = [33, 160, 158, 133, 153, 144]; 
-        const rightEyeIndices = [362, 385, 387, 263, 373, 380];
+        // Hair color detection
+        const hairRegionIndices = [10, 109, 67, 103]; 
+        const hairPoints = hairRegionIndices.map(i => ({
+            x: landmarks[i].x * videoWidth,
+            y: (landmarks[i].y * videoHeight) - (0.05 * videoHeight) // Shift up slightly
+        }));
         
-        const drawEyeBox = (eyeIndices: number[]) => {
-            const eyePoints = eyeIndices.map(i => landmarks[i]);
-            if (eyePoints.every(p => p)) {
-                const ex = Math.min(...eyePoints.map(p => p.x)) * videoWidth;
-                const ey = Math.min(...eyePoints.map(p => p.y)) * videoHeight;
-                const ew = (Math.max(...eyePoints.map(p => p.x)) - Math.min(...eyePoints.map(p => p.x))) * videoWidth;
-                const eh = (Math.max(...eyePoints.map(p => p.y)) - Math.min(...eyePoints.map(p => p.y))) * videoHeight;
+        const avgBrightness = getAverageColor(canvasCtx, hairPoints);
+        if (avgBrightness !== null) {
+            setHairColor(avgBrightness > 128 ? 'LIGHT' : 'DARK');
+        } else {
+            setHairColor('UNKNOWN');
+        }
+
+        // Indices for left and right eye centers (pupils)
+        const leftEyeCenterIndex = 473; 
+        const rightEyeCenterIndex = 468;
+        
+        const drawEyeBox = (centerIndex: number) => {
+            const centerPoint = landmarks[centerIndex];
+            if (centerPoint) {
+                const ex = (centerPoint.x * videoWidth) - 25;
+                const ey = (centerPoint.y * videoHeight) - 25;
                 canvasCtx.strokeStyle = 'red';
                 canvasCtx.lineWidth = 1;
-                canvasCtx.strokeRect(ex, ey, ew, eh);
+                canvasCtx.strokeRect(ex, ey, 50, 50);
                 return true;
             }
             return false;
         }
 
-        const leftEyeDetected = drawEyeBox(leftEyeIndices);
-        const rightEyeDetected = drawEyeBox(rightEyeIndices);
+        const leftEyeDetected = drawEyeBox(leftEyeCenterIndex);
+        const rightEyeDetected = drawEyeBox(rightEyeCenterIndex);
         setEyesDetected(leftEyeDetected && rightEyeDetected);
         
         let currentEmotion: Emotion = 'NEUTRAL';
@@ -186,6 +221,7 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
         setFaceDetected(false);
         setEyesDetected(false);
         setDetectedEmotion('NEUTRAL');
+        setHairColor('UNKNOWN');
       }
     }
     
@@ -202,14 +238,14 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
           </DialogDescription>
         </DialogHeader>
         <div className="relative aspect-video w-full overflow-hidden rounded-md border-2 border-red-500/50 bg-black">
-            <video ref={videoRef} className="w-full h-full aspect-video opacity-70" autoPlay muted playsInline />
+            <video ref={videoRef} className="w-full h-full aspect-video opacity-0" autoPlay muted playsInline />
             <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full" />
             
             <div className="glitch-overlay opacity-50" style={{'--glitch-color-1': 'rgba(255,0,0,0.1)', '--glitch-color-2': 'rgba(0,0,155,0.1)'} as React.CSSProperties}/>
             
             <div className="absolute top-2 left-2 text-sm uppercase">
                 <p>VISUAL: {faceDetected ? 'ONLINE' : 'OFFLINE'}</p>
-                <p>GENDER: UNKNOWN</p>
+                <p>HAIR: {hairColor}</p>
                 <p>OBJ: {detectedEmotion}</p>
             </div>
             
