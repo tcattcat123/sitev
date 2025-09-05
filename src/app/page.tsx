@@ -633,23 +633,32 @@ export default function Home() {
                           </CardTitle>
                       </CardHeader>
                       <CardContent className="p-2 grid grid-cols-2 gap-2">
-                        {services.map((service) => (
-                          <Button 
-                            key={service.name} 
-                            variant={service.name.startsWith('CV') ? "outline" : "ghost"}
-                            className={
-                              `justify-between w-full h-auto text-left p-2 hover:bg-accent ` +
-                              (service.name.startsWith('CV') ? 'border-primary text-primary hover:text-accent-foreground' : '')
-                            }
-                            onClick={() => handleServiceClick(service.name, service.description, service.fileType)}
-                          >
-                            <div className="flex flex-col">
-                                <span className="text-sm sm:text-base">{service.name}</span>
-                                <span className="text-xs text-muted-foreground">{service.fileType}</span>
-                            </div>
-                            <span className="text-2xl leading-none">→</span>
-                          </Button>
-                        ))}
+                        {services.map((service) => {
+                          const isCvButton = service.name.startsWith('CV');
+                          return (
+                            <Button 
+                              key={service.name} 
+                              variant={"ghost"}
+                              className={
+                                `justify-between w-full h-auto text-left p-2 hover:bg-accent ` +
+                                (isCvButton ? 'text-primary hover:text-accent-foreground relative overflow-hidden' : '')
+                              }
+                              onClick={() => handleServiceClick(service.name, service.description, service.fileType)}
+                            >
+                               {isCvButton && (
+                                <div 
+                                  className="glitch-overlay opacity-20" 
+                                  style={{'--glitch-color-1': 'rgba(0, 255, 255, 0.2)', '--glitch-color-2': 'rgba(0, 100, 255, 0.2)'} as React.CSSProperties}
+                                />
+                              )}
+                              <div className="flex flex-col">
+                                  <span className="text-sm sm:text-base">{service.name}</span>
+                                  <span className="text-xs text-muted-foreground">{service.fileType}</span>
+                              </div>
+                              <span className="text-2xl leading-none">→</span>
+                            </Button>
+                          );
+                        })}
                       </CardContent>
                   </Card>
               </section>
