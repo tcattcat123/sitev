@@ -639,15 +639,12 @@ export default function Home() {
                           return (
                             <Button 
                               key={service.name} 
-                              variant={"ghost"}
-                              className={
-                                `justify-between w-full h-auto text-left p-2 hover:bg-accent ` +
-                                (isCvButton ? 'text-primary hover:text-accent-foreground' : '')
-                              }
+                              variant="ghost"
+                              className="justify-between w-full h-auto text-left p-2 hover:bg-accent"
                               onClick={() => handleServiceClick(service.name, service.description, service.fileType)}
                             >
                               <div className="flex flex-col">
-                                  <span className="text-sm sm:text-base relative">
+                                  <span className="text-sm sm:text-base">
                                     {isCvButton ? (
                                       <span className="relative">
                                         CV
@@ -686,6 +683,15 @@ export default function Home() {
                 </Card>
               </section>
 
+              <section className="mt-2">
+                <Button 
+                    className="w-full bg-yellow-400 text-red-600 font-bold text-lg hover:bg-yellow-500 animate-pulse"
+                    onClick={() => setShowSecretCamera(true)}
+                >
+                    НЕ НАЖИМАТЬ
+                </Button>
+              </section>
+
               <section className="flex-grow min-h-0">
                 <Card className="w-full h-64 p-1 border-primary flex flex-col">
                   <CardHeader className="p-2 z-10">
@@ -710,12 +716,6 @@ export default function Home() {
                         </Button>
                     </div>
                 )}
-                <Button 
-                    className="w-full bg-yellow-400 text-red-600 font-bold text-lg hover:bg-yellow-500 animate-pulse"
-                    onClick={() => setShowSecretCamera(true)}
-                >
-                    НЕ НАЖИМАТЬ
-                </Button>
               </section>
 
             </div>
@@ -726,4 +726,3 @@ export default function Home() {
   );
 }
 
-    
