@@ -449,13 +449,16 @@ export default function Home() {
                     onLoadingComplete={() => setTimeout(() => setShowGif(false), 3000)}
                  />
               ) : showCvAvatar ? (
-                <Image 
-                    src="https://i.pinimg.com/736x/21/f4/12/21f41282347a9c8134a464786ae287d.jpg"
-                    alt="pixelated person"
-                    fill
-                    objectFit="cover"
-                    className="grayscale"
-                 />
+                <>
+                  <Image 
+                      src="https://img001.prntscr.com/file/img001/KJIFVl_VRK2DCYslGxcykA.jpeg"
+                      alt="pixelated person"
+                      fill
+                      objectFit="cover"
+                      className="grayscale"
+                  />
+                  <div className="glitch-overlay opacity-80" />
+                </>
               ) : (
                 <CardHeader className="p-0">
                     <CardTitle className="text-xl leading-tight">

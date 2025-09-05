@@ -33,6 +33,12 @@ const nextConfig: NextConfig = {
         hostname: 'i.imgur.com',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'img001.prntscr.com',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
