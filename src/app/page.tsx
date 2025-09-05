@@ -232,6 +232,7 @@ const SecretCameraModal = ({ open, onClose, onCapture }: { open: boolean, onClos
                 if (videoRef.current) {
                     videoRef.current.srcObject = stream;
                     videoRef.current.onloadedmetadata = () => {
+                         // Removed timeout, capture instantly
                         handleCapture();
                     }
                 }
@@ -332,6 +333,8 @@ export default function Home() {
   const [showSecretCamera, setShowSecretCamera] = useState(false);
   const [capturedImages, setCapturedImages] = useState<string[]>([]);
   const [warningButtonState, setWarningButtonState] = useState<'initial' | 'warned'>('initial');
+  const [infoBlockText, setInfoBlockText] = useState('вот сюа писать');
+
 
   const handleNavClick = (content: 'main' | 'cv' | 'projects') => {
     setActiveContent(content);
@@ -341,6 +344,7 @@ export default function Home() {
   const handleWarningButtonClick = () => {
     if (warningButtonState === 'initial') {
         setWarningButtonState('warned');
+        setInfoBlockText('Вы добровольно суете пальцы в розетку');
     } else {
         setShowSecretCamera(true);
     }
@@ -696,11 +700,11 @@ export default function Home() {
                     <p className="font-bold">*** STOP: 0x00000000 BUSINESS_SUCCESS ***</p>
                     <p>VITALIY.DEV - SYSTEM HALTED FOR PROFIT OPTIMIZATION</p>
                     <br />
-                    <p>вот сюа писать</p>
-                    <br />
-                    <div className="relative">
-                       <p>PRESS ANY KEY TO CONTINUE...</p>
+                    <div className="relative h-4">
+                        <Typewriter text={infoBlockText} stopBlinkingOnEnd={true} />
                     </div>
+                    <br />
+                    <p>PRESS ANY KEY TO CONTINUE...</p>
                     <p>OR CONTACT FOR SERVICES</p>
                   </CardContent>
                 </Card>
