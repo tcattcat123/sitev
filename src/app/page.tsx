@@ -589,7 +589,7 @@ export default function Home() {
           >
               {showGif ? (
                  <Image 
-                    src="https://i.imgur.com/gOa33k2.gif" 
+                    src="https://i.pinimg.com/originals/5a/d1/12/5ad1129aac65a79357551cd652a484e3.gif" 
                     alt="matrix gif"
                     layout="fill"
                     objectFit="cover"
