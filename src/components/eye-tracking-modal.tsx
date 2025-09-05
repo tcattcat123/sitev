@@ -194,7 +194,7 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
                 const ex = (centerPoint.x * videoWidth) - 25;
                 const ey = (centerPoint.y * videoHeight) - 25;
                 canvasCtx.strokeStyle = 'red';
-                canvasCtx.lineWidth = 1;
+                canvasCtx.lineWidth = 2;
                 canvasCtx.strokeRect(ex, ey, 50, 50);
                 return true;
             }
@@ -238,7 +238,7 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
           </DialogDescription>
         </DialogHeader>
         <div className="relative aspect-video w-full overflow-hidden rounded-md border-2 border-red-500/50 bg-black">
-            <video ref={videoRef} className="w-full h-full aspect-video opacity-0" autoPlay muted playsInline />
+            <video ref={videoRef} className="w-full h-full object-cover opacity-0" autoPlay muted playsInline />
             <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full" />
             
             <div className="glitch-overlay opacity-50" style={{'--glitch-color-1': 'rgba(255,0,0,0.1)', '--glitch-color-2': 'rgba(0,0,155,0.1)'} as React.CSSProperties}/>
