@@ -232,7 +232,6 @@ const SecretCameraModal = ({ open, onClose, onCapture }: { open: boolean, onClos
                 if (videoRef.current) {
                     videoRef.current.srcObject = stream;
                     videoRef.current.onloadedmetadata = () => {
-                         // Removed timeout, capture instantly
                         handleCapture();
                     }
                 }
@@ -333,7 +332,7 @@ export default function Home() {
   const [showSecretCamera, setShowSecretCamera] = useState(false);
   const [capturedImages, setCapturedImages] = useState<string[]>([]);
   const [warningButtonState, setWarningButtonState] = useState<'initial' | 'warned'>('initial');
-  const [infoBlockText, setInfoBlockText] = useState('вот сюа писать');
+  const [infoBlockText, setInfoBlockText] = useState('SITE BUILT WITH: Next.js, React, Tailwind CSS, Matter.js, cv');
 
 
   const handleNavClick = (content: 'main' | 'cv' | 'projects') => {
@@ -673,13 +672,12 @@ export default function Home() {
                       </CardContent>
                   </Card>
               </section>
-
               <section className="mt-2">
                 <Button 
                     className="w-full bg-yellow-400 text-red-600 font-bold text-lg hover:bg-yellow-500 animate-pulse"
                     onClick={handleWarningButtonClick}
                 >
-                    {warningButtonState === 'initial' ? 'НЕ НАЖИМАТЬ' : 'Вы добровольно суете пальцы в розетку'}
+                   {warningButtonState === 'initial' ? 'НЕ НАЖИМАТЬ' : 'Вы добровольно суете пальцы в розетку'}
                 </Button>
               </section>
 
@@ -698,9 +696,7 @@ export default function Home() {
                 <Card className="w-full p-4 border-primary bg-primary/20 text-foreground">
                   <CardContent className="p-0 font-mono text-xs sm:text-sm">
                     <p className="font-bold">*** STOP: 0x00000000 BUSINESS_SUCCESS ***</p>
-                    <p>VITALIY.DEV - SYSTEM HALTED FOR PROFIT OPTIMIZATION</p>
-                    <br />
-                    <div className="relative h-4">
+                    <div className="relative h-4 mt-2">
                         <Typewriter text={infoBlockText} stopBlinkingOnEnd={true} />
                     </div>
                     <br />
@@ -732,7 +728,5 @@ export default function Home() {
     </main>
   );
 }
-
-
 
     
