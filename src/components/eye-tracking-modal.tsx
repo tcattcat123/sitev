@@ -12,6 +12,7 @@ let lastVideoTime = -1;
 let animationFrameId: number;
 
 async function createFaceLandmarker() {
+  if (typeof window === 'undefined') return;
   const filesetResolver = await FilesetResolver.forVisionTasks(
     "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm"
   );
@@ -20,12 +21,25 @@ async function createFaceLandmarker() {
       modelAssetPath: `https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task`,
       delegate: "GPU",
     },
-    outputFaceBlendshapes: false,
-    outputFacialTransformationMatrixes: false,
+    outputFaceBlendshapes: true,
+    outputFacialTransformationMatrixes: true,
     runningMode: 'VIDEO',
     numFaces: 1,
   });
 }
+
+const Emotions = {
+    'mouthSmileLeft': 'HAPPY',
+    'mouthSmileRight': 'HAPPY',
+    'eyeSquintLeft': 'HAPPY',
+    'eyeSquintRight': 'HAPPY',
+    'mouthFrownLeft': 'SAD',
+    'mouthFrownRight': 'SAD',
+    'browDownLeft': 'ANGRY',
+    'browDownRight': 'ANGRY',
+};
+type Emotion = 'HAPPY' | 'SAD' | 'ANGRY' | 'NEUTRAL';
+
 
 export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
   const { toast } = useToast();
@@ -35,7 +49,7 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
   const [isModelLoaded, setIsModelLoaded] = useState(false);
   const [faceDetected, setFaceDetected] = useState(false);
   const [eyesDetected, setEyesDetected] = useState(false);
-
+  const [detectedEmotion, setDetectedEmotion] = useState<Emotion>('NEUTRAL');
 
   useEffect(() => {
     const initialize = async () => {
@@ -110,8 +124,6 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
     if (canvas.width !== videoWidth) canvas.width = videoWidth;
     if (canvas.height !== videoHeight) canvas.height = videoHeight;
     
-    const drawingUtils = new DrawingUtils(canvasCtx);
-    
     let nowInMs = Date.now();
     if (video.currentTime !== lastVideoTime) {
       lastVideoTime = video.currentTime;
@@ -120,26 +132,57 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
       canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
       if (results.faceLandmarks && results.faceLandmarks.length > 0) {
         setFaceDetected(true);
-        let eyesFound = false;
-        for (const landmarks of results.faceLandmarks) {
-          drawingUtils.drawConnectors(
-            landmarks,
-            FaceLandmarker.FACE_LANDMARKS_LEFT_EYE,
-            { color: "#30FF30", lineWidth: 1.5 }
-          );
-          drawingUtils.drawConnectors(
-            landmarks,
-            FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE,
-            { color: "#30FF30", lineWidth: 1.5 }
-          );
-          if (FaceLandmarker.FACE_LANDMARKS_LEFT_EYE && FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE) {
-            eyesFound = true;
-          }
+        const landmarks = results.faceLandmarks[0];
+
+        // Draw face bounding box
+        const x = Math.min(...landmarks.map(p => p.x)) * videoWidth;
+        const y = Math.min(...landmarks.map(p => p.y)) * videoHeight;
+        const width = (Math.max(...landmarks.map(p => p.x)) - Math.min(...landmarks.map(p => p.x))) * videoWidth;
+        const height = (Math.max(...landmarks.map(p => p.y)) - Math.min(...landmarks.map(p => p.y))) * videoHeight;
+        canvasCtx.strokeStyle = 'lime';
+        canvasCtx.lineWidth = 2;
+        canvasCtx.strokeRect(x, y, width, height);
+
+        // Draw eye bounding boxes
+        const leftEyeLandmarks = FaceLandmarker.FACE_LANDMARKS_LEFT_EYE;
+        const rightEyeLandmarks = FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE;
+        
+        const drawEyeBox = (eyeIndices: { start: number, end: number }[]) => {
+            const eyePoints = eyeIndices.flatMap(range => landmarks.slice(range.start, range.end + 1));
+            if (eyePoints.length > 0) {
+                const ex = Math.min(...eyePoints.map(p => p.x)) * videoWidth;
+                const ey = Math.min(...eyePoints.map(p => p.y)) * videoHeight;
+                const ew = (Math.max(...eyePoints.map(p => p.x)) - Math.min(...eyePoints.map(p => p.x))) * videoWidth;
+                const eh = (Math.max(...eyePoints.map(p => p.y)) - Math.min(...eyePoints.map(p => p.y))) * videoHeight;
+                canvasCtx.strokeStyle = 'red';
+                canvasCtx.lineWidth = 2;
+                canvasCtx.strokeRect(ex, ey, ew, eh);
+                return true;
+            }
+            return false;
         }
-        setEyesDetected(eyesFound);
+
+        const leftEyeDetected = drawEyeBox(leftEyeLandmarks);
+        const rightEyeDetected = drawEyeBox(rightEyeLandmarks);
+        setEyesDetected(leftEyeDetected && rightEyeDetected);
+        
+        // Emotion detection
+        let currentEmotion: Emotion = 'NEUTRAL';
+        if (results.faceBlendshapes && results.faceBlendshapes.length > 0) {
+            const blendshapes = results.faceBlendshapes[0].categories;
+            const prominentEmotion = blendshapes
+                .filter(shape => Object.keys(Emotions).includes(shape.categoryName) && shape.score > 0.5)
+                .sort((a, b) => b.score - a.score)[0];
+            if (prominentEmotion) {
+                currentEmotion = Emotions[prominentEmotion.categoryName as keyof typeof Emotions] as Emotion;
+            }
+        }
+        setDetectedEmotion(currentEmotion);
+
       } else {
         setFaceDetected(false);
         setEyesDetected(false);
+        setDetectedEmotion('NEUTRAL');
       }
     }
     
@@ -148,29 +191,31 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="max-w-xl bg-card/80 backdrop-blur-sm border-primary">
+      <DialogContent className="max-w-xl bg-card/80 backdrop-blur-sm border-primary text-red-500 font-mono">
         <DialogHeader>
-          <DialogTitle>CV: Детекция глаз</DialogTitle>
-          <DialogDescription>
-            Система использует MediaPipe для отслеживания ключевых точек на лице в реальном времени.
+          <DialogTitle className="text-red-500">VIPE CONSOLE</DialogTitle>
+          <DialogDescription className="text-red-500/80">
+            TECHNOLOGY: MediaPipe FaceLandmarker. Real-time facial landmark detection.
           </DialogDescription>
         </DialogHeader>
-        <div className="relative aspect-video w-full overflow-hidden rounded-md border border-primary">
-            <video ref={videoRef} className="w-full aspect-video" autoPlay muted playsInline />
+        <div className="relative aspect-video w-full overflow-hidden rounded-md border-2 border-red-500/50 bg-black">
+            <video ref={videoRef} className="w-full aspect-video opacity-70" autoPlay muted playsInline />
             <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full" />
             
-            {eyesDetected && <div className="glitch-overlay opacity-80"/>}
-
-            <div className="absolute top-2 left-2 font-mono text-xs text-green-400 bg-black/50 p-1 rounded">
-                {isModelLoaded ? 'STATUS: ACTIVE' : 'STATUS: LOADING MODEL...'}
+            {<div className="glitch-overlay opacity-50" style={{'--glitch-color-1': 'rgba(255,0,0,0.1)', '--glitch-color-2': 'rgba(0,0,155,0.1)'} as React.CSSProperties}/>}
+            
+            <div className="absolute top-2 left-2 text-sm uppercase">
+                <p>VISUAL: {faceDetected ? 'ONLINE' : 'OFFLINE'}</p>
+                <p>GENDER: UNKNOWN</p>
+                <p>OBJ: {detectedEmotion}</p>
             </div>
-
-            <div className="absolute bottom-2 left-2 font-mono text-sm text-green-400 bg-black/50 p-1 rounded">
+            
+            <div className="absolute bottom-2 left-2 text-sm uppercase">
                 {faceDetected ? '// FACE DETECTED //' : '// SCANNING... //'}
             </div>
 
             {eyesDetected && (
-                <div className="absolute bottom-8 left-2 font-mono text-sm text-red-500 bg-black/50 p-1 rounded animate-pulse">
+                <div className="absolute bottom-8 left-2 text-sm text-lime-400 uppercase animate-pulse">
                     {'// EYES LOCKED //'}
                 </div>
             )}
@@ -178,17 +223,17 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
 
             {hasCameraPermission === false && (
                 <div className="absolute inset-0 flex items-center justify-center bg-background/80">
-                    <Alert variant="destructive" className="w-auto">
-                      <AlertTitle>Доступ к камере необходим</AlertTitle>
+                    <Alert variant="destructive" className="w-auto border-red-500 text-red-500">
+                      <AlertTitle>CAMERA ACCESS DENIED</AlertTitle>
                       <AlertDescription>
-                        Пожалуйста, разрешите доступ к камере, чтобы использовать эту функцию.
+                        PLEASE ENABLE CAMERA PERMISSION TO USE THIS FEATURE.
                       </AlertDescription>
                     </Alert>
                 </div>
             )}
             {hasCameraPermission === true && !isModelLoaded && (
                  <div className="absolute inset-0 flex items-center justify-center bg-background/80">
-                    <p className="text-foreground animate-pulse">Загрузка модели CV...</p>
+                    <p className="text-red-500 animate-pulse">LOADING MODEL...</p>
                  </div>
             )}
         </div>
@@ -196,3 +241,5 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
     </Dialog>
   );
 };
+
+    

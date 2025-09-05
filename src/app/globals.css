@@ -87,8 +87,8 @@
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(0,255,0,0.2) 50%, rgba(0,0,0,0) 50%),
-    linear-gradient(90deg, rgba(0,0,255,0.2) 50%, transparent 50%);
+    linear-gradient(var(--glitch-color-1, rgba(0,255,0,0.2)) 50%, rgba(0,0,0,0) 50%),
+    linear-gradient(90deg, var(--glitch-color-2, rgba(0,0,255,0.2)) 50%, transparent 50%);
   background-size: 100% 3px, 3px 100%;
   animation: glitch 0.5s infinite alternate;
   mix-blend-mode: screen;
@@ -102,3 +102,5 @@
   75% { transform: translate(2px, 2px); }
   100% { transform: translate(0, 0); }
 }
+
+    
