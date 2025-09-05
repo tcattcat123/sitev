@@ -62,35 +62,29 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
   const [detectedEmotion, setDetectedEmotion] = useState<Emotion>('NEUTRAL');
 
   useEffect(() => {
-    const initialize = async () => {
-        if (!faceLandmarker || !objectDetector) {
-          await createVisionModels();
-        }
-        setIsModelLoaded(true);
-    };
-    if (typeof window !== 'undefined') {
-        initialize();
-    }
-  }, []);
+    let isCancelled = false;
 
-  useEffect(() => {
-    if (!isModelLoaded || typeof navigator === 'undefined') return;
-    
-    const getCameraPermission = async () => {
+    async function setupVision() {
+      // Load models
+      await createVisionModels();
+      if (isCancelled) return;
+      setIsModelLoaded(true);
+      
+      // Get camera permission
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        toast({
-            variant: 'destructive',
-            title: 'Ошибка камеры',
-            description: 'Ваш браузер не поддерживает доступ к камере.',
-        });
+        toast({ variant: 'destructive', title: 'Ошибка камеры', description: 'Ваш браузер не поддерживает доступ к камере.' });
         setHasCameraPermission(false);
         return;
       }
-
+      
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        setHasCameraPermission(true);
+        if (isCancelled) {
+            stream.getTracks().forEach(track => track.stop());
+            return;
+        };
 
+        setHasCameraPermission(true);
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
           videoRef.current.addEventListener("loadeddata", predictWebcam);
@@ -104,18 +98,19 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
           description: 'Пожалуйста, разрешите доступ к камере в настройках браузера.',
         });
       }
-    };
+    }
 
-    getCameraPermission();
+    setupVision();
 
     return () => {
+        isCancelled = true;
         cancelAnimationFrame(animationFrameId);
         if (videoRef.current && videoRef.current.srcObject) {
             const stream = videoRef.current.srcObject as MediaStream;
             stream.getTracks().forEach(track => track.stop());
         }
     }
-  }, [toast, isModelLoaded]);
+  }, [toast]);
 
   const predictWebcam = () => {
     if (!videoRef.current || !canvasRef.current || !faceLandmarker || !objectDetector) {
@@ -132,7 +127,10 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
     const canvas = canvasRef.current;
     const canvasCtx = canvas.getContext("2d");
 
-    if (!canvasCtx) return;
+    if (!canvasCtx) {
+      animationFrameId = requestAnimationFrame(predictWebcam);
+      return;
+    }
 
     const videoWidth = video.videoWidth;
     const videoHeight = video.videoHeight;
@@ -283,5 +281,3 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
     </Dialog>
   );
 };
-
-    
