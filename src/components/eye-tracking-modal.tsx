@@ -154,8 +154,7 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
       lastVideoTime = video.currentTime;
       const faceResults = faceLandmarker.detectForVideo(video, nowInMs);
 
-      // Clear canvas for drawing overlays
-      // canvasCtx.clearRect(0, 0, canvas.width, canvas.height); - we don't clear because video is drawn
+      // We don't clear because video is drawn on each frame
       
       if (faceResults.faceLandmarks && faceResults.faceLandmarks.length > 0) {
         setFaceDetected(true);
@@ -239,7 +238,7 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
         </DialogHeader>
         <div className="relative aspect-video w-full overflow-hidden rounded-md border-2 border-red-500/50 bg-black">
             <video ref={videoRef} className="w-full h-full object-cover opacity-0" autoPlay muted playsInline />
-            <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full" />
+            <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full object-cover" />
             
             <div className="glitch-overlay opacity-50" style={{'--glitch-color-1': 'rgba(255,0,0,0.1)', '--glitch-color-2': 'rgba(0,0,155,0.1)'} as React.CSSProperties}/>
             
@@ -278,4 +277,3 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
       </DialogContent>
     </Dialog>
   );
-};
