@@ -310,14 +310,14 @@ const PhotoFrame = ({ imageSrc, index }: { imageSrc: string, index: number }) =>
 
 const MatrixRain = () => (
     <div className="matrix-rain -z-10">
-        {[...Array(25)].map((_, i) => (
+        {[...Array(15)].map((_, i) => (
             <div
                 key={i}
                 className="matrix-char"
                 style={{
                     left: `${Math.random() * 100}%`,
-                    animationDuration: `${Math.random() * 4 + 3}s`,
-                    animationDelay: `${Math.random() * 3}s`,
+                    animationDuration: `${Math.random() * 10 + 15}s`,
+                    animationDelay: `${Math.random() * 20}s`,
                 }}
             >
                 {Math.random() > 0.5 ? '1' : '0'}
