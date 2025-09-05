@@ -326,23 +326,39 @@ const PhotoFrame = ({ imageSrc, index }: { imageSrc: string, index: number }) =>
     )
 }
 
-const MatrixRain = () => (
-    <div className="matrix-rain -z-10">
-        {[...Array(15)].map((_, i) => (
-            <div
-                key={i}
-                className="matrix-char"
-                style={{
+const MatrixRain = () => {
+    const [chars, setChars] = useState<{ key: number; style: React.CSSProperties; char: string }[]>([]);
+
+    useEffect(() => {
+        const generateChars = () => {
+            const newChars = [...Array(15)].map((_, i) => ({
+                key: i,
+                style: {
                     left: `${Math.random() * 100}%`,
                     animationDuration: `${Math.random() * 10 + 15}s`,
                     animationDelay: `${Math.random() * 20}s`,
-                }}
-            >
-                {Math.random() > 0.5 ? '1' : '0'}
-            </div>
-        ))}
-    </div>
-);
+                },
+                char: Math.random() > 0.5 ? '1' : '0'
+            }));
+            setChars(newChars);
+        };
+        generateChars();
+    }, []);
+
+    return (
+        <div className="matrix-rain -z-10">
+            {chars.map(({ key, style, char }) => (
+                <div
+                    key={key}
+                    className="matrix-char"
+                    style={style}
+                >
+                    {char}
+                </div>
+            ))}
+        </div>
+    );
+};
 
 const initialDynamicText = "SITE BUILT WITH: Next.js, React, Tailwind CSS, ShadCN, Genkit AI, Matter.js, Framer Motion";
 
@@ -391,8 +407,6 @@ export default function Home() {
   };
   
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-
     const getChinaTime = () => {
       const now = new Date();
       const utcOffset = now.getTimezoneOffset() * 60000;
@@ -401,17 +415,15 @@ export default function Home() {
       return chinaDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
     };
 
-    const timer = setInterval(() => {
-        const newTime = getChinaTime();
-        if (newTime !== chinaTime) {
-            setChinaTime(newTime);
-        }
-    }, 60000);
-    
+    // Set initial time without waiting for interval
     setChinaTime(getChinaTime());
 
+    const timer = setInterval(() => {
+        setChinaTime(getChinaTime());
+    }, 60000);
+    
     return () => clearInterval(timer);
-  }, [chinaTime]);
+  }, []);
 
   const services = [
     { name: 'Боты', fileType: '.EXE', description: 'Разработка Telegram-ботов.' },
