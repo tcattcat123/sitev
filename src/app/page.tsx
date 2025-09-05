@@ -356,7 +356,7 @@ export default function Home() {
     <div className="grid grid-cols-2 gap-2">
       <ProjectCard>
         <div className="flex flex-col items-center justify-center text-center gap-2">
-            <Image src="https://i.pinimg.com/736x/21/f4/12/21f41282347a9c8134a464786ae287d.jpg" alt="CV Face" width={48} height={48} className="grayscale rounded-full"/>
+            <Image src="https://i.imgur.com/g8fP6b8.jpeg" alt="CV Face" width={48} height={48} className="grayscale rounded-full"/>
             <h3 className="font-bold">CV</h3>
             <p className="text-xs text-muted-foreground">MediaPipe, OpenAI</p>
         </div>
@@ -549,5 +549,3 @@ export default function Home() {
     </main>
   );
 }
-
-    

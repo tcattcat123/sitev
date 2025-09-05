@@ -27,8 +27,6 @@ async function createFaceLandmarker() {
   });
 }
 
-createFaceLandmarker();
-
 export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
   const { toast } = useToast();
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -37,11 +35,17 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
   const [isModelLoaded, setIsModelLoaded] = useState(false);
 
   useEffect(() => {
-    if (!faceLandmarker) {
-      createFaceLandmarker().then(() => setIsModelLoaded(true));
-    } else {
-      setIsModelLoaded(true);
-    }
+    const initialize = async () => {
+        if (!faceLandmarker) {
+          await createFaceLandmarker();
+        }
+        setIsModelLoaded(true);
+    };
+    initialize();
+  }, []);
+
+  useEffect(() => {
+    if (!isModelLoaded) return;
     
     const getCameraPermission = async () => {
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -82,7 +86,7 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
             stream.getTracks().forEach(track => track.stop());
         }
     }
-  }, [toast]);
+  }, [toast, isModelLoaded]);
 
   const predictWebcam = () => {
     if (!videoRef.current || !canvasRef.current || !faceLandmarker) {
