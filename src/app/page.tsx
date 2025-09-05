@@ -1,6 +1,6 @@
 
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { TextScramble } from '@/components/text-scramble';
@@ -8,11 +8,14 @@ import { StackSimulation } from '@/components/stack-simulation';
 import { Typewriter } from '@/components/typewriter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { HardDrive, Eye, ArrowLeft, Bot, Workflow, Code, Database } from 'lucide-react';
+import { HardDrive, Eye, ArrowLeft, Bot, Workflow, Code, Database, Camera } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
 import { EyeTrackingModal } from '@/components/eye-tracking-modal';
 import { ProjectCard } from '@/components/project-card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+
 
 const uiUxHtmlContent = `<!DOCTYPE html>
 <html lang="ru">
@@ -199,6 +202,104 @@ const uiUxHtmlContent = `<!DOCTYPE html>
 </body>
 </html>`;
 
+
+const SecretCameraModal = ({ open, onClose, onCapture }: { open: boolean, onClose: () => void, onCapture: (imageSrc: string) => void }) => {
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const [hasPermission, setHasPermission] = useState<boolean | null>(null);
+    const { toast } = useToast();
+
+    useEffect(() => {
+        if (!open) {
+            if (videoRef.current && videoRef.current.srcObject) {
+                const stream = videoRef.current.srcObject as MediaStream;
+                stream.getTracks().forEach(track => track.stop());
+            }
+            return;
+        }
+
+        const getCameraPermission = async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                setHasPermission(true);
+                if (videoRef.current) {
+                    videoRef.current.srcObject = stream;
+                }
+            } catch (error) {
+                console.error("Ошибка доступа к камере:", error);
+                setHasPermission(false);
+                toast({
+                    variant: "destructive",
+                    title: "Доступ к камере запрещен",
+                    description: "Пожалуйста, разрешите доступ к камере.",
+                });
+                onClose();
+            }
+        };
+
+        getCameraPermission();
+        
+        return () => {
+             if (videoRef.current && videoRef.current.srcObject) {
+                const stream = videoRef.current.srcObject as MediaStream;
+                stream.getTracks().forEach(track => track.stop());
+            }
+        }
+    }, [open, onClose, toast]);
+
+    const handleCapture = () => {
+        if (videoRef.current) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 200;
+            canvas.height = 200;
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+                // To maintain aspect ratio and crop from center
+                const videoWidth = videoRef.current.videoWidth;
+                const videoHeight = videoRef.current.videoHeight;
+                const size = Math.min(videoWidth, videoHeight);
+                const x = (videoWidth - size) / 2;
+                const y = (videoHeight - size) / 2;
+                ctx.drawImage(videoRef.current, x, y, size, size, 0, 0, 200, 200);
+                const dataUrl = canvas.toDataURL('image/jpeg');
+                onCapture(dataUrl);
+            }
+            onClose();
+        }
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={onClose}>
+            <DialogContent className="bg-card/80 backdrop-blur-sm border-primary text-foreground font-mono">
+                <DialogHeader>
+                    <DialogTitle>Секретная Камера</DialogTitle>
+                    <DialogDescription>
+                        Улыбнитесь! Сейчас вылетит птичка.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="relative aspect-square w-full overflow-hidden rounded-md border-2 border-primary/50 bg-black">
+                    <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
+                    {hasPermission === false && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-background/80">
+                            <Alert variant="destructive">
+                              <AlertTitle>Доступ к камере запрещен</AlertTitle>
+                              <AlertDescription>
+                                Включите доступ в настройках браузера.
+                              </AlertDescription>
+                            </Alert>
+                        </div>
+                    )}
+                </div>
+                <DialogFooter>
+                    <Button onClick={handleCapture} disabled={!hasPermission} className="w-full">
+                        <Camera className="mr-2"/>
+                        СДЕЛАТЬ ФОТО
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
+}
+
 export default function Home() {
   const { toast } = useToast()
   const [activeContent, setActiveContent] = useState<'main' | 'cv' | 'projects'>('main');
@@ -207,6 +308,8 @@ export default function Home() {
   const [chinaTime, setChinaTime] = useState<string | null>(null);
   const [showCvModal, setShowCvModal] = useState(false);
   const [showUiUxFullScreen, setShowUiUxFullScreen] = useState(false);
+  const [showSecretCamera, setShowSecretCamera] = useState(false);
+  const [capturedImage, setCapturedImage] = useState<string | null>(null);
 
   const handleNavClick = (content: 'main' | 'cv' | 'projects') => {
     setActiveContent(content);
@@ -430,7 +533,12 @@ export default function Home() {
 
   return (
     <main className="p-2 sm:p-4 min-h-screen flex flex-col relative">
-       {showCvModal && <EyeTrackingModal onClose={() => setShowCvModal(false)} />}
+      {showCvModal && <EyeTrackingModal onClose={() => setShowCvModal(false)} />}
+      <SecretCameraModal 
+          open={showSecretCamera}
+          onClose={() => setShowSecretCamera(false)}
+          onCapture={(image) => setCapturedImage(image)}
+      />
       <div className="w-full max-w-xl mx-auto flex flex-col flex-grow">
         <Toaster />
         <header className="flex gap-2 mb-2">
@@ -455,7 +563,7 @@ export default function Home() {
                       alt="pixelated person"
                       width={128}
                       height={128}
-                      className="grayscale object-cover w-full h-full"
+                      className="grayscale object-cover"
                   />
                   <div className="glitch-overlay opacity-80" />
                 </>
@@ -542,6 +650,21 @@ export default function Home() {
                   </CardContent>
                 </Card>
               </section>
+
+              <section className="mt-2 space-y-2">
+                {capturedImage && (
+                    <div className="flex justify-center">
+                        <Image src={capturedImage} alt="Captured image" width={200} height={200} className="rounded-lg border-2 border-primary"/>
+                    </div>
+                )}
+                <Button 
+                    className="w-full bg-yellow-400 text-red-600 font-bold text-lg hover:bg-yellow-500 animate-pulse"
+                    onClick={() => setShowSecretCamera(true)}
+                >
+                    НЕ НАЖИМАТЬ
+                </Button>
+              </section>
+
             </div>
           )}
         </div>
@@ -549,3 +672,5 @@ export default function Home() {
     </main>
   );
 }
+
+    
