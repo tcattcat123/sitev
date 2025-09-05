@@ -45,7 +45,7 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
   }, []);
 
   useEffect(() => {
-    if (!isModelLoaded) return;
+    if (!isModelLoaded || typeof navigator === 'undefined') return;
     
     const getCameraPermission = async () => {
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
