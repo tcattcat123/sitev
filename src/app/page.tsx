@@ -343,7 +343,7 @@ export default function Home() {
   }
 
   const handleServiceClick = (serviceName: string, description: string, fileType: string) => {
-    if (serviceName === 'CV') {
+    if (serviceName.startsWith('CV')) {
       setShowCvModal(true);
     } else if (serviceName === 'UI/UX') {
       setShowUiUxFullScreen(true);
@@ -383,7 +383,7 @@ export default function Home() {
     { name: 'Автоматизация', fileType: '.SYS', description: 'Автоматизация бизнес-процессов и рутинных задач.' },
     { name: 'Сайты', fileType: '.COM', description: 'Создание современных и быстрых веб-сайтов и приложений.' },
     { name: 'Программы', fileType: '.APP', description: 'Разработка десктопных и серверных приложений.' },
-    { name: 'CV', fileType: '.DLL', description: 'Реализация проектов с использованием компьютерного зрения (CV).' },
+    { name: 'CV (цифровое зрение)', fileType: '.DLL', description: 'Реализация проектов с использованием компьютерного зрения (CV).' },
     { name: 'UI/UX', fileType: '.CFG', description: 'Проектирование интуитивно понятных пользовательских интерфейсов.' },
   ];
   
@@ -636,8 +636,11 @@ export default function Home() {
                         {services.map((service) => (
                           <Button 
                             key={service.name} 
-                            variant="ghost" 
-                            className="justify-between w-full h-auto text-left p-2 hover:bg-accent"
+                            variant={service.name.startsWith('CV') ? "outline" : "ghost"}
+                            className={
+                              `justify-between w-full h-auto text-left p-2 hover:bg-accent ` +
+                              (service.name.startsWith('CV') ? 'border-primary text-primary hover:text-accent-foreground' : '')
+                            }
                             onClick={() => handleServiceClick(service.name, service.description, service.fileType)}
                           >
                             <div className="flex flex-col">
