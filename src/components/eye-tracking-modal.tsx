@@ -12,7 +12,7 @@ let objectDetector: ObjectDetector | undefined;
 let lastVideoTime = -1;
 let animationFrameId: number;
 
-async function createFaceLandmarker() {
+async function createVisionModels() {
   if (typeof window === 'undefined') return;
   const filesetResolver = await FilesetResolver.forVisionTasks(
     "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm"
@@ -23,7 +23,6 @@ async function createFaceLandmarker() {
       delegate: "GPU",
     },
     outputFaceBlendshapes: true,
-    outputFacialTransformationMatrixes: true,
     runningMode: 'VIDEO',
     numFaces: 1,
   });
@@ -64,8 +63,8 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
 
   useEffect(() => {
     const initialize = async () => {
-        if (!faceLandmarker) {
-          await createFaceLandmarker();
+        if (!faceLandmarker || !objectDetector) {
+          await createVisionModels();
         }
         setIsModelLoaded(true);
     };
@@ -120,10 +119,16 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
 
   const predictWebcam = () => {
     if (!videoRef.current || !canvasRef.current || !faceLandmarker || !objectDetector) {
+      animationFrameId = requestAnimationFrame(predictWebcam);
       return;
     }
     
     const video = videoRef.current;
+    if (video.readyState < 2) {
+      animationFrameId = requestAnimationFrame(predictWebcam);
+      return;
+    }
+
     const canvas = canvasRef.current;
     const canvasCtx = canvas.getContext("2d");
 
@@ -179,7 +184,7 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
         setEyesDetected(leftEyeDetected && rightEyeDetected);
         
         let currentEmotion: Emotion = 'NEUTRAL';
-        if (faceResults.faceBlendshapes && faceResults.faceBlendshapes.length > 0) {
+        if (faceResults.faceBlendshapes && faceResults.faceBlendshapes.length > 0 && faceResults.faceBlendshapes[0].categories) {
             const blendshapes = faceResults.faceBlendshapes[0].categories;
             const prominentEmotion = blendshapes
                 .filter(shape => Object.keys(Emotions).includes(shape.categoryName) && shape.score > 0.5)
@@ -207,6 +212,9 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
                       canvasCtx.strokeStyle = '#00FF00';
                       canvasCtx.lineWidth = 4;
                       canvasCtx.strokeRect(bbox.originX, bbox.originY, bbox.width, bbox.height);
+                      canvasCtx.fillStyle = '#00FF00';
+                      canvasCtx.font = '14px monospace';
+                      canvasCtx.fillText('MUG', bbox.originX, bbox.originY > 10 ? bbox.originY - 5 : 10);
                   }
               }
           }
@@ -227,7 +235,7 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
           </DialogDescription>
         </DialogHeader>
         <div className="relative aspect-video w-full overflow-hidden rounded-md border-2 border-red-500/50 bg-black">
-            <video ref={videoRef} className="w-full aspect-video opacity-70" autoPlay muted playsInline />
+            <video ref={videoRef} className="w-full h-full aspect-video opacity-70" autoPlay muted playsInline />
             <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full" />
             
             {<div className="glitch-overlay opacity-50" style={{'--glitch-color-1': 'rgba(255,0,0,0.1)', '--glitch-color-2': 'rgba(0,0,155,0.1)'} as React.CSSProperties}/>}
@@ -275,3 +283,5 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
     </Dialog>
   );
 };
+
+    
