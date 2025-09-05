@@ -358,7 +358,7 @@ export default function Home() {
   }
 
   const handleServiceClick = (serviceName: string, description: string, fileType: string) => {
-    if (serviceName.startsWith('CV')) {
+    if (serviceName === 'CV') {
       setShowCvModal(true);
     } else if (serviceName === 'UI/UX') {
       setShowUiUxFullScreen(true);
@@ -649,7 +649,7 @@ export default function Home() {
                       </CardHeader>
                       <CardContent className="p-2 grid grid-cols-2 gap-2">
                         {services.map((service) => {
-                          const isCvButton = service.name.startsWith('CV');
+                          const isCvButton = service.name === 'CV';
                           return (
                             <Button 
                               key={service.name} 
@@ -680,12 +680,14 @@ export default function Home() {
                       </CardContent>
                   </Card>
               </section>
-               <section className="mt-2">
+              <section className="mt-2">
                 <Card className="w-full p-4 border-primary bg-primary/20 text-foreground">
                   <CardContent className="p-0 font-mono text-xs sm:text-sm">
                     <p className="font-bold">*** STOP: 0x00000000 BUSINESS_SUCCESS ***</p>
                     <p>VITALIY.DEV - SYSTEM HALTED FOR PROFIT OPTIMIZATION</p>
+                    <p>&nbsp;</p>
                     <p><Typewriter key={dynamicInfoText} text={dynamicInfoText} stopBlinkingOnEnd /></p>
+                    <p>&nbsp;</p>
                     <p>PRESS ANY KEY TO CONTINUE...</p>
                     <p>OR CONTACT FOR SERVICES</p>
                   </CardContent>
