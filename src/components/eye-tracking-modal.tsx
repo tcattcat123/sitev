@@ -143,27 +143,27 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
         canvasCtx.lineWidth = 2;
         canvasCtx.strokeRect(x, y, width, height);
 
-        // Draw eye bounding boxes
-        const leftEyeLandmarks = FaceLandmarker.FACE_LANDMARKS_LEFT_EYE;
-        const rightEyeLandmarks = FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE;
+        // More precise eye landmark indices for a tighter box
+        const leftEyeIndices = [33, 160, 158, 133, 153, 144];
+        const rightEyeIndices = [362, 385, 387, 263, 373, 380];
         
-        const drawEyeBox = (eyeIndices: { start: number, end: number }[]) => {
-            const eyePoints = eyeIndices.flatMap(range => landmarks.slice(range.start, range.end + 1));
+        const drawEyeBox = (eyeIndices: number[]) => {
+            const eyePoints = eyeIndices.map(i => landmarks[i]);
             if (eyePoints.length > 0) {
                 const ex = Math.min(...eyePoints.map(p => p.x)) * videoWidth;
                 const ey = Math.min(...eyePoints.map(p => p.y)) * videoHeight;
                 const ew = (Math.max(...eyePoints.map(p => p.x)) - Math.min(...eyePoints.map(p => p.x))) * videoWidth;
                 const eh = (Math.max(...eyePoints.map(p => p.y)) - Math.min(...eyePoints.map(p => p.y))) * videoHeight;
                 canvasCtx.strokeStyle = 'red';
-                canvasCtx.lineWidth = 2;
+                canvasCtx.lineWidth = 1;
                 canvasCtx.strokeRect(ex, ey, ew, eh);
                 return true;
             }
             return false;
         }
 
-        const leftEyeDetected = drawEyeBox(leftEyeLandmarks);
-        const rightEyeDetected = drawEyeBox(rightEyeLandmarks);
+        const leftEyeDetected = drawEyeBox(leftEyeIndices);
+        const rightEyeDetected = drawEyeBox(rightEyeIndices);
         setEyesDetected(leftEyeDetected && rightEyeDetected);
         
         // Emotion detection
@@ -241,5 +241,3 @@ export const EyeTrackingModal = ({ onClose }: { onClose: () => void }) => {
     </Dialog>
   );
 };
-
-    
