@@ -438,7 +438,6 @@ export default function Home() {
   
   const cvContent = (
     <div className="text-sm font-mono text-foreground bg-card p-4 sm:p-6 rounded-lg relative overflow-hidden border border-border group">
-        <div className="absolute inset-0 bg-black/10 glitch-overlay opacity-5 group-hover:opacity-20 transition-opacity duration-300"></div>
         <header className="flex flex-col md:flex-row justify-between md:items-start gap-4 md:gap-6 border-b border-border pb-4 mb-4">
             <div className="flex-grow">
                 <h1 className="text-3xl sm:text-4xl font-bold text-foreground">{cvData.name}</h1>
@@ -735,3 +734,5 @@ export default function Home() {
     </main>
   );
 }
+
+    
