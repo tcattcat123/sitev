@@ -284,9 +284,9 @@ export default function Home() {
         case 'Frontend':
             return 'text-green-400';
         case 'DB':
-            return 'text-foreground';
+            return 'text-yellow-400';
         case 'CV/Tools':
-            return 'text-foreground';
+            return 'text-red-400';
         default:
             return 'text-foreground';
     }
