@@ -601,7 +601,7 @@ export default function Home() {
               ) : showCvAvatar ? (
                 <>
                   <Image 
-                      src="https://img001.prntscr.com/file/img001/wjRTXBREQc618I5n23T2Yg.jpeg"
+                      src="https://img001.prntscr.com/file/img001/KJIFVl_VRK2DCYslGxcykA.jpeg"
                       alt="pixelated person"
                       width={128}
                       height={128}
