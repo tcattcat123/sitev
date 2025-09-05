@@ -451,11 +451,11 @@ export default function Home() {
               ) : showCvAvatar ? (
                 <>
                   <Image 
-                      src="https://i.imgur.com/g8fP6b8.jpeg"
+                      src="https://img001.prntscr.com/file/img001/KJIFVl_VRK2DCYslGxcykA.jpeg"
                       alt="pixelated person"
-                      fill
-                      objectFit="cover"
-                      className="grayscale"
+                      width={128}
+                      height={128}
+                      className="grayscale object-cover w-full h-full"
                   />
                   <div className="glitch-overlay opacity-80" />
                 </>

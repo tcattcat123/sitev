@@ -1,3 +1,4 @@
+
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
@@ -39,11 +40,9 @@ const nextConfig: NextConfig = {
         hostname: 'img001.prntscr.com',
         port: '',
         pathname: '/**',
-      }
+      },
     ],
   },
 };
 
 export default nextConfig;
-
-    
